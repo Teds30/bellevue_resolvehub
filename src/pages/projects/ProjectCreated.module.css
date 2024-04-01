@@ -1,0 +1,26 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 64px;
+    max-width: 360px;
+
+    gap: 16px;
+
+    text-align: center;
+}
+
+.top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.lowcaption {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fc-body);
+}

@@ -1,0 +1,23 @@
+.card {
+    background: #fff;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+
+    min-width: 300px;
+    padding: 24px 16px;
+
+    max-height: 80vh;
+
+    overflow-y: auto;
+}
+
+.title {
+    display: flex;
+}
+.title h3 {
+    flex: 1;
+}
+.close {
+    align-self: flex-end;
+}

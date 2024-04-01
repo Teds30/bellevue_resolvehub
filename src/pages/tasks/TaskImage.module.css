@@ -1,0 +1,13 @@
+.img-container {
+    width: 100px;
+    height: 100px;
+    background-color: var(--bg-layer2);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.img-container img {
+    width: inherit;
+    height: inherit;
+    object-fit: cover;
+}

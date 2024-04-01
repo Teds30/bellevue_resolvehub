@@ -1,0 +1,36 @@
+@import url('./ButtonStyle.module.css');
+.btn {
+    background-color: var(--accent);
+    color: #fff;
+    fill: #fff;
+}
+
+.btn:hover {
+    background-color: var(--accent-dark);
+}
+
+.btn-danger {
+    background-color: var(--accent-danger) !important;
+}
+
+.btn-danger:hover {
+    background-color: var(--accent-danger-secondary) !important;
+}
+
+.btn:disabled {
+    background-color: #f0f1f3 !important;
+    color: #a3a9b6;
+    /* background-color: rgba(var(--accent-rgb), 0.65) !important; */
+}
+
+.btn-danger:disabled {
+    background-color: rgba(var(--border-color)) !important;
+    color: var(--border-color);
+}
+
+.icon path {
+    /* fill: currentColor; */
+}
+.icon svg {
+    /* fill: currentColor; */
+}
