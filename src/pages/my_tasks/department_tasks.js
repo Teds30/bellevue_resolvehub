@@ -48,11 +48,24 @@ const department_tasks = () => {
         })
         return res.data
     }
+    const loadDepartmentDone = async () => {
+        const res = await sendRequest({
+            url: `${
+                import.meta.env.VITE_BACKEND_URL
+            }/api/department_done_tasks/${userCtx.user.position.department_id}`,
+            body: JSON.stringify({ today: true }),
+            headers: {
+                Authorization: `Bearer ${userCtx.token}`,
+            },
+        })
+        return res.data
+    }
 
     return {
         loadDepartmentAssigned,
         loadDepartmentOnGoing,
         loadDepartmentPending,
+        loadDepartmentDone,
         isLoading,
     }
 }

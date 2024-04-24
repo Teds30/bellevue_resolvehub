@@ -27,6 +27,7 @@ import Moment from 'react-moment'
 import ProjectCancelSwipe from './ProjectCancelSwipe'
 import ProjectRejectSwipe from './ProjectRejectSwipe'
 import userPermission from '../../hooks/userPermission'
+import { IconMessages } from '@tabler/icons-react'
 
 const ProjectApproval = (props) => {
     const { project, onRefreshData } = props
@@ -190,6 +191,7 @@ const ProjectApproval = (props) => {
                     </OutlinedButton>
                 )}
             </Box>
+
             {project.status === 0 &&
                 userCtx.user.id === project.requestor.id && (
                     <div className={styles['project-submitted']}>

@@ -1,17 +1,32 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import styles from './Dashboard.module.css'
 import BottomNavigationBar from '../../components/BottomNavigationBar/BottomNavigationBar'
 import { Outlet, useNavigate } from 'react-router-dom'
+import AuthContext from '../../context/auth-context'
+import useHttp from '../../hooks/http-hook'
+import { Skeleton } from '@mui/material'
 
 const Dashboard = () => {
     const [active, setActive] = useState(0)
+    const [department, setDepartment] = useState()
+
+    const { sendRequest } = useHttp()
 
     const navigate = useNavigate()
+    const userCtx = useContext(AuthContext)
 
     const handleActive = (id) => {
         setActive(id)
     }
+
+    useEffect(() => {
+        const loadData = async () => {
+            setDepartment(userCtx.user.position.department.name)
+        }
+
+        if (userCtx.user) loadData()
+    }, [userCtx])
 
     return (
         <>
@@ -19,7 +34,11 @@ const Dashboard = () => {
                 <h2>Performances</h2>
                 <div className={styles['title-content']}>
                     <p className="pre-title">DEPARTMENT</p>
-                    <h4>IT Department</h4>
+                    <h4>
+                        {department ?? (
+                            <Skeleton variant="text" width={100} height={24} />
+                        )}
+                    </h4>
                 </div>
                 <div className={styles['nav_container']}>
                     <div

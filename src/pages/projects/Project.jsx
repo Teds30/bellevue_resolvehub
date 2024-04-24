@@ -9,12 +9,15 @@ import {
     IconArrowNarrowLeft,
     IconArrowNarrowRight,
     IconBuilding,
+    IconChevronRight,
     IconMapPin,
 } from '@tabler/icons-react'
 import Moment from 'react-moment'
 import ProjectApproval from './ProjectApproval'
 import BottomNavigationBar from '../../components/BottomNavigationBar/BottomNavigationBar'
 import { IconUser } from '@tabler/icons-react'
+import { IconMessages } from '@tabler/icons-react'
+import ProjectCommentsSwipe from './ProjectCommentsSwipe'
 
 const Project = () => {
     const { sendRequest } = useHttp()
@@ -22,6 +25,9 @@ const Project = () => {
 
     const navigate = useNavigate()
     const [project, setProject] = useState()
+    const [commentOpen, setCommentOpen] = useState()
+    const [comments, setComments] = useState([])
+    const [total, setTotal] = useState(0)
 
     const userCtx = useContext(AuthContext)
 
@@ -35,19 +41,48 @@ const Project = () => {
         })
 
         setProject(res.data)
+
+        if (res) {
+            loadComments()
+        }
+    }
+
+    const loadComments = async () => {
+        const res2 = await sendRequest({
+            url: `${
+                import.meta.env.VITE_BACKEND_URL
+            }/api/project-comments/${id}`,
+        })
+
+        if (res2.data) {
+            setComments(res2.data.comments)
+            setTotal(res2.data.total)
+        }
     }
 
     return (
         <>
             <div className={styles['container']}>
                 <div className={styles['topnav']}>
-                    <IconButton
+                    <Box sx={{ flex: 1 }}>
+                        <IconButton
+                            onClick={() => {
+                                navigate(-1)
+                            }}
+                        >
+                            <IconArrowNarrowLeft color="var(--fc-strong)" />
+                        </IconButton>
+                    </Box>
+                    <Box
+                        sx={{ color: 'var(--accent)', fontWeight: '500' }}
                         onClick={() => {
-                            navigate('/projects')
+                            navigate(`/edit-project/${id}`, {
+                                relative: 'path',
+                            })
                         }}
                     >
-                        <IconArrowNarrowLeft color="var(--fc-strong)" />
-                    </IconButton>
+                        Edit
+                    </Box>
                 </div>
                 {project && userCtx.user && (
                     <div className={styles['rows']}>
@@ -64,7 +99,7 @@ const Project = () => {
                                     <div
                                         className={styles['project-type-chip']}
                                     >
-                                        {project.type === 1
+                                        {project.type == 1
                                             ? 'MAJOR PROJECT'
                                             : 'MINOR PROJECT'}
                                     </div>
@@ -238,6 +273,29 @@ const Project = () => {
                                 <p className="title">Details</p>
                                 <p>{project.details}</p>
                             </section>
+                            <section>
+                                <div className={styles['show_comments']}>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            gap: '8px',
+                                            flex: 1,
+                                        }}
+                                        onClick={() => {
+                                            setCommentOpen(true)
+                                        }}
+                                    >
+                                        <IconMessages />
+                                        <p>
+                                            See Comments{' '}
+                                            {total > 0 && (
+                                                <span>({total})</span>
+                                            )}
+                                        </p>
+                                    </Box>
+                                    <IconChevronRight />
+                                </div>
+                            </section>
                         </div>
                         <div className={styles['row2']}>
                             <ProjectApproval
@@ -248,6 +306,14 @@ const Project = () => {
                     </div>
                 )}
             </div>
+
+            <ProjectCommentsSwipe
+                isOpen={commentOpen}
+                setIsOpen={setCommentOpen}
+                project={project}
+                comments={comments}
+                refreshComments={loadComments}
+            />
             <BottomNavigationBar />
         </>
     )

@@ -1,6 +1,8 @@
 import { AppBar, Box, Fab, IconButton, Toolbar } from '@mui/material'
 import {
+    IconBell,
     IconBuilding,
+    IconFolderOpen,
     IconSubtask,
     IconUserSquareRounded,
 } from '@tabler/icons-react'
@@ -56,7 +58,7 @@ const BottomNavigationBar = (props) => {
     useEffect(() => {
         const insertNav = () => {
             setNavItems([])
-            if (hasPermission('401')) {
+            if (userCtx.hasPermission('401')) {
                 setNavItems((prev) => [
                     ...prev,
                     {
@@ -67,7 +69,7 @@ const BottomNavigationBar = (props) => {
                     },
                 ])
             }
-            if (hasPermission('101') || hasPermission('102')) {
+            if (userCtx.hasPermission('101') || userCtx.hasPermission('102')) {
                 setNavItems((prev) => [
                     ...prev,
                     {
@@ -79,10 +81,10 @@ const BottomNavigationBar = (props) => {
                 ])
             }
             if (
-                hasPermission('201') ||
-                hasPermission('202') ||
-                hasPermission('203') ||
-                hasPermission('204')
+                userCtx.hasPermission('201') ||
+                userCtx.hasPermission('202') ||
+                userCtx.hasPermission('203') ||
+                userCtx.hasPermission('204')
             ) {
                 setNavItems((prev) => [
                     ...prev,
@@ -94,7 +96,7 @@ const BottomNavigationBar = (props) => {
                     },
                 ])
             }
-            if (hasPermission('301')) {
+            if (userCtx.hasPermission('301')) {
                 setNavItems((prev) => [
                     ...prev,
                     {
@@ -109,9 +111,35 @@ const BottomNavigationBar = (props) => {
                 ...prev,
                 {
                     index: 4,
+                    name: 'Notifications',
+                    url: '/notifications',
+                    icon: <IconBell />,
+                },
+            ])
+            setNavItems((prev) => [
+                ...prev,
+                {
+                    index: 6,
                     name: 'Profile',
-                    url: '/',
-                    icon: <IconUserSquareRounded />,
+                    url: '/profile',
+                    icon: (
+                        <IconUserSquareRounded
+                        // onClick={() => userCtx.onLogout()}
+                        />
+                    ),
+                },
+            ])
+            setNavItems((prev) => [
+                ...prev,
+                {
+                    index: 5,
+                    name: 'Reports',
+                    url: '/reports',
+                    icon: (
+                        <IconFolderOpen
+                        // onClick={() => userCtx.onLogout()}
+                        />
+                    ),
                 },
             ])
         }
@@ -153,7 +181,8 @@ const BottomNavigationBar = (props) => {
                                         }
                                     >
                                         {item.icon}
-                                        {item.name}
+                                        {selectedItem === item.index &&
+                                            item.name}
                                     </Box>
                                 </IconButton>
                             </Box>

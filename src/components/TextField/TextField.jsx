@@ -28,6 +28,10 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
             boxShadow: `rgba(var(--accent-rgb), 0.12) 0 0 0 .2em`,
             borderColor: 'var(--accent)',
         },
+        '&:disabled': {
+            // boxShadow: `rgba(var(--accent-rgb), 0.12) 0 0 0 .2em`,
+            backgroundColor: 'var(--bg-layer2)',
+        },
     },
 }))
 

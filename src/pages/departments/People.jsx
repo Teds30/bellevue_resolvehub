@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import useHttp from '../../hooks/http-hook'
 
 import styles from './Positions.module.css'
@@ -22,11 +22,14 @@ import AddPosition from './AddPosition'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import EditPerson from './EditPerson'
 import AddPerson from './AddPerson'
+import AuthContext from '../../context/auth-context'
+import BellevueLoading from '../../components/LoadingSpinner/BellevueLoading'
 
 const People = (props) => {
     const { department_id } = props
 
     const navigate = useNavigate()
+    const userCtx = useContext(AuthContext)
 
     const { sendRequest, isLoading } = useHttp()
     const [people, setPeople] = useState([])
@@ -74,14 +77,16 @@ const People = (props) => {
                             </h4>
                             <p>{person.position.name}</p>
                         </div>
-                        <IconButton
-                            onClick={() => {
-                                handleOpen()
-                                setEditing(person.id)
-                            }}
-                        >
-                            <IconPencil />
-                        </IconButton>
+                        {userCtx.user && userCtx.hasPermission('306') && (
+                            <IconButton
+                                onClick={() => {
+                                    handleOpen()
+                                    setEditing(person.id)
+                                }}
+                            >
+                                <IconPencil />
+                            </IconButton>
+                        )}
                         {editing === person.id && (
                             <EditPerson
                                 department_id={department_id}
@@ -94,27 +99,46 @@ const People = (props) => {
                     </div>
                 ))}
 
+            {isLoading && (
+                <Box
+                    sx={{
+                        marginTop: '48px',
+                        width: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '48px',
+                    }}
+                >
+                    <BellevueLoading />
+                    <h4>Fetching</h4>
+                </Box>
+            )}
+
             <AddPerson
                 department_id={department_id}
                 loadData={loadData}
                 open={openAdd}
                 handleClose={handleAddClose}
             />
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    marginTop: '48px',
-                }}
-            >
-                <PrimaryButton
-                    width="250px"
-                    leftIcon={<IconPlus />}
-                    onClick={handleAddOpen}
+            {!isLoading && userCtx.user && userCtx.hasPermission('305') && (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginTop: '48px',
+                    }}
                 >
-                    Add new
-                </PrimaryButton>
-            </Box>
+                    <PrimaryButton
+                        width="250px"
+                        leftIcon={<IconPlus />}
+                        onClick={handleAddOpen}
+                    >
+                        Add new
+                    </PrimaryButton>
+                </Box>
+            )}
         </div>
     )
 }

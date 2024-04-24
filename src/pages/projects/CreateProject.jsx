@@ -53,7 +53,7 @@ const CreateProject = () => {
     const [departments, setDepartments] = useState()
     const [issues, setIssues] = useState()
     const userCtx = useContext(AuthContext)
-    const { sendRequest } = useHttp()
+    const { sendRequest, isLoading } = useHttp()
 
     const [people, setPeople] = useState([])
     const [selectedPerson, setPerson] = useState()
@@ -66,7 +66,7 @@ const CreateProject = () => {
     const [deadlineDate, setDeadlineDate] = useState()
     const [deadlineTime, setDeadlineTime] = useState()
 
-    const { hasPermission } = userPermission()
+    // const { hasPermission } = userPermission()
 
     const navigate = useNavigate()
 
@@ -86,7 +86,6 @@ const CreateProject = () => {
     const [selectedDepartment, setSelectedDepartment] = useState()
 
     const handleSelectDepartment = (e) => {
-        console.log(e.target.value)
         setSelectedDepartment(e.target.value)
     }
 
@@ -195,7 +194,12 @@ const CreateProject = () => {
     return (
         <div className={styles['container']}>
             <div className={styles['topnav']}>
-                <IconButton aria-label="delete">
+                <IconButton
+                    aria-label="delete"
+                    onClick={() => {
+                        navigate(-1)
+                    }}
+                >
                     <IconArrowNarrowLeft color="var(--fc-strong)" />
                 </IconButton>
                 <h3>Create a project</h3>
@@ -205,7 +209,7 @@ const CreateProject = () => {
                 ref={isMajorRef}
                 id="toggle"
                 onChange={handleCheckboxChange}
-                disabled={!hasPermission('206')}
+                disabled={userCtx.user && !userCtx.hasPermission('206')}
                 class={styles['toggleCheckbox']}
             />
             <label for="toggle" class={styles['toggleContainer']}>
@@ -327,7 +331,12 @@ const CreateProject = () => {
                 </Box>
             </Box>
 
-            <PrimaryButton disabled={!formIsValid} onClick={handleSubmit}>
+            <PrimaryButton
+                disabled={!formIsValid}
+                onClick={handleSubmit}
+                isLoading={isLoading}
+                loadingText="Creating Project"
+            >
                 Create Project
             </PrimaryButton>
         </div>

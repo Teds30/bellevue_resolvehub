@@ -1,5 +1,9 @@
-importScripts('https://www.gstatic.com/firebasejs/8.2.0/firebase-app.js')
-importScripts('https://www.gstatic.com/firebasejs/8.2.0/firebase-messaging.js')
+// importScripts(
+//     'https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js'
+// )
+// importScripts(
+//     'https://www.gstatic.com/firebasejs/10.0.0/firebase-messaging-compat.js'
+// )
 
 // Initialize the Firebase app in the service worker by passing the generated config
 const firebaseConfig = {
@@ -11,22 +15,39 @@ const firebaseConfig = {
     appId: '1:329712442874:web:3d700e0a0a94ffa6261843',
 }
 
-firebase.initializeApp(firebaseConfig)
+// firebase.initializeApp(firebaseConfig)
+// const messaging = firebase.messaging()
 
-// Retrieve firebase messaging
-const messaging = firebase.messaging()
+console.log('initializing')
 
-messaging.onBackgroundMessage(function (payload) {
-    console.log('Received background message ', payload)
+// messaging.onBackgroundMessage((payload) => {
+//     console.log('listening')
+//     console.log(
+//         '[firebase-messaging-sw.js] Received background message ',
+//         payload
+//     )
 
-    const notificationTitle = payload.notification.title
-    const notificationOptions = {
-        body: payload.notification.body,
-        click_action: payload.notification.click_action, // To handle notification click when notification is moved to notification tray
-        data: {
-            click_action: payload.notification.click_action,
-        },
-    }
+//     const notificationTitle = 'Background Message Title'
+//     const notificationOptions = {
+//         body: 'Background Message body.',
+//     }
 
-    self.registration.showNotification(notificationTitle, notificationOptions)
-})
+//     return self.registration.showNotification(
+//         notificationTitle,
+//         notificationOptions
+//     )
+// })
+
+// // // Retrieve firebase messaging
+// const messaging = firebase.messaging()
+
+// messaging.onBackgroundMessage(function (payload) {
+//     console.log('Received background message ', payload)
+
+//     const notificationTitle = payload.notification.title
+//     const notificationOptions = {
+//         body: payload.notification.body,
+//     }
+
+//     self.registration.showNotification(notificationTitle, notificationOptions)
+// })

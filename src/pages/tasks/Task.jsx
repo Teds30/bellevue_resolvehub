@@ -13,6 +13,7 @@ import AuthContext from '../../context/auth-context'
 import {
     IconArrowNarrowLeft,
     IconBuilding,
+    IconCircleCheck,
     IconCircleCheckFilled,
     IconCircleXFilled,
 } from '@tabler/icons-react'
@@ -24,6 +25,7 @@ import SwipeableCard from '../../components/SwipeableCard/SwipeableCard'
 import TaskAssignSelf from './TaskAssignSelf'
 import TaskAssignor from './TaskAssignor'
 import userPermission from '../../hooks/userPermission'
+import { IconHourglassHigh } from '@tabler/icons-react'
 
 const Task = () => {
     const { sendRequest } = useHttp()
@@ -78,18 +80,31 @@ const Task = () => {
                 <IconButton
                     aria-label="delete"
                     onClick={() => {
-                        navigate('/tasks')
+                        navigate(-1)
                     }}
                 >
                     <IconArrowNarrowLeft color="var(--fc-strong)" />
                 </IconButton>
             </div>
-            {task && userCtx.user && (
+            {task && (
                 <div className={styles['rows']}>
                     <div className={styles['row1']}>
                         <div>
                             <p className="pre-title">ISSUE</p>
-                            <h2>{task && task.issue.name}</h2>
+                            <h2
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                }}
+                            >
+                                {task.issue}
+                                {task.status == 4 && (
+                                    <span style={{ marginLeft: '4px' }}>
+                                        <IconCircleCheck color="#03b077" />
+                                    </span>
+                                )}
+                            </h2>
                         </div>
                         <div className={styles['info-container']}>
                             <div className={styles['info']}>
@@ -123,7 +138,7 @@ const Task = () => {
                             </div>
                             <div className={styles['info-line']}></div>
                             <div className={styles['info']}>
-                                <p className="pre-title">ROOM</p>
+                                <p className="pre-title">AREA</p>
                                 <div className={styles['info-data']}>
                                     <p>{task && task.room}</p>
                                 </div>
@@ -133,7 +148,7 @@ const Task = () => {
                             )}
                             {task && task.schedule && (
                                 <div className={styles['info']}>
-                                    <p className="pre-title">SCHEDULE</p>
+                                    <p className="pre-title">DEADLINE</p>
 
                                     <div className={styles['info-data']}>
                                         <Box
@@ -156,7 +171,7 @@ const Task = () => {
                         </div>
                         <section>
                             <p className="title">Details</p>
-                            <p>{task && task.details}</p>
+                            <p>{task.details}</p>
                         </section>
                         <section>
                             <p className="title">Images</p>
@@ -228,6 +243,7 @@ const Task = () => {
                             //TODO: PERMISSION change to dynamic
                         }
                         {task &&
+                            userCtx.user &&
                             task.assignee_id === null &&
                             task.requestor.id === userCtx.user.id &&
                             hasPermission('103') && (
@@ -240,22 +256,54 @@ const Task = () => {
                         {
                             //TODO: PERMISSION change to dynamic
                         }
-                        {task && hasPermission('104') && task.status !== 4 && (
-                            <div className={styles['row2']}>
-                                <TaskAssignor
-                                    task={task}
-                                    onRefreshData={loadData}
-                                />
-                            </div>
-                        )}
+                        {task &&
+                            userCtx.user &&
+                            hasPermission('104') &&
+                            task.status !== 4 && (
+                                <div className={styles['row2']}>
+                                    <TaskAssignor
+                                        task={task}
+                                        onRefreshData={loadData}
+                                    />
+                                </div>
+                            )}
                     </div>
 
                     <div className={styles['row2']}>
-                        {task && task.assignee_id === userCtx.user.id && (
-                            <TaskAssignee
-                                onRefreshData={loadData}
-                                task={task}
-                            />
+                        {task &&
+                            userCtx.user &&
+                            task.assignee_id === userCtx.user.id && (
+                                <TaskAssignee
+                                    onRefreshData={loadData}
+                                    task={task}
+                                />
+                            )}
+                        {task && task.pending_reason && (
+                            <div className={styles['marked-done-container']}>
+                                <div
+                                    className={
+                                        styles['marked-done-title-pending']
+                                    }
+                                >
+                                    <IconHourglassHigh
+                                        style={{
+                                            color: 'var(--fc-body)',
+                                        }}
+                                    />
+                                    <p>
+                                        <strong>Pending </strong> by{' '}
+                                        {task.pending_marker.first_name}{' '}
+                                        {task.pending_marker.last_name}.
+                                    </p>
+                                </div>
+                                <div className={styles['marked-done-details']}>
+                                    <p className="title">Reason</p>
+                                    <div className={styles['done-content']}>
+                                        <div className={styles['border']}></div>
+                                        <p>{task.pending_reason}</p>
+                                    </div>
+                                </div>
+                            </div>
                         )}
                         {task && task.status === 4 ? (
                             <div className={styles['marked-done-container']}>

@@ -1,5 +1,12 @@
 {
-    "short_name": "Bellevue OssMS",
-    "name": "Bellevue OMssS",
-    "display": "standalone"
+    "short_name": "Bellevue OMS",
+    "name": "Bellevue OMS",
+    "display": "standalone",
+    "icons": [
+        {
+          "src": "https://www.thebellevuemanila.com/wp-content/uploads/2022/08/fav.png",
+          "type": "image/png",
+          "sizes": "512x512"
+        }
+      ]
   }

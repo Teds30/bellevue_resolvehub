@@ -9,18 +9,16 @@ import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
-import { Box, Fab, IconButton } from '@mui/material'
+import { Box, Fab, IconButton, Skeleton } from '@mui/material'
 import ProjectsList from './ProjectsList'
 import AuthContext from '../../context/auth-context'
 import { IconPlus } from '@tabler/icons-react'
-import userPermission from '../../hooks/userPermission'
 import { useNavigate } from 'react-router-dom'
 
 const MyProjects = () => {
     const [projects, setProjects] = useState([])
     const [myProjects, setMyProjects] = useState([])
     const [assignedProjects, setAssignedProjects] = useState([])
-    const { hasPermission } = userPermission()
     const navigate = useNavigate()
 
     const { sendRequest, isLoading } = useHttp()
@@ -80,7 +78,6 @@ const MyProjects = () => {
         <>
             <div className={styles['container']}>
                 <h2>Projects</h2>
-
                 <TabContext value={value}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <TabList
@@ -96,9 +93,11 @@ const MyProjects = () => {
                             }}
                             // indicatorColor='red'
                         >
-                            {(hasPermission('201') || hasPermission('202')) && (
-                                <Tab label="Department" value={0} />
-                            )}
+                            {userCtx.user &&
+                                (userCtx.hasPermission('201') ||
+                                    userCtx.hasPermission('202')) && (
+                                    <Tab label="Department" value={0} />
+                                )}
                             <Tab label="Assigned" value={1} />
                             <Tab label="My Projects" value={2} />
                         </TabList>
@@ -127,11 +126,12 @@ const MyProjects = () => {
                     </TabPanel>
                 </TabContext>
             </div>
-            {hasPermission('217') && (
+
+            {userCtx.user && userCtx.hasPermission('217') && (
                 <Fab
                     variant={'extended'}
                     sx={{
-                        position: 'absolute',
+                        position: 'fixed',
                         bottom: 80,
                         right: 16,
                         color: '#fff',
@@ -147,6 +147,7 @@ const MyProjects = () => {
                     <IconPlus sx={{ mr: 1 }} /> new project
                 </Fab>
             )}
+
             <BottomNavigationBar current={2} />
         </>
     )

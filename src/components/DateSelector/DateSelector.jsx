@@ -4,10 +4,27 @@ import dayjs, { Dayjs } from '`dayjs`'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import { styled } from '@mui/material/styles'
 import { MobileDatePicker } from '@mui/x-date-pickers'
 
+const StyledDatePicker = styled(MobileDatePicker)(
+    ({ theme }) => `
+      .MuiOutlinedInput-root {
+        border-radius: 15px;
+        border-color: var(--accent);
+        box-shadow: rgba(var(--accent-rgb), 0.12) 0 0 0 .2em,
+      } 
+    `
+)
+
 const DateSelector = (props) => {
-    const { currentValue, handleSetValue, defaultValue = dayjs() } = props
+    const {
+        currentValue,
+        handleSetValue,
+        defaultValue = dayjs(),
+        label,
+        views,
+    } = props
 
     const [value, setValue] = React.useState(currentValue)
 
@@ -20,13 +37,27 @@ const DateSelector = (props) => {
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <MobileDatePicker
+            <StyledDatePicker
                 defaultValue={defaultValue}
-                label="Select date"
                 value={value}
                 onChange={(newValue) => {
                     setValue(newValue)
                     handleSetValue(newValue)
+                }}
+                views={views && views}
+                label={label ?? 'Select date'}
+                sx={{
+                    '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                            borderColor: 'var(--accent)',
+                        },
+                        '&:hover fieldset': {
+                            borderColor: 'var(--accent)',
+                        },
+                        '&.Mui-focused fieldset': {
+                            borderColor: 'var(--accent)',
+                        },
+                    },
                 }}
             />
         </LocalizationProvider>

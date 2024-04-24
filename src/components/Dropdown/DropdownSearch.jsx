@@ -41,6 +41,8 @@ const DropdownSearch = ({
     defaultValue,
     disabled,
     customEndAdornment,
+    isFreeText = false,
+    isLoading = false,
 }) => {
     const [isOpen, setIsOpen] = useState(false)
 
@@ -71,11 +73,14 @@ const DropdownSearch = ({
                     </p>
                 )}
                 <Autocomplete
+                    freeSolo={isFreeText}
                     key={value}
                     disabled={disabled}
                     defaultValue={defaultValue}
                     value={value}
-                    getOptionLabel={(option) => option.name}
+                    getOptionLabel={(option) => {
+                        return option.name || option
+                    }}
                     onChange={(event, newValue) => {
                         onValueChange(newValue)
                     }}
@@ -92,7 +97,7 @@ const DropdownSearch = ({
                     options={options}
                     renderOption={(props, option) =>
                         isPerson ? (
-                            <li {...props}>
+                            <li {...props} key={option.id}>
                                 <ListItemAvatar>
                                     <Avatar
                                         alt={option.name}
@@ -105,7 +110,7 @@ const DropdownSearch = ({
                                 />
                             </li>
                         ) : (
-                            <li {...props}>
+                            <li {...props} key={option.name}>
                                 <ListItemText primary={option.name} />
                             </li>
                         )

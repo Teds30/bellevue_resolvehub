@@ -17,7 +17,6 @@ const TasksSection = () => {
 
     useEffect(() => {
         const loadData = async () => {
-            console.log('asdsssssssss')
             const res = await sendRequest({
                 url: `${import.meta.env.VITE_BACKEND_URL}/api/tasks_metric/${
                     userCtx.user.position.department_id

@@ -62,7 +62,7 @@ const TaskAssignee = (props) => {
         reset: remarksReset,
     } = useValidate((value) => value.trim() !== '')
 
-    const { sendRequest } = useHttp()
+    const { sendRequest, isLoading } = useHttp()
     const userCtx = useContext(AuthContext)
 
     const { hasPermission } = userPermission()
@@ -218,6 +218,8 @@ const TaskAssignee = (props) => {
                                 <OutlinedButton
                                     btnType="danger"
                                     onClick={toggleCancelDrawer}
+                                    isLoading={isLoading}
+                                    loadingText="Cancelling"
                                 >
                                     Cancel
                                 </OutlinedButton>
@@ -226,6 +228,8 @@ const TaskAssignee = (props) => {
                                 <PrimaryButton
                                     width="100%"
                                     onClick={handleAccept}
+                                    isLoading={isLoading}
+                                    loadingText="Accepting"
                                 >
                                     Accept
                                 </PrimaryButton>
@@ -243,8 +247,10 @@ const TaskAssignee = (props) => {
                             <PrimaryButton
                                 width="100%"
                                 onClick={toggleSubmitDrawer}
+                                isLoading={isLoading}
+                                loadingText="Accomplishing"
                             >
-                                Mark as Done
+                                Accomplish
                             </PrimaryButton>
                             <Box
                                 sx={{
@@ -257,6 +263,8 @@ const TaskAssignee = (props) => {
                                         btnType="danger"
                                         width="100%"
                                         onClick={toggleCancelDrawer}
+                                        isLoading={isLoading}
+                                        loadingText="Cancelling"
                                     >
                                         Cancel
                                     </OutlinedButton>
@@ -265,6 +273,8 @@ const TaskAssignee = (props) => {
                                     <OutlinedButton
                                         width="100%"
                                         onClick={togglePendingDrawer}
+                                        isLoading={isLoading}
+                                        loadingText="Pending"
                                     >
                                         Pending
                                     </OutlinedButton>
@@ -336,6 +346,8 @@ const TaskAssignee = (props) => {
                     <OutlinedButton
                         onClick={handlePending}
                         disabled={!pendingReasonIsValid}
+                        isLoading={isLoading}
+                        loadingText="Pending"
                     >
                         Mark Pending
                     </OutlinedButton>
@@ -377,6 +389,8 @@ const TaskAssignee = (props) => {
                         btnType="danger"
                         onClick={handleCancel}
                         disabled={!cancelReasonIsValid}
+                        isLoading={isLoading}
+                        loadingText="Cancelling Task"
                     >
                         Cancel Task
                     </OutlinedButton>
@@ -431,8 +445,10 @@ const TaskAssignee = (props) => {
                     <PrimaryButton
                         onClick={handleDone}
                         disabled={!remarksIsValid || !actionTakenIsValid}
+                        isLoading={isLoading}
+                        loadingText="Accomplishing"
                     >
-                        Mark as Done
+                        Accomplish
                     </PrimaryButton>
                 </Box>
             </SwipeableCard>
