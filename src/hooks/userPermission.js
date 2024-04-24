@@ -1,12 +1,11 @@
-import { useContext } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import useHttp from './http-hook'
 import AuthContext from '../context/auth-context'
 
 const userPermission = (code) => {
-    const { sendRequest } = useHttp()
     const userCtx = useContext(AuthContext)
 
-    const hasPermission = (code) => {
+    const hasPermission = useCallback((code) => {
         if (
             userCtx.user &&
             userCtx.user.permissions &&
@@ -16,7 +15,7 @@ const userPermission = (code) => {
         }
 
         return false
-    }
+    }, [])
 
     return {
         hasPermission,

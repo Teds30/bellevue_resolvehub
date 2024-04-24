@@ -23,6 +23,7 @@
 .topnav {
     display: flex;
     width: 100%;
+    align-items: center;
 }
 
 .schedule-container {
@@ -69,6 +70,16 @@
     border-radius: 50%;
 
     background-color: rgba(235, 88, 88, 0.1);
+}
+
+.show_comments {
+    display: flex;
+    gap: 12px;
+
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    /* width: fit-content; */
+    padding: 8px 12px;
 }
 
 @media (min-width: 768px) {

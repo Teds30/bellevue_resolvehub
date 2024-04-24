@@ -1,24 +1,45 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import useHttp from '../../hooks/http-hook'
 
 import styles from './Departments.module.css'
 import { useNavigate } from 'react-router-dom'
+import AuthContext from '../../context/auth-context'
+
 const DepartmentList = () => {
+    const userCtx = useContext(AuthContext)
     const navigate = useNavigate()
     const { sendRequest, isLoading } = useHttp()
     const [departments, setDepartments] = useState([])
 
+    const loadAllDepartments = async () => {
+        const res = await sendRequest({
+            url: `${import.meta.env.VITE_BACKEND_URL}/api/departments`,
+        })
+
+        setDepartments(res.data)
+    }
+
+    const loadUserDepartment = async () => {
+        const res = await sendRequest({
+            url: `${import.meta.env.VITE_BACKEND_URL}/api/departments/${
+                userCtx.user.position.department_id
+            }`,
+        })
+
+        setDepartments([res.data])
+    }
+
     useEffect(() => {
         const loadData = async () => {
-            const res = await sendRequest({
-                url: `${import.meta.env.VITE_BACKEND_URL}/api/departments`,
-            })
-
-            setDepartments(res.data)
+            if (userCtx.hasPermission('302')) {
+                loadAllDepartments()
+            } else {
+                loadUserDepartment()
+            }
         }
 
-        loadData()
-    }, [])
+        if (userCtx.user) loadData()
+    }, [userCtx])
 
     return (
         <div>

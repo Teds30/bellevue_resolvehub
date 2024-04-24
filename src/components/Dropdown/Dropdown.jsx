@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Box from '@mui/material/Box'
+import { Box, Divider } from '@mui/material'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
@@ -96,13 +96,44 @@ export default function Dropdown(props) {
                     <MenuItem disabled value="">
                         <em>{placeholder}</em>
                     </MenuItem>
-                    {items.map((item) => {
-                        return (
-                            <MenuItem key={item.id} value={item.id}>
-                                {item.name}
-                            </MenuItem>
-                        )
-                    })}
+                    {items
+                        .filter((i) => i.divided == null || i.divided == false)
+                        .map((item) => {
+                            if (item.divided) {
+                                return (
+                                    <MenuItem key={item.id} value={item.id}>
+                                        {item.name}
+                                    </MenuItem>
+                                )
+                            }
+
+                            return (
+                                <MenuItem key={item.id} value={item.id}>
+                                    {item.name}
+                                </MenuItem>
+                            )
+                        })}
+                    {items.filter((i) => i.divided == true).length > 0 && (
+                        <Divider />
+                    )}
+
+                    {items
+                        .filter((i) => i.divided == true)
+                        .map((item) => {
+                            if (item.divided) {
+                                return (
+                                    <MenuItem key={item.id} value={item.id}>
+                                        {item.name}
+                                    </MenuItem>
+                                )
+                            }
+
+                            return (
+                                <MenuItem key={item.id} value={item.id}>
+                                    {item.name}
+                                </MenuItem>
+                            )
+                        })}
                 </StyledSelect>
             </FormControl>
         </Box>

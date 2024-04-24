@@ -10,6 +10,7 @@ const IssueSection = () => {
     const { sendRequest } = useHttp()
 
     const [graphData, setGraphData] = useState()
+    const [selectedMetric, setSelectedMetric] = useState(1)
     const [reports, setReports] = useState()
 
     useEffect(() => {
@@ -32,17 +33,40 @@ const IssueSection = () => {
         loadData()
     }, [])
 
+    const handleSelectMetric = async (e) => {
+        if (e.target.value === 1) {
+            const res = await sendRequest({
+                url: `${
+                    import.meta.env.VITE_BACKEND_URL
+                }/api/issues_metric/week`,
+            })
+
+            setGraphData(res)
+        } else if (e.target.value === 2) {
+            const res = await sendRequest({
+                url: `${
+                    import.meta.env.VITE_BACKEND_URL
+                }/api/issues_metric/month`,
+            })
+
+            setGraphData(res)
+        }
+        setSelectedMetric(e.target.value)
+    }
+
     return (
         <section className={styles['container']}>
             <Dropdown
                 leadingIcon={<IconBuilding size={20} color="var(--fc-body)" />}
                 label="Filter"
                 placeholder="Select filter"
-                items={[{ id: 1, name: 'Weekly' }]}
-                value={1}
-                selected={1}
-                disabled={true}
-                // handleSelect={handleSelectDepartment}
+                items={[
+                    { id: 1, name: 'Weekly' },
+                    { id: 2, name: 'Monthly' },
+                ]}
+                value={selectedMetric}
+                selected={selectedMetric}
+                handleSelect={handleSelectMetric}
             />
 
             {graphData && (
@@ -81,10 +105,10 @@ const IssueSection = () => {
             <div className={styles['most-reported']}>
                 <h4>Most reported issues</h4>
                 <div className={styles['reports']}>
-                    {reports?.map((report) => {
+                    {reports?.map((report, index) => {
                         return (
-                            <div className={styles['report']}>
-                                <p>{report.issue.name}</p>
+                            <div className={styles['report']} key={index}>
+                                <p>{report.issue}</p>
                                 <p className="title">{report.total}</p>
                             </div>
                         )

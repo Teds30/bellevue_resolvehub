@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
+import useAuth from '../hooks/auth-hook'
 
 const AuthContext = React.createContext({
     user: {},
@@ -6,10 +7,19 @@ const AuthContext = React.createContext({
     isLoggedIn: false,
     onLogout: () => {},
     onLogin: (user, token) => {},
+    hasPermission: (code) => {},
 })
 
 export const AuthContextProvider = (props) => {
-    const { user, token, loginHandler, logoutHandler, isLoggedIn } = useAuth()
+    const {
+        user,
+        token,
+        loginHandler,
+        logoutHandler,
+        isLoggedIn,
+        hasPermission,
+        fetchUserData,
+    } = useAuth()
 
     return (
         <AuthContext.Provider
@@ -19,6 +29,8 @@ export const AuthContextProvider = (props) => {
                 isLoggedIn: isLoggedIn,
                 onLogout: logoutHandler,
                 onLogin: loginHandler,
+                hasPermission: hasPermission,
+                fetchUserData: fetchUserData,
             }}
         >
             {props.children}

@@ -3,9 +3,12 @@ import React, { useEffect, useRef, useState } from 'react'
 import { IconPlus, IconX } from '@tabler/icons-react'
 
 import styles from './UploadedImages.module.css'
+import useNotistack from '../../hooks/notistack-hook'
 
 const UploadedImages = (props) => {
     const { uploadedImages, setUploadedImages } = props
+
+    const { notify } = useNotistack()
 
     // const [uploadedImages, setUploadedImages] = useState([])
     const imgRef = useRef()
@@ -13,7 +16,14 @@ const UploadedImages = (props) => {
     const addImageChangeHandler = (event) => {
         const selectedImage = event.target.files[0]
 
-        if (selectedImage && selectedImage.size > 5 * 1024 * 1024) {
+        if (!selectedImage.type.startsWith('image/')) {
+            // If not an image, you can handle it accordingly (e.g., show an error message)
+            console.log('File is not an image.')
+            notify('File is not an image.', 'error')
+            return
+        }
+
+        if (selectedImage && selectedImage.size > 20 * 1024 * 1024) {
             return
         }
 

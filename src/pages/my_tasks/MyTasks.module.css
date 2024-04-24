@@ -1,16 +1,19 @@
 .container {
     width: 100%;
+    padding: 24px 12px;
 }
 .nav_container {
     display: flex;
-    overflow-x: auto;
+    overflow-x: scroll;
     text-wrap: nowrap;
 }
 .nav_btn {
-    padding: 14px 24px;
+    padding: 14px;
 
     background-color: none;
     color: var(--fc-body);
+
+    white-space: nowrap;
 
     display: flex;
     justify-content: center;
@@ -22,12 +25,15 @@
 }
 
 .nav_btn_active {
+    padding: 14px 24px;
     background-color: var(--fc-strong);
     color: #fff;
+
+    transition: 0.2s;
 }
 
 .tasks_container {
-    margin-top: 12px;
+    margin-top: 24px;
     display: flex;
     gap: 20px;
     flex-wrap: wrap;

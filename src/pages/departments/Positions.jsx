@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import useHttp from '../../hooks/http-hook'
 
 import styles from './Positions.module.css'
@@ -14,6 +14,8 @@ import useValidate from '../../hooks/validate-input-hook'
 import OutlinedButton from '../../components/Button/OutlinedButton'
 import PrimaryButton from '../../components/Button/PrimaryButton'
 import AddPosition from './AddPosition'
+import AuthContext from '../../context/auth-context'
+import BellevueLoading from '../../components/LoadingSpinner/BellevueLoading'
 
 const Positions = (props) => {
     const { department_id } = props
@@ -29,6 +31,7 @@ const Positions = (props) => {
     } = useValidate((value) => value.trim() !== '')
 
     const navigate = useNavigate()
+    const userCtx = useContext(AuthContext)
 
     const { sendRequest, isLoading } = useHttp()
     const [positions, setPositions] = useState([])
@@ -100,15 +103,36 @@ const Positions = (props) => {
                                 </Moment>
                             </p>
                         </div>
-                        <IconButton
-                            onClick={() => {
-                                handleOpen()
-                                setEditing(position.id)
-                                titleDefaultValue(position.name)
-                            }}
-                        >
-                            <IconPencil />
-                        </IconButton>
+                        {isLoading && (
+                            <Box
+                                sx={{
+                                    marginTop: '48px',
+                                    width: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '48px',
+                                }}
+                            >
+                                <BellevueLoading />
+                                <h4>Fetching</h4>
+                            </Box>
+                        )}
+
+                        {!isLoading &&
+                            userCtx.user &&
+                            userCtx.hasPermission('304') && (
+                                <IconButton
+                                    onClick={() => {
+                                        handleOpen()
+                                        setEditing(position.id)
+                                        titleDefaultValue(position.name)
+                                    }}
+                                >
+                                    <IconPencil />
+                                </IconButton>
+                            )}
                         <Backdrop
                             sx={{
                                 color: '#fff',
@@ -207,23 +231,42 @@ const Positions = (props) => {
                         </Backdrop>
                     </div>
                 ))}
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    marginTop: '48px',
-                }}
-            >
-                <PrimaryButton
-                    width="250px"
-                    leftIcon={<IconPlus />}
-                    onClick={() => {
-                        setOpenAdd(true)
+            {isLoading && (
+                <Box
+                    sx={{
+                        marginTop: '48px',
+                        width: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '48px',
                     }}
                 >
-                    Add new
-                </PrimaryButton>
-            </Box>
+                    <BellevueLoading />
+                    <h4>Fetching</h4>
+                </Box>
+            )}
+
+            {!isLoading && userCtx.user && userCtx.hasPermission('303') && (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginTop: '48px',
+                    }}
+                >
+                    <PrimaryButton
+                        width="250px"
+                        leftIcon={<IconPlus />}
+                        onClick={() => {
+                            setOpenAdd(true)
+                        }}
+                    >
+                        Add new
+                    </PrimaryButton>
+                </Box>
+            )}
             {openAdd && (
                 <AddPosition
                     department_id={department_id}

@@ -84,7 +84,7 @@ const ReportIssue = () => {
         enteredRoomIsValid &&
         enteredDetailsIsValid &&
         !!selectedDepartment &&
-        !!selectedIssue
+        !!inputValue
 
     const handleFileUpload = async (image, task_id, i) => {
         const formData = new FormData()
@@ -131,7 +131,7 @@ const ReportIssue = () => {
                 url: `${import.meta.env.VITE_BACKEND_URL}/api/tasks`,
                 body: JSON.stringify({
                     room: enteredRoom,
-                    issue_id: selectedIssue.id,
+                    issue: inputValue,
                     details: enteredDetails,
                     department_id: selectedDepartment,
                     requestor_id: userCtx.user.id,
@@ -159,6 +159,10 @@ const ReportIssue = () => {
         }
     }
 
+    useEffect(() => {
+        console.log(selectedIssue)
+    }, [selectedIssue])
+
     return (
         <div className={styles['container']}>
             <div className={styles['topnav']}>
@@ -173,12 +177,12 @@ const ReportIssue = () => {
                 <h3>Report an Issue</h3>
             </div>
             <TextField
-                label="Room"
-                placeholder="Enter the room number"
+                label="Area"
+                placeholder="Enter the area"
                 value={enteredRoom}
                 onChange={roomChangeHandler}
                 onBlur={roomBlurHandler}
-                helperText={enteredRoomHasError && 'Please enter the room ID.'}
+                helperText={enteredRoomHasError && 'Invalid input.'}
                 error
             />
             <Dropdown
@@ -192,16 +196,18 @@ const ReportIssue = () => {
             />
 
             <DropdownSearch
+                disabled={!issues}
                 label="Issue"
                 leadingIcon={
                     <IconMessageReport size={20} color="var(--fc-body)" />
                 }
                 value={selectedIssue}
-                placeholder="Select issue"
+                placeholder={issues ? 'Select issue' : 'Loading'}
                 onValueChange={setSelectedIssue}
                 onInputChange={setInputValue}
                 inputValue={inputValue}
                 options={issues}
+                isFreeText={true}
             />
 
             <TextField
@@ -228,7 +234,12 @@ const ReportIssue = () => {
                 setUploadedImages={setUploadedImages}
             />
 
-            <PrimaryButton disabled={!formIsValid} onClick={handleSubmit}>
+            <PrimaryButton
+                disabled={!formIsValid}
+                onClick={handleSubmit}
+                isLoading={formIsValid && isLoading}
+                loadingText="Submitting Issue"
+            >
                 Submit Issue
             </PrimaryButton>
         </div>
