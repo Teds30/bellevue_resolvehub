@@ -1,9 +1,9 @@
-// importScripts(
-//     'https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js'
-// )
-// importScripts(
-//     'https://www.gstatic.com/firebasejs/10.0.0/firebase-messaging-compat.js'
-// )
+importScripts(
+    'https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js'
+)
+importScripts(
+    'https://www.gstatic.com/firebasejs/10.0.0/firebase-messaging-compat.js'
+)
 
 // Initialize the Firebase app in the service worker by passing the generated config
 const firebaseConfig = {
@@ -15,28 +15,23 @@ const firebaseConfig = {
     appId: '1:329712442874:web:3d700e0a0a94ffa6261843',
 }
 
-// firebase.initializeApp(firebaseConfig)
-// const messaging = firebase.messaging()
+firebase.initializeApp(firebaseConfig)
+const messaging = firebase.messaging()
 
 console.log('initializing')
 
-// messaging.onBackgroundMessage((payload) => {
-//     console.log('listening')
-//     console.log(
-//         '[firebase-messaging-sw.js] Received background message ',
-//         payload
-//     )
+messaging.onBackgroundMessage((payload) => {
+    console.log('listening')
+    const notificationTitle = payload.notification.title
+    const notificationOptions = {
+        body: payload.notification.body,
+    }
 
-//     const notificationTitle = 'Background Message Title'
-//     const notificationOptions = {
-//         body: 'Background Message body.',
-//     }
-
-//     return self.registration.showNotification(
-//         notificationTitle,
-//         notificationOptions
-//     )
-// })
+    return self.registration.showNotification(
+        notificationTitle,
+        notificationOptions
+    )
+})
 
 // // // Retrieve firebase messaging
 // const messaging = firebase.messaging()
