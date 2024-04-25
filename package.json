@@ -1,11 +1,12 @@
 {
   "name": "bellevue_resolvehub",
+  "homepage": "http://10.5.5.19/bellevue_oms_live",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build",
+    "build": "vite build --base=./",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
