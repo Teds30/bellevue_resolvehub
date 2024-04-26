@@ -42,6 +42,7 @@
 
 .task_card {
     min-width: 340px;
+    width: 300px;
     max-width: 400px;
     padding: 20px 12px;
 
@@ -55,6 +56,20 @@
     flex-direction: column;
     gap: 4px;
     flex: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.col1 h4 {
+    color: var(--fc-body);
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    /* display: -webkit-box; */
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .col2 {
