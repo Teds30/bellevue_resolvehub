@@ -18,6 +18,7 @@ import BottomNavigationBar from '../../components/BottomNavigationBar/BottomNavi
 import userPermission from '../../hooks/userPermission'
 
 import { IconMapPin } from '@tabler/icons-react'
+import dayjs from 'dayjs'
 const MyTasks = () => {
     const [active, setActive] = useState(0)
     const [tasks, setTasks] = useState([])
@@ -205,8 +206,8 @@ const MyTasks = () => {
                                         )}
                                         {active === 3 && (
                                             <p>
-                                                There are currently no accomplished
-                                                tasks today.
+                                                There are currently no
+                                                accomplished tasks today.
                                             </p>
                                         )}
                                     </>
@@ -399,13 +400,30 @@ const MyTasks = () => {
                                                                     color: 'var(--fc-body)',
                                                                 }}
                                                             >
-                                                                Accomplish
-                                                                before{' '}
-                                                                <Moment format="h:mm A">
-                                                                    {
+                                                                {dayjs().isAfter(
+                                                                    dayjs(
                                                                         task.schedule
-                                                                    }
-                                                                </Moment>
+                                                                    )
+                                                                ) ? (
+                                                                    'OVERDUE'
+                                                                ) : (
+                                                                    <span>
+                                                                        {' '}
+                                                                        Accomplish
+                                                                        before:{' '}
+                                                                        <Moment
+                                                                            format="h:mma"
+                                                                            style={{
+                                                                                color: 'var(--accent)',
+                                                                                fontWeight: 600,
+                                                                            }}
+                                                                        >
+                                                                            {
+                                                                                task.schedule
+                                                                            }
+                                                                        </Moment>
+                                                                    </span>
+                                                                )}
                                                             </p>
                                                         )}
                                                         {
@@ -495,7 +513,7 @@ const MyTasks = () => {
                 <Fab
                     variant={'extended'}
                     sx={{
-                        position: 'absolute',
+                        position: 'fixed',
                         bottom: 80,
                         right: 16,
                         color: '#fff',
