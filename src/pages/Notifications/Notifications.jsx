@@ -117,7 +117,13 @@ const Notifications = () => {
 
     const handleDelete = async (id) => {
         // Implement your delete logic here.
-        console.log('Deleted: ', id)
+
+        const res = await fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/api/notifications/${id}`,
+            {
+                method: 'DELETE',
+            }
+        )
         // const res = await deleteUserNotification(id)
     }
 
