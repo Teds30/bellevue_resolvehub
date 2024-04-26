@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import useHttp from '../../hooks/http-hook'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 
@@ -25,6 +25,7 @@ import {
 } from '@tabler/icons-react'
 import { IconSend } from '@tabler/icons-react'
 import { IconHourglassHigh } from '@tabler/icons-react'
+import AuthContext from '../../context/auth-context'
 
 function CustomToolbar() {
     return (
@@ -39,6 +40,8 @@ const ProjectsTable = () => {
     const queryClient = useQueryClient()
     const [params, setParams] = useState('')
     const navigate = useNavigate()
+
+    const userCtx = useContext(AuthContext)
 
     const [paginationModel, setPaginationModel] = React.useState({
         pageSize: 10,
@@ -61,7 +64,16 @@ const ProjectsTable = () => {
         const res = await fetch(
             `${
                 import.meta.env.VITE_BACKEND_URL
-            }/api/projects_page?page_size=${pageSize}&page=${_page}${params}`
+            }/api/projects_page?page_size=${pageSize}&page=${_page}${params}`,
+            {
+                method: 'POST',
+                body: JSON.stringify({
+                    department_id: userCtx.user.position.department_id,
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
         )
 
         const out = await res.json()
@@ -115,6 +127,7 @@ const ProjectsTable = () => {
         ],
         retry: false,
         queryFn: async () => loadTasks(params),
+        enabled: !!userCtx && !!userCtx.user,
 
         refetchOnWindowFocus: false,
         initialData: {
