@@ -29,7 +29,7 @@ const TaskAssignor = (props) => {
     const [inputValue, setInputValue] = React.useState()
 
     const [date, setDate] = useState(dayjs())
-    const [time, setTime] = useState(dayjs())
+    const [time, setTime] = useState()
 
     const { sendRequest, isLoading } = useHttp()
     const userCtx = useContext(AuthContext)
@@ -96,7 +96,6 @@ const TaskAssignor = (props) => {
         //     assigned_timestamp: dayjs().unix(),
         // })
 
-        console.log(selectedPerson)
         const res = await sendRequest({
             url: `${import.meta.env.VITE_BACKEND_URL}/api/tasks/${task.id}`,
             method: 'PATCH',
@@ -168,7 +167,7 @@ const TaskAssignor = (props) => {
                             leadingIcon={
                                 <IconUser size={20} color="var(--fc-body)" />
                             }
-                            value={selectedPerson}
+                            // value={selectedPerson}
                             placeholder="Select assignee"
                             onValueChange={setPerson}
                             onInputChange={setInputValue}
