@@ -81,8 +81,17 @@ const ProjectCommentsSwipe = (props) => {
                         onBlur={commentBlurHandler}
                         error
                     />
-                    <IconButton onClick={handleSubmit}>
-                        <IconSend2 color="var(--accent)" />
+                    <IconButton
+                        onClick={handleSubmit}
+                        disabled={!commentIsValid}
+                    >
+                        <IconSend2
+                            color={
+                                commentIsValid
+                                    ? 'var(--accent)'
+                                    : 'var(--fc-body-lighter)'
+                            }
+                        />
                     </IconButton>
                 </Box>
             }
