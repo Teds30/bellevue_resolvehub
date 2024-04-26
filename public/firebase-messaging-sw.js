@@ -30,17 +30,17 @@ messaging.onMessage((payload) => {
     )
 })
 
-// messaging.onBackgroundMessage((payload) => {
-//     const notificationTitle = payload.notification.title
-//     const notificationOptions = {
-//         body: payload.notification.body,
-//     }
+messaging.onBackgroundMessage((payload) => {
+    const notificationTitle = payload.notification.title
+    const notificationOptions = {
+        body: payload.notification.body,
+    }
 
-//     return self.registration.showNotification(
-//         notificationTitle,
-//         notificationOptions
-//     )
-// })
+    return self.registration.showNotification(
+        notificationTitle,
+        notificationOptions
+    )
+})
 
 // // // Retrieve firebase messaging
 // const messaging = firebase.messaging()
