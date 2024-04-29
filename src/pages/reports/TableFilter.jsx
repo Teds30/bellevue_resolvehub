@@ -6,7 +6,7 @@ import PrimaryButton from '../../components/Button/PrimaryButton'
 import DateSelector from '../../components/DateSelector/DateSelector'
 import dayjs from 'dayjs'
 
-const filterOptions = [
+const dateFilterOptions = [
     {
         id: 1,
         name: 'Daily',
@@ -81,7 +81,7 @@ const TableFilter = (props) => {
         <div>
             <FilterButton onClick={handleClick}>
                 <span>
-                    Filter{filterLabel && `:`}
+                    Date Created{filterLabel && `:`}
                     <span style={{ color: 'var(--accent)', marginLeft: '4px' }}>
                         {filterLabel && ` ${filterLabel}`}
                     </span>
@@ -106,7 +106,7 @@ const TableFilter = (props) => {
                         <Dropdown
                             label={`Filter by`}
                             placeholder="Select filter"
-                            items={filterOptions}
+                            items={dateFilterOptions}
                             value={selectedFilter}
                             selected={selectedFilter}
                             handleSelect={handleSelectFilter}
