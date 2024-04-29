@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 import styles from './ReportsTable.module.css'
 
-import { Box } from '@mui/material'
+import { Box, InputAdornment } from '@mui/material'
 import {
     DataGrid,
     GridToolbar,
@@ -18,6 +18,14 @@ import dayjs from 'dayjs'
 import { useNavigate } from 'react-router-dom'
 import { IconExternalLink } from '@tabler/icons-react'
 import AuthContext from '../../context/auth-context'
+import TableFilterMain from './TableFilterStatus'
+
+import TextField from '../../components/TextField/TextField'
+import useValidate from '../../hooks/validate-input-hook'
+import FilterButton from './FilterButton'
+import FilterSearch from './FilterSearch'
+import Dropdown from '../../components/Dropdown/Dropdown'
+import TableFilterStatus from './TableFilterStatus'
 
 function CustomToolbar() {
     return (
@@ -28,9 +36,19 @@ function CustomToolbar() {
 }
 
 const ReportsTable = () => {
+    const {
+        value: search,
+        isValid: searchIsValid,
+        hasError: searchHasError,
+        valueChangeHandler: searchChangeHandler,
+        inputBlurHandler: searchBlurHandler,
+        reset: searchReset,
+    } = useValidate((value) => value.trim() !== '')
+
     const { sendRequest } = useHttp()
     const queryClient = useQueryClient()
     const [params, setParams] = useState('')
+    const [statusParams, setStatusParams] = useState('')
     const navigate = useNavigate()
 
     const userCtx = useContext(AuthContext)
@@ -41,6 +59,8 @@ const ReportsTable = () => {
     })
     const [filterModel, setFilterModel] = React.useState({ items: [] })
     const [sortModel, setSortModel] = React.useState([])
+
+    const [selectedSearchItem, setSelectedSearchItem] = useState()
 
     const loadTasks = async (params) => {
         const page = paginationModel.page
@@ -56,7 +76,7 @@ const ReportsTable = () => {
         const res = await fetch(
             `${
                 import.meta.env.VITE_BACKEND_URL
-            }/api/tasks_page?page_size=${pageSize}&page=${_page}${params}`,
+            }/api/tasks_page?page_size=${pageSize}&page=${_page}${params}${statusParams}`,
             {
                 method: 'POST',
                 body: JSON.stringify({
@@ -107,6 +127,15 @@ const ReportsTable = () => {
         setParams(fetchParams)
     }
 
+    const handleFilterStatus = async (data) => {
+        if (data) {
+            let fetchParams = `&status=${data}`
+            setStatusParams(fetchParams)
+        } else {
+            setStatusParams('')
+        }
+    }
+
     const {
         data: unitData,
         isLoading,
@@ -120,6 +149,7 @@ const ReportsTable = () => {
                 page: paginationModel.page,
                 pageSize: paginationModel.pageSize,
                 params: params,
+                statusParams: statusParams,
             },
         ],
         retry: false,
@@ -153,18 +183,60 @@ const ReportsTable = () => {
         setQueryOptions({ filterModel: { ...filterModel } })
     }, [])
 
+    const handleSelectSearchItem = async (e) => {
+        setSelectedSearchItem(e.target.value)
+    }
+
     return (
         <div className={styles['table_container']}>
-            <Box
+            {/* <Box
                 sx={{
                     padding: '12px',
                     border: '1px solid var(--border-color)',
                     borderBottom: '0',
                     borderTopLeftRadius: '8px',
                     borderTopRightRadius: '8px',
+                    display: 'flex',
+                    gap: '12px',
+                }}
+            >
+                <Dropdown
+                    items={[
+                        {
+                            id: 1,
+                            name: 'Task',
+                        },
+                        {
+                            id: 2,
+                            name: 'Area',
+                        },
+                    ]}
+                    value={selectedSearchItem}
+                    selected={selectedSearchItem}
+                    handleSelect={handleSelectSearchItem}
+                    variation="small"
+                />
+                <TextField
+                    label=""
+                    placeholder="Search"
+                    value={search}
+                    onChange={searchChangeHandler}
+                    onBlur={searchBlurHandler}
+                />
+            </Box> */}
+            <Box
+                sx={{
+                    padding: '12px',
+                    border: '1px solid var(--border-color)',
+                    borderTopLeftRadius: '8px',
+                    borderTopRightRadius: '8px',
+                    borderBottom: '0',
+                    display: 'flex',
+                    gap: '12px',
                 }}
             >
                 <TableFilter handleAppliedFilter={handleAppliedFilter} />
+                <TableFilterStatus handleAppliedFilter={handleFilterStatus} />
             </Box>
             <DataGrid
                 sx={{ width: '100%' }}
@@ -175,6 +247,7 @@ const ReportsTable = () => {
                     {
                         field: 'room',
                     },
+
                     {
                         field: 'row_data',
                         hideable: false,
@@ -209,6 +282,27 @@ const ReportsTable = () => {
                                 </div>
                             )
                         },
+                    },
+                    {
+                        field: 'area',
+                        hideable: true,
+                        disableColumnMenu: true,
+                        headerName: 'Area/Room ID',
+                        valueGetter: (value) => {
+                            return value
+                        },
+                        renderCell: (par) => {
+                            return (
+                                <Box>
+                                    <p>{par.row.room}</p>
+                                </Box>
+                            )
+                        },
+                        flex: 1,
+                        cellClassName: styles['row_cells'],
+                        headerClassName: styles['row_header'],
+                        headerAlign: 'center',
+                        align: 'center',
                     },
                     {
                         field: 'assignee_id',
@@ -266,6 +360,7 @@ const ReportsTable = () => {
                         headerAlign: 'center',
                         align: 'center',
                     },
+
                     {
                         field: 'completion_date',
                         hideable: false,
@@ -375,6 +470,7 @@ const ReportsTable = () => {
                 loading={unitFetching}
                 slots={{
                     loadingOverlay: LinearProgress,
+                    // toolbar: GridToolbar,
                     // toolbar: CustomToolbar,
                 }}
                 isRowSelectable={false}
@@ -385,9 +481,13 @@ const ReportsTable = () => {
                 sortModel={sortModel}
                 onSortModelChange={(newSortModel) => setSortModel(newSortModel)}
                 onPaginationModelChange={handlePageChange}
-                pageSizeOptions={[10, 25, 50, 100]}
+                pageSizeOptions={[10, 50, 100, 1000]}
                 disableColumnSorting={true}
-                onFilterModelChange={onFilterChange}
+                // filterModel={filterModel}
+                // onFilterModelChange={(newFilterModel) => {
+                //     console.log(newFilterModel)
+                //     setFilterModel(newFilterModel)
+                // }}
             />
         </div>
     )
