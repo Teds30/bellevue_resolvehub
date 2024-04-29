@@ -36,7 +36,12 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
 }))
 
 const TextField = (props) => {
-    const { label = 'Search', helperText = null, fullWidth = true } = props
+    const {
+        label = 'Search',
+        helperText = null,
+        fullWidth = true,
+        InputProps,
+    } = props
 
     return (
         <FormControl variant="standard" fullWidth={fullWidth}>
@@ -51,7 +56,7 @@ const TextField = (props) => {
                     {label}
                 </h4>
             )}
-            <BootstrapInput label={label} {...props} />
+            <BootstrapInput label={label} {...props} InputProps={InputProps} />
 
             {helperText && (
                 <FormHelperText
