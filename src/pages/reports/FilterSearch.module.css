@@ -1,0 +1,23 @@
+.button {
+    padding: 8px 12px 8px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+
+    width: fit-content;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    font-weight: 500;
+    color: var(--fc-strong);
+    cursor: pointer;
+}
+.button span {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
