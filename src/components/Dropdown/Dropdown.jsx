@@ -13,6 +13,7 @@ const StyledSelect = styled(Select)(() => ({
     '&.MuiOutlinedInput-root': {
         '& fieldset': {
             borderColor: 'var(--border-color)',
+            display: 'flex',
         },
         '&:hover fieldset': {
             borderColor: 'var(--border-color)',
@@ -36,6 +37,7 @@ export default function Dropdown(props) {
         disabled = false,
         errorText = undefined,
         leadingIcon = null,
+        variation,
     } = props
 
     return (
@@ -62,6 +64,8 @@ export default function Dropdown(props) {
                     disabled={disabled}
                     sx={{
                         borderRadius: '12px',
+                        fontSize: '14px',
+                        display: 'flex',
                     }}
                     IconComponent={(props) => {
                         if (props.className.includes('MuiSelect-iconOpen')) {
@@ -99,17 +103,17 @@ export default function Dropdown(props) {
                     {items
                         .filter((i) => i.divided == null || i.divided == false)
                         .map((item) => {
-                            if (item.divided) {
-                                return (
-                                    <MenuItem key={item.id} value={item.id}>
-                                        {item.name}
-                                    </MenuItem>
-                                )
-                            }
-
                             return (
                                 <MenuItem key={item.id} value={item.id}>
-                                    {item.name}
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        {item.adornment && item.adornment}
+                                        <span>{item.name}</span>
+                                    </Box>
                                 </MenuItem>
                             )
                         })}
@@ -120,17 +124,14 @@ export default function Dropdown(props) {
                     {items
                         .filter((i) => i.divided == true)
                         .map((item) => {
-                            if (item.divided) {
-                                return (
-                                    <MenuItem key={item.id} value={item.id}>
-                                        {item.name}
-                                    </MenuItem>
-                                )
-                            }
-
                             return (
                                 <MenuItem key={item.id} value={item.id}>
-                                    {item.name}
+                                    <p>
+                                        <span>
+                                            {item.adornment && item.adornment}
+                                        </span>
+                                        {item.name}
+                                    </p>
                                 </MenuItem>
                             )
                         })}
