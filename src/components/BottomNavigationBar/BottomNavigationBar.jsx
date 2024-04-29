@@ -181,8 +181,11 @@ const BottomNavigationBar = (props) => {
                                         }
                                     >
                                         {item.icon}
-                                        {selectedItem === item.index &&
-                                            item.name}
+                                        {window.innerWidth > 768
+                                            ? item.name
+                                            : selectedItem === item.index
+                                            ? item.name
+                                            : null}
                                     </Box>
                                 </IconButton>
                             </Box>
