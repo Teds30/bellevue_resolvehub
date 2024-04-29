@@ -26,7 +26,7 @@ const TaskAssignSelf = (props) => {
         reset: candelReasonReset,
     } = useValidate((value) => value.trim() !== '')
 
-    const { sendRequest } = useHttp()
+    const { sendRequest, isLoading } = useHttp()
     const userCtx = useContext(AuthContext)
 
     const [openAssign, setOpenAssign] = useState(false)
@@ -122,7 +122,13 @@ const TaskAssignSelf = (props) => {
                         </Box>
                     </Box>
 
-                    <PrimaryButton onClick={handleSubmit}>Save</PrimaryButton>
+                    <PrimaryButton
+                        onClick={handleSubmit}
+                        isLoading={isLoading}
+                        loadingText="Saving"
+                    >
+                        Save
+                    </PrimaryButton>
                 </Box>
             </SwipeableCard>
         </div>
