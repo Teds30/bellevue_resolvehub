@@ -25,8 +25,10 @@ const TaskAssignor = (props) => {
 
     const [people, setPeople] = useState([])
     const [selectedPerson, setPerson] = useState()
+    const [displaySelectedPerson, setDisplaySelectedPerson] = useState()
 
     const [inputValue, setInputValue] = React.useState()
+    const [displayInputValue, setDisplayInputValue] = React.useState()
 
     const [date, setDate] = useState(dayjs())
     const [time, setTime] = useState()
@@ -43,6 +45,13 @@ const TaskAssignor = (props) => {
     const handleCloseAssignDrawer = () => {
         setOpenAssign(false)
     }
+
+    useEffect(() => {
+        const changeData = () => {
+            setDisplaySelectedPerson(selectedPerson)
+        }
+        changeData()
+    }, [selectedPerson])
 
     useEffect(() => {
         loadData()
@@ -73,6 +82,11 @@ const TaskAssignor = (props) => {
                 name: `${task.assignee.first_name} ${task.assignee.last_name}`,
                 position: task.assignee.position.name,
             })
+        setDisplaySelectedPerson({
+            id: task.assignee.id,
+            name: `${task.assignee.first_name} ${task.assignee.last_name}`,
+            position: task.assignee.position.name,
+        })
 
         setPeople(modified)
     }
@@ -117,12 +131,12 @@ const TaskAssignor = (props) => {
                 <DropdownSearch
                     label={`Assignee`}
                     leadingIcon={<IconUser size={20} color="var(--fc-body)" />}
-                    value={selectedPerson}
+                    value={displaySelectedPerson}
                     placeholder="Select assignee"
-                    onValueChange={setPerson}
-                    onInputChange={setInputValue}
-                    inputValue={inputValue}
-                    options={people}
+                    onValueChange={setDisplaySelectedPerson}
+                    onInputChange={setDisplayInputValue}
+                    inputValue={displayInputValue}
+                    options={[]}
                     defaultValue={
                         task.assignee_id
                             ? {
