@@ -33,13 +33,13 @@ const dateFilterOptions = [
 const TableFilter = (props) => {
     const { handleAppliedFilter } = props
     const [anchorEl, setAnchorEl] = React.useState(null)
-    const [selectedFilter, setSelectedFilter] = useState()
+    const [selectedFilter, setSelectedFilter] = useState(1)
 
     const [custom, setCustom] = useState()
     const [month, setMonth] = useState(dayjs)
     const [year, setYear] = useState(dayjs)
 
-    const [filterLabel, setFilterLabel] = useState()
+    const [filterLabel, setFilterLabel] = useState('Daily')
 
     const handleSelectFilter = (e) => {
         setSelectedFilter(e.target.value)
@@ -56,7 +56,7 @@ const TableFilter = (props) => {
     const handleApply = () => {
         // setFilterLabel()
         if (selectedFilter === 1) {
-            setFilterLabel('Today')
+            setFilterLabel('Daily')
         }
         if (selectedFilter === 2) {
             setFilterLabel('This Week')

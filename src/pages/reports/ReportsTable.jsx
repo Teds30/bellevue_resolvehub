@@ -47,7 +47,7 @@ const ReportsTable = () => {
 
     const { sendRequest } = useHttp()
     const queryClient = useQueryClient()
-    const [params, setParams] = useState('')
+    const [params, setParams] = useState('&filter_by=daily')
     const [statusParams, setStatusParams] = useState('')
     const navigate = useNavigate()
 
@@ -105,7 +105,7 @@ const ReportsTable = () => {
         let fetchParams = ''
         if (data) {
             if (data.selectedFilter == 1) {
-                fetchParams = `&filter_by=today`
+                fetchParams = `&filter_by=daily`
             } else if (data.selectedFilter == 2) {
                 fetchParams = `&filter_by=this_week`
             } else if (data.selectedFilter == 3) {
@@ -481,7 +481,7 @@ const ReportsTable = () => {
                 sortModel={sortModel}
                 onSortModelChange={(newSortModel) => setSortModel(newSortModel)}
                 onPaginationModelChange={handlePageChange}
-                pageSizeOptions={[10, 50, 100, 1000]}
+                pageSizeOptions={[10, 25, 50, 100]}
                 disableColumnSorting={true}
                 // filterModel={filterModel}
                 // onFilterModelChange={(newFilterModel) => {
