@@ -11,7 +11,7 @@ const Profile = () => {
     return (
         <div className={styles['container']}>
             <Outlet />
-            <BottomNavigationBar current={5} />
+            <BottomNavigationBar current={6} />
         </div>
     )
 }
