@@ -37,7 +37,7 @@ const MyProjects = () => {
             loadAssignedProjects()
             loadUserProjects()
         }
-    }, [userCtx])
+    }, [userCtx.user])
 
     const loadProjects = async () => {
         const res = await sendRequest({
@@ -96,10 +96,22 @@ const MyProjects = () => {
                             {userCtx.user &&
                                 (userCtx.hasPermission('201') ||
                                     userCtx.hasPermission('202')) && (
-                                    <Tab label="Department" value={0} />
+                                    <Tab
+                                        label="Department"
+                                        value={0}
+                                        onClick={() => loadProjects()}
+                                    />
                                 )}
-                            <Tab label="Assigned" value={1} />
-                            <Tab label="My Projects" value={2} />
+                            <Tab
+                                label="Assigned"
+                                value={1}
+                                onClick={() => loadAssignedProjects()}
+                            />
+                            <Tab
+                                label="My Projects"
+                                value={2}
+                                onClick={() => loadUserProjects()}
+                            />
                         </TabList>
                     </Box>
                     <TabPanel

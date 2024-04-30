@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Box, Divider } from '@mui/material'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
@@ -40,6 +40,17 @@ export default function Dropdown(props) {
         variation,
     } = props
 
+    const selectRef = useRef(null)
+
+    const handleAdornmentClick = () => {
+        if (selectRef.current.open) {
+            selectRef.current.open = false
+        } else {
+            selectRef.current.open = true
+        }
+
+    }
+
     return (
         <Box sx={{ minWidth: 120, position: 'relative' }}>
             <FormControl fullWidth={fullWidth}>
@@ -55,6 +66,7 @@ export default function Dropdown(props) {
                     </h4>
                 )}
                 <StyledSelect
+                    ref={selectRef}
                     // label={label}
                     placeholder={placeholder}
                     onChange={handleSelect}
@@ -70,7 +82,10 @@ export default function Dropdown(props) {
                     IconComponent={(props) => {
                         if (props.className.includes('MuiSelect-iconOpen')) {
                             return (
-                                <InputAdornment position="end">
+                                <InputAdornment
+                                    position="end"
+                                    onClick={handleAdornmentClick}
+                                >
                                     <IoIosArrowUp
                                         style={{
                                             marginRight: '12px',
@@ -81,7 +96,10 @@ export default function Dropdown(props) {
                             )
                         }
                         return (
-                            <InputAdornment position="end">
+                            <InputAdornment
+                                position="end"
+                                onClick={handleAdornmentClick}
+                            >
                                 <IoIosArrowDown
                                     style={{
                                         marginRight: '12px',
@@ -92,7 +110,10 @@ export default function Dropdown(props) {
                         )
                     }}
                     startAdornment={
-                        <InputAdornment position="start">
+                        <InputAdornment
+                            position="start"
+                            onClick={handleAdornmentClick}
+                        >
                             {leadingIcon}
                         </InputAdornment>
                     }

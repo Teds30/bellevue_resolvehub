@@ -146,8 +146,8 @@ const MyTasks = () => {
                                     }
                                     {userCtx.user &&
                                     userCtx.hasPermission('104')
-                                        ? 'Assign Tasks'
-                                        : 'Assigned'}
+                                        ? 'Open Tasks'
+                                        : 'Open Tasks'}
                                 </div>
                                 <div
                                     className={`${styles['nav_btn']} ${
@@ -391,7 +391,22 @@ const MyTasks = () => {
                                                                     </p>
                                                                 )
                                                         }
-
+                                                        {active === 1 &&
+                                                            task.assignee_id &&
+                                                            task.assignee_id !==
+                                                                userCtx.user
+                                                                    .id && (
+                                                                <p
+                                                                    style={{
+                                                                        fontSize:
+                                                                            '12px',
+                                                                        color: 'var(--fc-body)',
+                                                                    }}
+                                                                >
+                                                                    assigned to{' '}
+                                                                    <strong>{`${task.assignee.first_name} ${task.assignee.last_name}`}</strong>
+                                                                </p>
+                                                            )}
                                                         {active === 1 && (
                                                             <p
                                                                 style={{
