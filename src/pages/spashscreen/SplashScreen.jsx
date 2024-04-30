@@ -11,21 +11,14 @@ const SplashScreen = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        const storedData = JSON.parse(localStorage.getItem('userData'))
-
-        
-        if (storedData) {
-            const loadData = async () => {
-                const res = await userCtx.fetchUserData(storedData)
-                // if (res) {
-                //     navigate('/tasks')
-                // }
+        if (userCtx.isLoggedIn !== 'initial') {
+            if (userCtx.user) {
+                navigate('/tasks')
+            } else {
+                navigate('/login')
             }
-            if (userCtx.user) loadData()
-        } else {
-            navigate('/login')
         }
-    }, [userCtx])
+    }, [userCtx.user])
 
     return (
         <div className={styles['container']}>

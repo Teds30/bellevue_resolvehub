@@ -48,10 +48,11 @@ const App = () => {
     routes = (
         <Suspense fallback={<SplashScreen />}>
             <Routes>
-                <Route
+                {/* <Route
                     path="/"
                     element={<Navigate replace to="login" />}
-                ></Route>
+                ></Route> */}
+                <Route path="/" element={<SplashScreen />}></Route>
                 <Route path="/login" element={<Login />}></Route>
                 <Route path="/logout" element={<Logout />}></Route>
                 <Route
