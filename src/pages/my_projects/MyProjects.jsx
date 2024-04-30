@@ -69,8 +69,6 @@ const MyProjects = () => {
             }`,
         })
 
-        console.log(res)
-
         setAssignedProjects(res.data)
     }
 
@@ -116,7 +114,7 @@ const MyProjects = () => {
                     </Box>
                     <TabPanel
                         value={0}
-                        sx={{ padding: '0', width: '100%', maxWidth: '500px' }}
+                        sx={{ padding: '0', width: '100%', maxWidth: '720px' }}
                     >
                         {!isLoading ? (
                             <ProjectsList projects={projects} />
@@ -126,13 +124,13 @@ const MyProjects = () => {
                     </TabPanel>
                     <TabPanel
                         value={1}
-                        sx={{ padding: '0', width: '100%', maxWidth: '500px' }}
+                        sx={{ padding: '0', width: '100%', maxWidth: '720px' }}
                     >
                         <ProjectsList projects={assignedProjects} />
                     </TabPanel>
                     <TabPanel
                         value={2}
-                        sx={{ padding: '0', width: '100%', maxWidth: '500px' }}
+                        sx={{ padding: '0', width: '100%', maxWidth: '720px' }}
                     >
                         <ProjectsList projects={myProjects} />
                     </TabPanel>
