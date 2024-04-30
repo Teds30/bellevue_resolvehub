@@ -73,16 +73,18 @@ const Project = () => {
                             <IconArrowNarrowLeft color="var(--fc-strong)" />
                         </IconButton>
                     </Box>
-                    <Box
-                        sx={{ color: 'var(--accent)', fontWeight: '500' }}
-                        onClick={() => {
-                            navigate(`/edit-project/${id}`, {
-                                relative: 'path',
-                            })
-                        }}
-                    >
-                        Edit
-                    </Box>
+                    {project && userCtx.user && project.status === 0 && (
+                        <Box
+                            sx={{ color: 'var(--accent)', fontWeight: '500' }}
+                            onClick={() => {
+                                navigate(`/edit-project/${id}`, {
+                                    relative: 'path',
+                                })
+                            }}
+                        >
+                            Edit
+                        </Box>
+                    )}
                 </div>
                 {project && userCtx.user && (
                     <div className={styles['rows']}>
