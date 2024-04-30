@@ -131,8 +131,8 @@ const ProjectsList = (props) => {
                                 handleActive(1)
                             }}
                         >
-                            On-Going
-                            {!!count.ongoing && <span>{count.ongoing}</span>}
+                            Pending
+                            {!!count.pending && <span>{count.pending}</span>}
                         </div>
                         <div
                             className={`${styles['nav_btn']} ${
@@ -143,8 +143,8 @@ const ProjectsList = (props) => {
                                 handleActive(2)
                             }}
                         >
-                            Pending
-                            {!!count.pending && <span>{count.pending}</span>}
+                            On-Going
+                            {!!count.ongoing && <span>{count.ongoing}</span>}
                         </div>
                         <div
                             className={`${styles['nav_btn']} ${
