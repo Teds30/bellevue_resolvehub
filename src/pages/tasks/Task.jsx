@@ -245,7 +245,6 @@ const Task = () => {
                         {task &&
                             userCtx.user &&
                             task.assignee_id === null &&
-                            task.requestor.id === userCtx.user.id &&
                             hasPermission('103') && (
                                 <TaskAssignSelf
                                     task={task}
