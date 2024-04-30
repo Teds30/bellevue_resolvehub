@@ -27,6 +27,7 @@ import { useNavigate } from 'react-router-dom'
 import SwipeableNotification from './SwipeableNotification'
 import BellevueLoading from '../../components/LoadingSpinner/BellevueLoading'
 import BottomNavigationBar from '../../components/BottomNavigationBar/BottomNavigationBar'
+import { HiOutlineExclamationCircle } from 'react-icons/hi'
 
 const Notifications = () => {
     const [isInit, setIsInit] = useState(false)
@@ -69,7 +70,7 @@ const Notifications = () => {
                 }),
             })
 
-            console.log('saved token')
+            // console.log('saved token')
         }
 
         if (granted && userCtx.user) saveToken()
@@ -107,12 +108,12 @@ const Notifications = () => {
         navigator.clipboard.writeText(copyText.value)
 
         // Alert the copied text
-        alert('Copied the text: ' + copyText.value)
+        // alert('Copied the text: ' + copyText.value)
     }
 
     const handleArchive = () => {
         // Implement your archive logic here.
-        console.log('Archived')
+        // console.log('Archived')
     }
 
     const handleDelete = async (id) => {
@@ -149,7 +150,7 @@ const Notifications = () => {
                     <h3>Notifications</h3>
                 </div>
 
-                <div>
+                {/* <div>
                     <button
                         onClick={async () => {
                             await requestPermission()
@@ -164,7 +165,20 @@ const Notifications = () => {
                     {thetoken && (
                         <button onClick={myFunction}>Copy Token</button>
                     )}
-                </div>
+                </div> */}
+                {!thetoken && (
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px',
+                            marginLeft: '12px',
+                        }}
+                    >
+                        <HiOutlineExclamationCircle />
+                        <p>Notification disabled.</p>
+                    </Box>
+                )}
                 {!granted && (
                     <div className={styles['allow-notif']}>
                         <h4>Please allow the Notification</h4>
