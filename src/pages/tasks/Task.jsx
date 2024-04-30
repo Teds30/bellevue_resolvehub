@@ -306,17 +306,36 @@ const Task = () => {
                         )}
                         {task && task.status === 4 ? (
                             <div className={styles['marked-done-container']}>
-                                <div className={styles['marked-done-title']}>
-                                    <IconCircleCheckFilled
-                                        style={{ color: '#03b077' }}
-                                    />
-                                    <p>
-                                        This task has been marked as{' '}
-                                        <strong>Done</strong> by{' '}
-                                        {task.completed_marker.first_name}{' '}
-                                        {task.completed_marker.last_name}.
-                                    </p>
-                                </div>
+                                <Box>
+                                    <div
+                                        className={styles['marked-done-title']}
+                                    >
+                                        <IconCircleCheckFilled
+                                            style={{ color: '#03b077' }}
+                                        />
+                                        <Box>
+                                            <p>
+                                                This task has been marked as{' '}
+                                                <strong>Done</strong> by{' '}
+                                                {
+                                                    task.completed_marker
+                                                        .first_name
+                                                }{' '}
+                                                {
+                                                    task.completed_marker
+                                                        .last_name
+                                                }
+                                                .
+                                            </p>
+                                            <p className="smaller-text">
+                                                <Moment format="MMMM DD, YYYY [at] h:m A">
+                                                    {task.updated_at}
+                                                </Moment>
+                                            </p>
+                                        </Box>
+                                    </div>
+                                </Box>
+
                                 <div className={styles['marked-done-details']}>
                                     <p className="title">Action taken</p>
                                     <div className={styles['done-content']}>
