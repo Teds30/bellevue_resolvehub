@@ -31,6 +31,7 @@ const MyTasks = () => {
         loadDepartmentOnGoing,
         loadDepartmentPending,
         loadDepartmentDone,
+        loadDepartmentCancelled,
         isLoading: deptLoading,
     } = department_tasks()
 
@@ -74,6 +75,15 @@ const MyTasks = () => {
         })
         setTasks(res.data)
     }
+    const loadCancelled = async () => {
+        setTasks(null)
+        const res = await sendRequest({
+            url: `${
+                import.meta.env.VITE_BACKEND_URL
+            }/api/user_cancelled_tasks/${userCtx.user.id}`,
+        })
+        setTasks(res.data)
+    }
 
     useEffect(() => {
         const loadData = async () => {
@@ -85,6 +95,7 @@ const MyTasks = () => {
                 if (active === 1) _tasks = await loadDepartmentOnGoing()
                 if (active === 2) _tasks = await loadDepartmentPending()
                 if (active === 3) _tasks = await loadDepartmentDone()
+                if (active === 4) _tasks = await loadDepartmentCancelled()
 
                 setTasks(_tasks)
 
@@ -94,6 +105,7 @@ const MyTasks = () => {
             else if (active === 1) await loadOnGoing()
             else if (active === 2) await loadPending()
             else if (active === 3) await loadDone()
+            else if (active === 4) await loadCancelled()
         }
 
         if (userCtx.user) loadData()
@@ -179,6 +191,16 @@ const MyTasks = () => {
                                 >
                                     Done
                                 </div>
+                                <div
+                                    className={`${styles['nav_btn']} ${
+                                        active === 4 && styles['nav_btn_active']
+                                    }`}
+                                    onClick={() => {
+                                        handleActive(4)
+                                    }}
+                                >
+                                    Cancelled
+                                </div>
                             </div>
 
                             <div className={styles['tasks_container']}>
@@ -208,6 +230,12 @@ const MyTasks = () => {
                                             <p>
                                                 There are currently no
                                                 accomplished tasks today.
+                                            </p>
+                                        )}
+                                        {active === 4 && (
+                                            <p>
+                                                There are currently no cancelled
+                                                tasks today.
                                             </p>
                                         )}
                                     </>
@@ -498,6 +526,22 @@ const MyTasks = () => {
                                                                 }}
                                                             >
                                                                 Accomplished on:{' '}
+                                                                <Moment format="MMM D [at] h:mma">
+                                                                    {
+                                                                        task.updated_at
+                                                                    }
+                                                                </Moment>
+                                                            </p>
+                                                        )}
+                                                        {active === 4 && (
+                                                            <p
+                                                                style={{
+                                                                    fontSize:
+                                                                        '12px',
+                                                                    color: 'var(--accent-danger)',
+                                                                }}
+                                                            >
+                                                                Cancelled on:{' '}
                                                                 <Moment format="MMM D [at] h:mma">
                                                                     {
                                                                         task.updated_at
