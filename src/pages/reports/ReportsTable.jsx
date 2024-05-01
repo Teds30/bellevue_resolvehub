@@ -26,6 +26,8 @@ import FilterButton from './FilterButton'
 import FilterSearch from './FilterSearch'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import TableFilterStatus from './TableFilterStatus'
+import Moment from 'react-moment'
+import TableSearch from './TableSearch'
 
 function CustomToolbar() {
     return (
@@ -60,7 +62,10 @@ const ReportsTable = () => {
     const [filterModel, setFilterModel] = React.useState({ items: [] })
     const [sortModel, setSortModel] = React.useState([])
 
-    const [selectedSearchItem, setSelectedSearchItem] = useState()
+    const [searchParams, setSearchParams] = useState({
+        searchField: '',
+        search: '',
+    })
 
     const loadTasks = async (params) => {
         const page = paginationModel.page
@@ -73,10 +78,15 @@ const ReportsTable = () => {
             _page = page + 1
         }
 
+        let _searchParams = ''
+        if (searchParams && searchParams.searchField && searchParams.search) {
+            _searchParams = `&searchField=${searchParams.searchField}&search=${searchParams.search}`
+        }
+
         const res = await fetch(
             `${
                 import.meta.env.VITE_BACKEND_URL
-            }/api/tasks_page?page_size=${pageSize}&page=${_page}${params}${statusParams}`,
+            }/api/tasks_page?page_size=${pageSize}&page=${_page}${params}${statusParams}${_searchParams}`,
             {
                 method: 'POST',
                 body: JSON.stringify({
@@ -150,6 +160,7 @@ const ReportsTable = () => {
                 pageSize: paginationModel.pageSize,
                 params: params,
                 statusParams: statusParams,
+                searchParams: searchParams,
             },
         ],
         retry: false,
@@ -183,8 +194,9 @@ const ReportsTable = () => {
         setQueryOptions({ filterModel: { ...filterModel } })
     }, [])
 
-    const handleSelectSearchItem = async (e) => {
-        setSelectedSearchItem(e.target.value)
+    const handleSubmitSearch = async (searchParams) => {
+        console.log('to search: ', searchParams)
+        setSearchParams(searchParams)
     }
 
     return (
@@ -235,6 +247,19 @@ const ReportsTable = () => {
                     gap: '12px',
                 }}
             >
+                <TableSearch handleSubmitSearch={handleSubmitSearch} />
+            </Box>
+            <Box
+                sx={{
+                    padding: '12px',
+                    border: '1px solid var(--border-color)',
+                    // borderTopLeftRadius: '8px',
+                    // borderTopRightRadius: '8px',
+                    borderBottom: '0',
+                    display: 'flex',
+                    gap: '12px',
+                }}
+            >
                 <TableFilter handleAppliedFilter={handleAppliedFilter} />
                 <TableFilterStatus handleAppliedFilter={handleFilterStatus} />
             </Box>
@@ -277,7 +302,10 @@ const ReportsTable = () => {
                                         </span>
                                     </p>
                                     <p className="smaller-text">
-                                        Area: {par.row.room}
+                                        {/* Created:{' '} */}
+                                        <Moment format="MMMM DD, YYYY">
+                                            {par.row.created_at}
+                                        </Moment>
                                     </p>
                                 </div>
                             )
