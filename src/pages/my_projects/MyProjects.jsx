@@ -23,7 +23,7 @@ const MyProjects = () => {
 
     const { sendRequest, isLoading } = useHttp()
 
-    const [value, setValue] = React.useState(0)
+    const [value, setValue] = React.useState(1)
 
     const userCtx = useContext(AuthContext)
 
@@ -33,7 +33,9 @@ const MyProjects = () => {
 
     useEffect(() => {
         if (userCtx.user) {
-            loadProjects()
+            if (userCtx.hasPermission('201') || userCtx.hasPermission('202')) {
+                loadProjects()
+            }
             loadAssignedProjects()
             loadUserProjects()
         }
