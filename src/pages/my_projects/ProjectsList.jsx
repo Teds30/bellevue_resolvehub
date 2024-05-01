@@ -35,6 +35,7 @@ const ProjectsList = (props) => {
         pending: 0,
         cancelled: 0,
         done: 0,
+        rejected: 0,
     })
 
     const { sendRequest } = useHttp()
@@ -49,20 +50,22 @@ const ProjectsList = (props) => {
         }
 
         const countData = () => {
-            let request, ongoing, pending, cancelled, done
+            let request, ongoing, pending, cancelled, done, rejected
 
             request = projects.filter((proj) => proj.status == 0).length
-            ongoing = projects.filter((proj) => proj.status == 1).length
-            pending = projects.filter((proj) => proj.status == 2).length
+            pending = projects.filter((proj) => proj.status == 1).length
+            ongoing = projects.filter((proj) => proj.status == 2).length
             cancelled = projects.filter((proj) => proj.status == 3).length
             done = projects.filter((proj) => proj.status == 4).length
+            rejected = projects.filter((proj) => proj.status == 4).length
 
             setCount({
                 request: request,
                 ongoing: ongoing,
                 pending: pending,
-                request: request,
+                cancelled: cancelled,
                 done: done,
+                rejected: rejected,
             })
         }
 
@@ -97,6 +100,11 @@ const ProjectsList = (props) => {
                 case 4:
                     setfilteredProjects(
                         projects.filter((proj) => proj.status == 4)
+                    )
+                    break
+                case 5:
+                    setfilteredProjects(
+                        projects.filter((proj) => proj.status == 5)
                     )
                     break
             }
@@ -171,6 +179,18 @@ const ProjectsList = (props) => {
                         >
                             Done
                             {!!count.done && <span>{count.done}</span>}
+                        </div>
+                        <div
+                            className={`${styles['nav_btn']} ${
+                                active === 5 && styles['nav_btn_active']
+                            }`}
+                            onClick={() => {
+                                // navigate('tasks')
+                                handleActive(5)
+                            }}
+                        >
+                            Rejected
+                            {!!count.rejected && <span>{count.rejected}</span>}
                         </div>
                     </div>
                     <Box>
