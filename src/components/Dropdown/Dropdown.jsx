@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Box, Divider } from '@mui/material'
+import { Box, Divider, Input, OutlinedInput } from '@mui/material'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
@@ -8,9 +8,11 @@ import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 
 import { styled } from '@mui/material/styles'
 import { InputAdornment } from '@mui/material'
+import styles from './Dropdown.module.css'
 
-const StyledSelect = styled(Select)(() => ({
+const StyledSelect = styled(Select)(({ variation }) => ({
     '&.MuiOutlinedInput-root': {
+        padding: variation == 'small' && '0px',
         '& fieldset': {
             borderColor: 'var(--border-color)',
             display: 'flex',
@@ -22,6 +24,9 @@ const StyledSelect = styled(Select)(() => ({
             borderColor: 'var(--accent)',
             boxShadow: `rgba(var(--accent-rgb), 0.12) 0 0 0 .2em`,
         },
+    },
+    '& .MuiOutlinedInput-input': {
+        padding: variation == 'small' ? '10px 6px' : '16.5px 14px',
     },
 }))
 
@@ -42,13 +47,14 @@ export default function Dropdown(props) {
 
     const selectRef = useRef(null)
 
-    const handleAdornmentClick = () => {
-        if (selectRef.current.open) {
-            selectRef.current.open = false
-        } else {
-            selectRef.current.open = true
-        }
+    const [open, setOpen] = React.useState(false)
 
+    const handleAdornmentClick = () => {
+        // if (selectRef.current.open) {
+        //     selectRef.current.open = false
+        // } else {
+        //     selectRef.current.open = true
+        // }
     }
 
     return (
@@ -66,6 +72,9 @@ export default function Dropdown(props) {
                     </h4>
                 )}
                 <StyledSelect
+                    open={open}
+                    onOpen={() => setOpen(true)}
+                    onClose={() => setOpen(false)}
                     ref={selectRef}
                     // label={label}
                     placeholder={placeholder}
@@ -74,6 +83,7 @@ export default function Dropdown(props) {
                     // defaultValue={defaultValue}
                     value={selected || defaultValue}
                     disabled={disabled}
+                    variation={variation}
                     sx={{
                         borderRadius: '12px',
                         fontSize: '14px',
@@ -84,13 +94,13 @@ export default function Dropdown(props) {
                             return (
                                 <InputAdornment
                                     position="end"
-                                    onClick={handleAdornmentClick}
+                                    onClick={() => setOpen(false)}
                                 >
                                     <IoIosArrowUp
                                         style={{
                                             marginRight: '12px',
                                         }}
-                                        size={24}
+                                        size={variation === 'small' ? 18 : 24}
                                     ></IoIosArrowUp>
                                 </InputAdornment>
                             )
@@ -98,13 +108,13 @@ export default function Dropdown(props) {
                         return (
                             <InputAdornment
                                 position="end"
-                                onClick={handleAdornmentClick}
+                                onClick={() => setOpen(true)}
                             >
                                 <IoIosArrowDown
                                     style={{
                                         marginRight: '12px',
                                     }}
-                                    size={24}
+                                    size={variation === 'small' ? 18 : 24}
                                 ></IoIosArrowDown>
                             </InputAdornment>
                         )
@@ -117,6 +127,7 @@ export default function Dropdown(props) {
                             {leadingIcon}
                         </InputAdornment>
                     }
+                    // input={<StyledInput variation={variation} />}
                 >
                     <MenuItem disabled value="">
                         <em>{placeholder}</em>
