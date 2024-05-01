@@ -258,7 +258,7 @@ const Task = () => {
                         {task &&
                             userCtx.user &&
                             hasPermission('104') &&
-                            task.status !== 4 && (
+                            !task.completed_marker_id && (
                                 <div className={styles['row2']}>
                                     <TaskAssignor
                                         task={task}
