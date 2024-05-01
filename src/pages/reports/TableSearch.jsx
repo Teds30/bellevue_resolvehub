@@ -7,7 +7,7 @@ import styles from './TableSearch.module.css'
 import { Box } from '@mui/material'
 
 const TableSearch = (props) => {
-    const { handleSubmitSearch } = props
+    const { handleSubmitSearch, setSearchParams, options = [] } = props
 
     const [selectedSearch, setSelectedSearch] = useState(1)
     const [filterLabel, setFilterLabel] = useState('Area')
@@ -24,23 +24,33 @@ const TableSearch = (props) => {
     }
 
     const handleSubmit = () => {
+        let selected = options.find((item) => item.id == selectedSearch)
         handleSubmitSearch({
-            searchField:
-                selectedSearch == 1
-                    ? 'issue'
-                    : selectedSearch == 2
-                    ? 'room'
-                    : '',
+            searchField: selected.name == 'Area' ? 'room' : selected.name,
             search: search,
+        })
+    }
+
+    const handleClear = () => {
+        handleSubmitSearch({
+            searchField: '',
+            search: '',
+        })
+
+        setSearchParams({
+            searchField: '',
+            search: '',
         })
     }
 
     return (
         <Box sx={{ width: '100%' }}>
             <SearchField
-                placeholder="Seach a user"
+                showClear={true}
+                placeholder="Seach"
                 onChange={handleSearchChange}
                 handleSubmit={handleSubmit}
+                handleClear={handleClear}
                 dropdown={true}
                 dropdownComponent={
                     // <div className={styles['button']} onClick={onClick}>
@@ -49,16 +59,7 @@ const TableSearch = (props) => {
                     <Dropdown
                         variation="small"
                         placeholder="Select"
-                        items={[
-                            {
-                                id: 1,
-                                name: 'Issue',
-                            },
-                            {
-                                id: 2,
-                                name: 'Area',
-                            },
-                        ]}
+                        items={options}
                         value={selectedSearch}
                         selected={selectedSearch}
                         handleSelect={handleSelectSearch}

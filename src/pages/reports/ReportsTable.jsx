@@ -195,7 +195,6 @@ const ReportsTable = () => {
     }, [])
 
     const handleSubmitSearch = async (searchParams) => {
-        console.log('to search: ', searchParams)
         setSearchParams(searchParams)
     }
 
@@ -247,7 +246,22 @@ const ReportsTable = () => {
                     gap: '12px',
                 }}
             >
-                <TableSearch handleSubmitSearch={handleSubmitSearch} />
+                <TableSearch
+                    options={[
+                        {
+                            id: 1,
+                            name: 'Issue',
+                            field_name: 'issue',
+                        },
+                        {
+                            id: 2,
+                            name: 'Area',
+                            field_name: 'room',
+                        },
+                    ]}
+                    handleSubmitSearch={handleSubmitSearch}
+                    setSearchParams={setSearchParams}
+                />
             </Box>
             <Box
                 sx={{

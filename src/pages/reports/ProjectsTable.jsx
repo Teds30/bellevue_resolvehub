@@ -26,6 +26,7 @@ import {
 import { IconSend } from '@tabler/icons-react'
 import { IconHourglassHigh } from '@tabler/icons-react'
 import AuthContext from '../../context/auth-context'
+import TableSearch from './TableSearch'
 
 function CustomToolbar() {
     return (
@@ -50,6 +51,11 @@ const ProjectsTable = () => {
     const [filterModel, setFilterModel] = React.useState({ items: [] })
     const [sortModel, setSortModel] = React.useState([])
 
+    const [searchParams, setSearchParams] = useState({
+        searchField: '',
+        search: '',
+    })
+
     const loadTasks = async (params) => {
         const page = paginationModel.page
         const pageSize = paginationModel.pageSize
@@ -61,10 +67,15 @@ const ProjectsTable = () => {
             _page = page + 1
         }
 
+        let _searchParams = ''
+        if (searchParams && searchParams.searchField && searchParams.search) {
+            _searchParams = `&searchField=${searchParams.searchField}&search=${searchParams.search}`
+        }
+
         const res = await fetch(
             `${
                 import.meta.env.VITE_BACKEND_URL
-            }/api/projects_page?page_size=${pageSize}&page=${_page}${params}`,
+            }/api/projects_page?page_size=${pageSize}&page=${_page}${params}${_searchParams}`,
             {
                 method: 'POST',
                 body: JSON.stringify({
@@ -123,6 +134,7 @@ const ProjectsTable = () => {
                 page: paginationModel.page,
                 pageSize: paginationModel.pageSize,
                 params: params,
+                searchParams: searchParams,
             },
         ],
         retry: false,
@@ -154,9 +166,12 @@ const ProjectsTable = () => {
 
     const onFilterChange = React.useCallback((filterModel) => {
         // Here you save the data you need from the filter model
-        console.log(filterModel)
         setQueryOptions({ filterModel: { ...filterModel } })
     }, [])
+
+    const handleSubmitSearch = async (searchParams) => {
+        setSearchParams(searchParams)
+    }
 
     return (
         <div className={styles['table_container']}>
@@ -164,9 +179,37 @@ const ProjectsTable = () => {
                 sx={{
                     padding: '12px',
                     border: '1px solid var(--border-color)',
-                    borderBottom: '0',
                     borderTopLeftRadius: '8px',
                     borderTopRightRadius: '8px',
+                    borderBottom: '0',
+                    display: 'flex',
+                    gap: '12px',
+                }}
+            >
+                <TableSearch
+                    options={[
+                        {
+                            id: 1,
+                            name: 'Title',
+                            field_name: 'title',
+                        },
+                        {
+                            id: 2,
+                            name: 'Location',
+                            field_name: 'location',
+                        },
+                    ]}
+                    handleSubmitSearch={handleSubmitSearch}
+                    setSearchParams={setSearchParams}
+                />
+            </Box>
+            <Box
+                sx={{
+                    padding: '12px',
+                    border: '1px solid var(--border-color)',
+                    borderBottom: '0',
+                    // borderTopLeftRadius: '8px',
+                    // borderTopRightRadius: '8px',
                 }}
             >
                 <TableFilter handleAppliedFilter={handleAppliedFilter} />
@@ -195,7 +238,6 @@ const ProjectsTable = () => {
                         align: 'start',
 
                         renderCell: (par) => {
-                            console.log(par)
                             return (
                                 <div className={styles['details']}>
                                     <p
