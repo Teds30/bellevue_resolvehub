@@ -9,8 +9,8 @@ import IssueReported from './pages/report_issue/IssueReported'
 // import Task from './pages/tasks/Task'
 import CreateProject from './pages/projects/CreateProject'
 import ProjectCreated from './pages/projects/ProjectCreated'
-import Project from './pages/projects/Project'
-import MyProjects from './pages/my_projects/MyProjects'
+// import Project from './pages/projects/Project'
+// import MyProjects from './pages/my_projects/MyProjects'
 import Departments from './pages/departments/Departments'
 import DepartmentList from './pages/departments/DepartmentList'
 import Department from './pages/departments/Department'
@@ -23,6 +23,7 @@ import Profile from './pages/profile/Profile'
 import ProfileDetails from './pages/profile/ProfileDetails'
 import Logout from './pages/auth/Logout'
 import SplashScreen from './pages/spashscreen/SplashScreen'
+import SplashScreenStatic from './pages/spashscreen/SplashScreenStatic'
 // import EditProject from './pages/projects/EditProject'
 
 const MyTasks = lazy(() => import('./pages/my_tasks/MyTasks'))
@@ -31,7 +32,9 @@ const Dashboard = lazy(() => import('./pages/dashboard/Dashboard'))
 const ReportIssue = lazy(() => import('./pages/report_issue/ReportIssue'))
 const Reports = lazy(() => import('./pages/reports/Reports'))
 // const Login = lazy(() => import('./pages/auth/Login'))
+const Project = lazy(() => import('./pages/projects/Project'))
 const EditProject = lazy(() => import('./pages/projects/EditProject'))
+const MyProjects = lazy(() => import('./pages/my_projects/MyProjects'))
 
 const App = () => {
     const {
@@ -46,7 +49,7 @@ const App = () => {
     let routes
 
     routes = (
-        <Suspense fallback={<SplashScreen />}>
+        <Suspense fallback={<SplashScreenStatic />}>
             <Routes>
                 {/* <Route
                     path="/"
@@ -90,6 +93,7 @@ const App = () => {
                 <Route path="/profile" element={<Profile />}>
                     <Route path="" element={<ProfileDetails />}></Route>
                 </Route>
+                <Route path="*" element={<Navigate replace to="/" />}></Route>
             </Routes>
         </Suspense>
     )
