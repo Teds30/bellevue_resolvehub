@@ -72,6 +72,12 @@ const MyTasks = () => {
             url: `${import.meta.env.VITE_BACKEND_URL}/api/user_done_tasks/${
                 userCtx.user.id
             }`,
+            method: 'POST',
+            body: JSON.stringify({ today: true }),
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userCtx.token}`,
+            },
         })
         setTasks(res.data)
     }
@@ -81,6 +87,12 @@ const MyTasks = () => {
             url: `${
                 import.meta.env.VITE_BACKEND_URL
             }/api/user_cancelled_tasks/${userCtx.user.id}`,
+            method: 'POST',
+            body: JSON.stringify({ today: true }),
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userCtx.token}`,
+            },
         })
         setTasks(res.data)
     }
@@ -202,6 +214,10 @@ const MyTasks = () => {
                                     Cancelled
                                 </div>
                             </div>
+
+                            {(active === 3 || active === 4) && (
+                                <h3 style={{ textAlign: 'center' }}>Today</h3>
+                            )}
 
                             <div className={styles['tasks_container']}>
                                 {isLoading || deptLoading ? (
