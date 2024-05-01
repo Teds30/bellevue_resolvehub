@@ -26,7 +26,7 @@ const StyledSelect = styled(Select)(({ variation }) => ({
         },
     },
     '& .MuiOutlinedInput-input': {
-        padding: variation == 'small' ? '10px 6px' : '16.5px 14px',
+        padding: variation == 'small' && '10px 6px',
     },
 }))
 
