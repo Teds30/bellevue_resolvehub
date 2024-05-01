@@ -41,8 +41,8 @@ const ProjectCancelSwipe = (props) => {
                 project.id
             }`,
             body: JSON.stringify({
-                status: 4,
-                remarks: remarks,
+                status: 3,
+                remarks: cancelReason,
                 completed_marker_id: userCtx.user.id,
             }),
             method: 'PATCH',
@@ -70,7 +70,7 @@ const ProjectCancelSwipe = (props) => {
                 <TextField
                     rows={4}
                     multiline
-                    label="Details"
+                    label="Reason"
                     placeholder="Explain the reason"
                     fillWidth={true}
                     value={cancelReason}

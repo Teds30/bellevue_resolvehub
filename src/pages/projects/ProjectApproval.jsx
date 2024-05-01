@@ -11,6 +11,7 @@ import {
     IconRubberStamp,
     IconThumbDown,
     IconThumbUp,
+    IconX,
 } from '@tabler/icons-react'
 import useHttp from '../../hooks/http-hook'
 
@@ -180,16 +181,19 @@ const ProjectApproval = (props) => {
 
                 {/* pending of minor projects from employee */}
 
-                {project.status !== 4 && hasPermission('215') && (
-                    <OutlinedButton
-                        width="100%"
-                        // onClick={handlePending}
-                        leftIcon={<IconCalendarTime />}
-                        onClick={() => setPendingOpen(true)}
-                    >
-                        Reschedule
-                    </OutlinedButton>
-                )}
+                {project.status !== 3 &&
+                    project.status !== 4 &&
+                    project.status !== 5 &&
+                    hasPermission('215') && (
+                        <OutlinedButton
+                            width="100%"
+                            // onClick={handlePending}
+                            leftIcon={<IconCalendarTime />}
+                            onClick={() => setPendingOpen(true)}
+                        >
+                            Reschedule
+                        </OutlinedButton>
+                    )}
             </Box>
 
             {project.status === 0 &&
@@ -221,6 +225,23 @@ const ProjectApproval = (props) => {
                             </Moment>
                         </strong>
                     </p>
+                </div>
+            )}
+            {project.status === 3 && (
+                <div className={styles['project-submitted']}>
+                    <div className={styles['submit-icon']}>
+                        <IconX size={32} color="var(--accent-danger)" />
+                    </div>
+                    <div>
+                        <p>
+                            This project has been cancelled by{' '}
+                            {project.completed_marker.first_name}{' '}
+                            {project.completed_marker.last_name}.
+                        </p>
+                        <p className="title" style={{ marginTop: '6px' }}>
+                            Reason: {project.remarks}
+                        </p>
+                    </div>
                 </div>
             )}
             {project.status === 5 && (
