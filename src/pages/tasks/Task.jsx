@@ -363,12 +363,20 @@ const Task = () => {
                                             color: 'var(--accent-danger)',
                                         }}
                                     />
-                                    <p>
-                                        This task has been{' '}
-                                        <strong>Cancelled</strong> by{' '}
-                                        {task.completed_marker.first_name}{' '}
-                                        {task.completed_marker.last_name}.
-                                    </p>
+                                    <Box>
+                                        <p>
+                                            This task has been{' '}
+                                            <strong>Cancelled</strong> by{' '}
+                                            {task.completed_marker.first_name}{' '}
+                                            {task.completed_marker.last_name}.
+                                        </p>
+
+                                        <p className="smaller-text">
+                                            <Moment format="MMMM DD, YYYY [at] h:m A">
+                                                {task.updated_at}
+                                            </Moment>
+                                        </p>
+                                    </Box>
                                 </div>
                                 <div className={styles['marked-done-details']}>
                                     <p className="title">Reason</p>
