@@ -56,7 +56,9 @@ const ReportIssue = () => {
                 url: `${import.meta.env.VITE_BACKEND_URL}/api/issues`,
             })
 
-            setDepartments(res.data)
+            setDepartments(
+                res.data?.sort((a, b) => a.name.localeCompare(b.name))
+            )
             setIssues(res2.data)
         }
 
@@ -202,11 +204,11 @@ const ReportIssue = () => {
                     <IconMessageReport size={20} color="var(--fc-body)" />
                 }
                 value={selectedIssue}
-                placeholder={issues ? 'Select issue' : 'Loading'}
+                placeholder={issues ? 'Enter issue' : 'Loading'}
                 onValueChange={setSelectedIssue}
                 onInputChange={setInputValue}
                 inputValue={inputValue}
-                options={issues}
+                options={[]}
                 isFreeText={true}
             />
 
