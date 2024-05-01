@@ -5,12 +5,20 @@ import styles from './SearchField.module.css'
 import TableFilter from '../../pages/reports/TableFilter'
 import { Box, IconButton } from '@mui/material'
 import styled from 'styled-components'
+import { IconCrossOff, IconX } from '@tabler/icons-react'
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
     color: '#fff',
     backgroundColor: 'var(--accent)',
     '&:hover': {
         backgroundColor: 'var(--accent)',
+    },
+}))
+const StyledClearIconButton = styled(IconButton)(({ theme }) => ({
+    color: 'var(--fc-body)',
+    // backgroundColor: 'var(--accent)',
+    '&:hover': {
+        // backgroundColor: 'var(--accent)',
     },
 }))
 
@@ -24,6 +32,8 @@ const SearchField = (props) => {
         dropdown = false,
         dropdownComponent,
         handleSubmit,
+        showClear,
+        handleClear,
     } = props
 
     const searchRef = useRef()
@@ -57,6 +67,16 @@ const SearchField = (props) => {
                     >
                         <FiSearch />
                     </StyledIconButton>
+                    {showClear && (
+                        <StyledClearIconButton
+                            onClick={() => {
+                                handleClear()
+                                searchRef.current.value = ''
+                            }}
+                        >
+                            <IconX />
+                        </StyledClearIconButton>
+                    )}
                 </Box>
             </form>
         </div>
