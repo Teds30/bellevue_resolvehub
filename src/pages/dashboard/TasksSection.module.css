@@ -42,6 +42,9 @@
 .ongoing {
     background-color: #62ce94;
 }
+.done {
+    background-color: #03b077;
+}
 
 .pending {
     background-color: #6266ce;

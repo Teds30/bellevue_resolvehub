@@ -20,7 +20,7 @@ const TasksSection = () => {
             const res = await sendRequest({
                 url: `${import.meta.env.VITE_BACKEND_URL}/api/tasks_metric/${
                     userCtx.user.position.department_id
-                }`,
+                }/all`,
             })
 
             setMetrics(res)
@@ -58,6 +58,11 @@ const TasksSection = () => {
                                     value: metrics && metrics.cancelled,
                                     label: 'Cancelled',
                                     color: '#CB3E01',
+                                },
+                                {
+                                    value: metrics && metrics.done,
+                                    label: 'Done',
+                                    color: '#03b077',
                                 },
                             ],
                             innerRadius: 80,
@@ -128,6 +133,17 @@ const TasksSection = () => {
                         </div>
                         <div className={styles['col2']}>
                             {metrics ? metrics.cancelled : '--'}
+                        </div>
+                    </div>
+                    <div className={styles['legend']}>
+                        <div className={styles['col1']}>
+                            <div
+                                className={`${styles['box']} ${styles['done']}`}
+                            ></div>
+                            <p className="title">Done</p>
+                        </div>
+                        <div className={styles['col2']}>
+                            {metrics ? metrics.done : '--'}
                         </div>
                     </div>
                 </div>
