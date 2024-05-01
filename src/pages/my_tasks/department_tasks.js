@@ -73,7 +73,7 @@ const department_tasks = () => {
                 userCtx.user.position.department_id
             }`,
             method: 'POST',
-            // body: JSON.stringify({ today: true }),
+            body: JSON.stringify({ today: true }),
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${userCtx.token}`,
