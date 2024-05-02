@@ -6,11 +6,19 @@ import { IconChevronRight } from '@tabler/icons-react'
 import useHttp from '../../hooks/http-hook'
 import AuthContext from '../../context/auth-context'
 import { Link } from 'react-router-dom'
+import Dropdown from '../../components/Dropdown/Dropdown'
+import { IconBuilding } from '@tabler/icons-react'
+import dayjs from 'dayjs'
+import { Box } from '@mui/material'
+import DateSelector from '../../components/DateSelector/DateSelector'
 
 const TasksSection = () => {
     const pieParams = { height: 230, margin: { right: 5 } }
 
     const [metrics, setMetrics] = useState()
+    const [selectedMetric, setSelectedMetric] = useState(1)
+    const [year, setYear] = useState(dayjs)
+    const [month, setMonth] = useState(dayjs)
 
     const { sendRequest } = useHttp()
     const userCtx = useContext(AuthContext)
@@ -20,7 +28,7 @@ const TasksSection = () => {
             const res = await sendRequest({
                 url: `${import.meta.env.VITE_BACKEND_URL}/api/tasks_metric/${
                     userCtx.user.position.department_id
-                }/all`,
+                }/daily`,
             })
 
             setMetrics(res)
@@ -28,10 +36,152 @@ const TasksSection = () => {
         if (userCtx.user) loadData()
     }, [userCtx])
 
-    // console.log(metrics)
+    const handleSelectMetric = async (e) => {
+        if (e.target.value === 1) {
+            const res = await sendRequest({
+                url: `${import.meta.env.VITE_BACKEND_URL}/api/tasks_metric/${
+                    userCtx.user.position.department_id
+                }/daily`,
+                method: 'POST',
+            })
+            setMetrics(res)
+        } else if (e.target.value === 2) {
+            const res = await sendRequest({
+                url: `${import.meta.env.VITE_BACKEND_URL}/api/tasks_metric/${
+                    userCtx.user.position.department_id
+                }/weekly`,
+                method: 'POST',
+            })
+            setMetrics(res)
+        } else if (e.target.value === 3) {
+            const res = await sendRequest({
+                url: `${import.meta.env.VITE_BACKEND_URL}/api/tasks_metric/${
+                    userCtx.user.position.department_id
+                }/monthly`,
+                method: 'POST',
+                body: JSON.stringify({
+                    month: dayjs(month).month() + 1,
+                    year: dayjs(month).year(),
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            setMetrics(res)
+        } else if (e.target.value === 4) {
+            const res = await sendRequest({
+                url: `${import.meta.env.VITE_BACKEND_URL}/api/tasks_metric/${
+                    userCtx.user.position.department_id
+                }/yearly`,
+                method: 'POST',
+                body: JSON.stringify({
+                    year: dayjs(year).year(),
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            setMetrics(res)
+        }
+        setSelectedMetric(e.target.value)
+    }
+
+    useEffect(() => {
+        const refetchData = async () => {
+            const res = await sendRequest({
+                url: `${import.meta.env.VITE_BACKEND_URL}/api/tasks_metric/${
+                    userCtx.user.position.department_id
+                }/monthly`,
+                method: 'POST',
+                body: JSON.stringify({
+                    month: dayjs(month).month() + 1,
+                    year: dayjs(month).year(),
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+
+            setMetrics(res)
+        }
+        if (selectedMetric === 3) refetchData()
+    }, [month])
+
+    useEffect(() => {
+        const refetchData = async () => {
+            const res = await sendRequest({
+                url: `${import.meta.env.VITE_BACKEND_URL}/api/tasks_metric/${
+                    userCtx.user.position.department_id
+                }/yearly`,
+                method: 'POST',
+                body: JSON.stringify({
+                    year: dayjs(year).year(),
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+
+            setMetrics(res)
+        }
+        if (selectedMetric === 4) refetchData()
+    }, [year])
 
     return (
         <div className={styles['container']}>
+            <Box
+                sx={{
+                    marginTop: '16px',
+                    borderTop: '1px solid var(--border-color)',
+                    paddingTop: '16px',
+                    gap: '8px',
+                    display: 'flex',
+                }}
+            >
+                <Dropdown
+                    leadingIcon={
+                        <IconBuilding size={20} color="var(--fc-body)" />
+                    }
+                    // label="Filter"
+                    placeholder="Select filter"
+                    items={[
+                        { id: 1, name: 'Daily' },
+                        { id: 2, name: 'Weekly' },
+                        { id: 3, name: 'Monthly' },
+                        { id: 4, name: 'Year' },
+                    ]}
+                    value={selectedMetric}
+                    selected={selectedMetric}
+                    handleSelect={handleSelectMetric}
+                />
+                {(selectedMetric === 3 || selectedMetric === 4) && (
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <IconChevronRight />
+                    </Box>
+                )}
+                {selectedMetric === 3 ? (
+                    <DateSelector
+                        currentValue={month}
+                        handleSetValue={setMonth}
+                        defaultValue={null}
+                        label={'Month'}
+                        views={['month', 'year']}
+                    />
+                ) : selectedMetric === 4 ? (
+                    <DateSelector
+                        currentValue={year}
+                        handleSetValue={setYear}
+                        defaultValue={null}
+                        label={'Year'}
+                        views={['year']}
+                    />
+                ) : null}
+            </Box>
             <div className={styles['pie-container']}>
                 <PieChart
                     className={styles['pie']}
