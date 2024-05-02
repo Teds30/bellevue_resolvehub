@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Box } from '@mui/material'
 
 import styles from './Priorities.module.css'
 
@@ -20,35 +21,38 @@ const Priorities = (props) => {
     const selectedStyle = `${styles['priority-card']} ${styles['card-selected']}`
 
     return (
-        <div className={styles['container']}>
-            {priorities.map((priority, index) => {
-                return (
-                    <div
-                        key={index}
-                        className={
-                            selected === priority.id
-                                ? selectedStyle
-                                : styles['priority-card']
-                        }
-                        style={
-                            selected === priority.id
-                                ? {
-                                      border: `2px solid ${priority.color}`,
-                                      backgroundColor: `${priority.color}08`,
-                                  }
-                                : {
-                                      borderColor: 'none',
-                                  }
-                        }
-                        onClick={() => handleSelect(priority.id)}
-                    >
-                        {/* {selected} */}
-                        <h3>{priority.id}</h3>
-                        <p>{priority.label}</p>
-                    </div>
-                )
-            })}
-        </div>
+        <Box>
+            <p className="title">Priority</p>
+            <div className={styles['container']}>
+                {priorities.map((priority, index) => {
+                    return (
+                        <div
+                            key={index}
+                            className={
+                                selected === priority.id
+                                    ? selectedStyle
+                                    : styles['priority-card']
+                            }
+                            style={
+                                selected === priority.id
+                                    ? {
+                                          border: `2px solid ${priority.color}`,
+                                          backgroundColor: `${priority.color}08`,
+                                      }
+                                    : {
+                                          borderColor: 'none',
+                                      }
+                            }
+                            onClick={() => handleSelect(priority.id)}
+                        >
+                            {/* {selected} */}
+                            <h3>{priority.id}</h3>
+                            <p>{priority.label}</p>
+                        </div>
+                    )
+                })}
+            </div>
+        </Box>
     )
 }
 
