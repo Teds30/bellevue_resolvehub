@@ -70,7 +70,6 @@ const ReportIssue = () => {
     const navigate = useNavigate()
 
     const handleSelectDepartment = (e) => {
-        console.log(e.target.value)
         setSelectedDepartment(e.target.value)
     }
     const handleSelectIssue = (e) => {
@@ -208,7 +207,7 @@ const ReportIssue = () => {
                 onValueChange={setSelectedIssue}
                 onInputChange={setInputValue}
                 inputValue={inputValue}
-                options={[]}
+                options={issues}
                 isFreeText={true}
             />
 
