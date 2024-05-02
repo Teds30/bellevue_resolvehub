@@ -99,8 +99,8 @@
     display: flex;
     overflow-x: auto;
     text-wrap: nowrap;
-    justify-content: center;
-    padding-top: 12px;
+    /* justify-content: center; */
+    padding: 12px;
 }
 .nav_btn {
     padding: 8px 12px;
