@@ -29,6 +29,7 @@ const TasksSection = () => {
                 url: `${import.meta.env.VITE_BACKEND_URL}/api/tasks_metric/${
                     userCtx.user.position.department_id
                 }/daily`,
+                method: 'POST',
             })
 
             setMetrics(res)
