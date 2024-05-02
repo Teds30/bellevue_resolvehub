@@ -252,7 +252,7 @@ const ProjectsSection = () => {
                             <div
                                 className={`${styles['box']} ${styles['unassigned']}`}
                             ></div>
-                            <p className="title">Unassigned</p>
+                            <p className="title">Request</p>
                         </div>
                         <div className={styles['col2']}>
                             {metrics ? metrics.unassigned : '--'}
