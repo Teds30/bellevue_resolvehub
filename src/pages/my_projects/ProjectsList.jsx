@@ -57,7 +57,7 @@ const ProjectsList = (props) => {
             ongoing = projects.filter((proj) => proj.status == 2).length
             cancelled = projects.filter((proj) => proj.status == 3).length
             done = projects.filter((proj) => proj.status == 4).length
-            rejected = projects.filter((proj) => proj.status == 4).length
+            rejected = projects.filter((proj) => proj.status == 5).length
 
             setCount({
                 request: request,
