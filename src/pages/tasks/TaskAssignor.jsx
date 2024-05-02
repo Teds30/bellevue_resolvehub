@@ -76,17 +76,18 @@ const TaskAssignor = (props) => {
             ]
         })
 
-        if (task.assignee_id)
+        if (task.assignee_id) {
             setPerson({
                 id: task.assignee.id,
                 name: `${task.assignee.first_name} ${task.assignee.last_name}`,
                 position: task.assignee.position.name,
             })
-        setDisplaySelectedPerson({
-            id: task.assignee.id,
-            name: `${task.assignee.first_name} ${task.assignee.last_name}`,
-            position: task.assignee.position.name,
-        })
+            setDisplaySelectedPerson({
+                id: task.assignee.id,
+                name: `${task.assignee.first_name} ${task.assignee.last_name}`,
+                position: task.assignee.position.name,
+            })
+        }
 
         setPeople(modified)
     }
