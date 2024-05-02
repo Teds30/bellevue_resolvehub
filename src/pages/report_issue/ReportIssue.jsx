@@ -78,14 +78,15 @@ const ReportIssue = () => {
 
     const [inputValue, setInputValue] = React.useState('')
 
-    const [selectedPriority, setSelectedPriority] = useState(1)
+    const [selectedPriority, setSelectedPriority] = useState()
     const [uploadedImages, setUploadedImages] = useState([])
 
     let formIsValid =
         enteredRoomIsValid &&
         enteredDetailsIsValid &&
         !!selectedDepartment &&
-        !!inputValue
+        !!inputValue &&
+        !!selectedPriority
 
     const handleFileUpload = async (image, task_id, i) => {
         const formData = new FormData()
@@ -188,7 +189,7 @@ const ReportIssue = () => {
             />
             <Dropdown
                 leadingIcon={<IconBuilding size={20} color="var(--fc-body)" />}
-                label="Department"
+                label="Concerned Department"
                 placeholder="Select department"
                 items={departments}
                 value={selectedDepartment}
