@@ -57,7 +57,7 @@ const IssueSection = () => {
 
             setGraphData(res)
         }
-        refetchData()
+        if (selectedMetric === 2) refetchData()
     }, [month])
 
     useEffect(() => {
@@ -77,7 +77,7 @@ const IssueSection = () => {
 
             setGraphData(res)
         }
-        refetchData()
+        if (selectedMetric === 3) refetchData()
     }, [year])
 
     const handleSelectMetric = async (e) => {
