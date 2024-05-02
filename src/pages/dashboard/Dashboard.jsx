@@ -63,6 +63,17 @@ const Dashboard = () => {
                     >
                         Tasks
                     </div>
+                    <div
+                        className={`${styles['nav_btn']} ${
+                            active === 2 && styles['nav_btn_active']
+                        }`}
+                        onClick={() => {
+                            navigate('projects')
+                            handleActive(2)
+                        }}
+                    >
+                        Projects
+                    </div>
                     {/* <div
                         className={`${styles['nav_btn']} ${
                             active === 2 && styles['nav_btn_active']

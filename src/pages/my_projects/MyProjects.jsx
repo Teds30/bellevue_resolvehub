@@ -97,18 +97,18 @@ const MyProjects = () => {
                                 (userCtx.hasPermission('201') ||
                                     userCtx.hasPermission('202')) && (
                                     <Tab
-                                        label="Department"
+                                        label="My Department"
                                         value={0}
                                         onClick={() => loadProjects()}
                                     />
                                 )}
                             <Tab
-                                label="Assigned"
+                                label="My Projects"
                                 value={1}
                                 onClick={() => loadAssignedProjects()}
                             />
                             <Tab
-                                label="My Projects"
+                                label="Assigned To"
                                 value={2}
                                 onClick={() => loadUserProjects()}
                             />

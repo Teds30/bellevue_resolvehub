@@ -24,6 +24,7 @@ import ProfileDetails from './pages/profile/ProfileDetails'
 import Logout from './pages/auth/Logout'
 import SplashScreen from './pages/spashscreen/SplashScreen'
 import SplashScreenStatic from './pages/spashscreen/SplashScreenStatic'
+import ProjectsSection from './pages/dashboard/ProjectsSection'
 // import EditProject from './pages/projects/EditProject'
 
 const MyTasks = lazy(() => import('./pages/my_tasks/MyTasks'))
@@ -89,6 +90,10 @@ const App = () => {
                 <Route path="/dashboard" element={<Dashboard />}>
                     <Route path="" element={<IssueSection />}></Route>
                     <Route path="tasks" element={<TasksSection />}></Route>
+                    <Route
+                        path="projects"
+                        element={<ProjectsSection />}
+                    ></Route>
                 </Route>
                 <Route path="/profile" element={<Profile />}>
                     <Route path="" element={<ProfileDetails />}></Route>

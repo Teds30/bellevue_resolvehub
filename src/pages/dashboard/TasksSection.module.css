@@ -53,6 +53,9 @@
 .cancelled {
     background-color: #cb3e01;
 }
+.rejected {
+    background-color: #555;
+}
 
 .col1 {
     flex: 1;
