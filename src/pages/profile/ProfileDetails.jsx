@@ -9,6 +9,7 @@ import useValidate from '../../hooks/validate-input-hook'
 import { Box } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import useHttp from '../../hooks/http-hook'
+import ChangePassword from './ChangePassword'
 
 const ProfileDetails = () => {
     const {
@@ -32,6 +33,14 @@ const ProfileDetails = () => {
 
     const userCtx = useContext(AuthContext)
     const navigate = useNavigate()
+
+    const [open, setOpen] = useState(false)
+    const handleClose = () => {
+        setOpen(false)
+    }
+    const handleOpen = () => {
+        setOpen(true)
+    }
 
     const [isEditing, setIsEditing] = useState(false)
     const { sendRequest, isLoading } = useHttp()
@@ -93,23 +102,44 @@ const ProfileDetails = () => {
                     </div>
                     <div className={styles['actions']}>
                         {isEditing && (
-                            <Box sx={{ display: 'flex', gap: '14px' }}>
-                                <OutlinedButton
-                                    width="100%"
-                                    onClick={() => {
-                                        setIsEditing(false)
+                            <Box>
+                                <Box sx={{ display: 'flex', gap: '14px' }}>
+                                    <OutlinedButton
+                                        width="100%"
+                                        onClick={() => {
+                                            setIsEditing(false)
+                                        }}
+                                    >
+                                        Cancel
+                                    </OutlinedButton>
+                                    <PrimaryButton
+                                        width="100%"
+                                        onClick={handleSubmit}
+                                        isLoading={isLoading}
+                                        loadingText="Saving"
+                                    >
+                                        Save
+                                    </PrimaryButton>
+                                </Box>
+                                <Box
+                                    sx={{
+                                        marginTop: '24px',
+                                        textAlign: 'center',
+                                        cursor: 'pointer',
                                     }}
                                 >
-                                    Cancel
-                                </OutlinedButton>
-                                <PrimaryButton
-                                    width="100%"
-                                    onClick={handleSubmit}
-                                    isLoading={isLoading}
-                                    loadingText="Saving"
-                                >
-                                    Save
-                                </PrimaryButton>
+                                    <p
+                                        style={{
+                                            fontWeight: 500,
+                                            color: 'var(--fc-strong)',
+                                            textDecoration: 'underline',
+                                        }}
+                                        width="100%"
+                                        onClick={handleOpen}
+                                    >
+                                        Change Password
+                                    </p>
+                                </Box>
                             </Box>
                         )}
 
@@ -137,6 +167,7 @@ const ProfileDetails = () => {
                     </div>
                 </div>
             )}
+            {<ChangePassword open={open} handleClose={handleClose} />}
         </div>
     )
 }
