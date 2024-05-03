@@ -370,72 +370,72 @@ const ReportsTable = () => {
                         headerAlign: 'center',
                         align: 'center',
                     },
-                    // {
-                    //     field: 'schedule',
-                    //     hideable: false,
-                    //     disableColumnMenu: true,
-                    //     headerName: 'Schedule',
-                    //     valueGetter: (value) => {
-                    //         return value
-                    //     },
-                    //     renderCell: (par) => {
-                    //         return (
-                    //             <Box>
-                    //                 <p>
-                    //                     {dayjs(par.row.schedule).format(
-                    //                         'MMMM DD, YYYY'
-                    //                     )}
-                    //                 </p>
-                    //                 <p className="smaller-text">
-                    //                     {dayjs(par.row.schedule).format(
-                    //                         'hh:mm A'
-                    //                     )}
-                    //                 </p>
-                    //             </Box>
-                    //         )
-                    //     },
-                    //     flex: 1,
-                    //     cellClassName: styles['row_cells'],
-                    //     headerClassName: styles['row_header'],
-                    //     headerAlign: 'center',
-                    //     align: 'center',
-                    // },
+                    {
+                        field: 'schedule',
+                        hideable: false,
+                        disableColumnMenu: true,
+                        headerName: 'Schedule',
+                        valueGetter: (value) => {
+                            return value
+                        },
+                        renderCell: (par) => {
+                            return (
+                                <Box>
+                                    <p>
+                                        {dayjs(par.row.schedule).format(
+                                            'MMMM DD, YYYY'
+                                        )}
+                                    </p>
+                                    <p className="smaller-text">
+                                        {dayjs(par.row.schedule).format(
+                                            'hh:mm A'
+                                        )}
+                                    </p>
+                                </Box>
+                            )
+                        },
+                        flex: 1,
+                        cellClassName: styles['row_cells'],
+                        headerClassName: styles['row_header'],
+                        headerAlign: 'center',
+                        align: 'center',
+                    },
 
-                    // {
-                    //     field: 'completion_date',
-                    //     hidden: true,
-                    //     hideable: false,
-                    //     disableColumnMenu: true,
-                    //     headerName: 'Completion Date',
-                    //     valueGetter: (value) => {
-                    //         return value
-                    //     },
-                    //     renderCell: (par) => {
-                    //         let out = par.row.completed_marker_id ? (
-                    //             <Box>
-                    //                 <p>
-                    //                     {dayjs(par.row.updated_at).format(
-                    //                         'MMMM DD, YYYY'
-                    //                     )}
-                    //                 </p>
-                    //                 <p className="smaller-text">
-                    //                     {dayjs(par.row.updated_at).format(
-                    //                         'hh:mm A'
-                    //                     )}
-                    //                 </p>
-                    //             </Box>
-                    //         ) : (
-                    //             ''
-                    //         )
+                    {
+                        field: 'completion_date',
+                        hidden: true,
+                        hideable: false,
+                        disableColumnMenu: true,
+                        headerName: 'Completion Date',
+                        valueGetter: (value) => {
+                            return value
+                        },
+                        renderCell: (par) => {
+                            let out = par.row.completed_marker_id ? (
+                                <Box>
+                                    <p>
+                                        {dayjs(par.row.updated_at).format(
+                                            'MMMM DD, YYYY'
+                                        )}
+                                    </p>
+                                    <p className="smaller-text">
+                                        {dayjs(par.row.updated_at).format(
+                                            'hh:mm A'
+                                        )}
+                                    </p>
+                                </Box>
+                            ) : (
+                                ''
+                            )
 
-                    //         return out
-                    //     },
-                    //     flex: 1,
-                    //     cellClassName: styles['row_cells'],
-                    //     headerClassName: styles['row_header'],
-                    //     headerAlign: 'center',
-                    //     align: 'center',
-                    // },
+                            return out
+                        },
+                        flex: 1,
+                        cellClassName: styles['row_cells'],
+                        headerClassName: styles['row_header'],
+                        headerAlign: 'center',
+                        align: 'center',
+                    },
                     {
                         field: 'status',
                         hideable: false,
