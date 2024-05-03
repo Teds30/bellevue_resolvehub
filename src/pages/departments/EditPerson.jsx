@@ -120,18 +120,36 @@ const EditPerson = (props) => {
     formIsValid = isChangePass ? formIsValid && enteredPassword : formIsValid
 
     const handleSaveChanges = async () => {
-        const res = await sendRequest({
-            url: `${import.meta.env.VITE_BACKEND_URL}/api/users/${person.id}`,
-            method: 'PATCH',
-            body: JSON.stringify({
-                first_name: enteredFirstName,
-                last_name: enteredLastName,
-                phone_number: enteredNumber,
-                username: enteredUsername,
-                position_id: selectedPosition,
-                password: isChangePass ? enteredPassword : null,
-            }),
-        })
+        if (isChangePass) {
+            const res = await sendRequest({
+                url: `${import.meta.env.VITE_BACKEND_URL}/api/users/${
+                    person.id
+                }`,
+                method: 'PATCH',
+                body: JSON.stringify({
+                    first_name: enteredFirstName,
+                    last_name: enteredLastName,
+                    phone_number: enteredNumber,
+                    username: enteredUsername,
+                    position_id: selectedPosition,
+                    password: enteredPassword,
+                }),
+            })
+        } else {
+            const res2 = await sendRequest({
+                url: `${import.meta.env.VITE_BACKEND_URL}/api/users/${
+                    person.id
+                }`,
+                method: 'PATCH',
+                body: JSON.stringify({
+                    first_name: enteredFirstName,
+                    last_name: enteredLastName,
+                    phone_number: enteredNumber,
+                    username: enteredUsername,
+                    position_id: selectedPosition,
+                }),
+            })
+        }
         handleClose()
         loadData()
     }
