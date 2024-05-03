@@ -148,7 +148,7 @@ const ProjectsSection = () => {
                     items={[
                         { id: 1, name: 'Daily' },
                         { id: 2, name: 'Weekly' },
-                        { id: 3, name: 'Monthly' },
+                        { id: 3, name: 'Month' },
                         { id: 4, name: 'Year' },
                     ]}
                     value={selectedMetric}
@@ -242,7 +242,7 @@ const ProjectsSection = () => {
                 />
                 <div className={styles['pie-title']}>
                     <h1>{metrics ? metrics.total : '--'}</h1>
-                    <p style={{ fontWeight: 600 }}>TASKS</p>
+                    <p style={{ fontWeight: 600 }}>PROJECTS</p>
                 </div>
             </div>
             <div className={styles['legends-container']}>
@@ -255,7 +255,7 @@ const ProjectsSection = () => {
                             <p className="title">Request</p>
                         </div>
                         <div className={styles['col2']}>
-                            {metrics ? metrics.unassigned : '--'}
+                            {metrics ? metrics.request : '--'}
                         </div>
                     </div>
                     <div className={styles['legend']}>
