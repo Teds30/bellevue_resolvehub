@@ -1,5 +1,5 @@
 import { LineChart } from '@mui/x-charts'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import useHttp from '../../hooks/http-hook'
 
 import styles from './IssueSection.module.css'
@@ -9,9 +9,12 @@ import { Box } from '@mui/material'
 import DateSelector from '../../components/DateSelector/DateSelector'
 import dayjs from 'dayjs'
 import { IconChevronRight } from '@tabler/icons-react'
+import AuthContext from '../../context/auth-context'
 
 const IssueSection = () => {
     const { sendRequest } = useHttp()
+
+    const userCtx = useContext(AuthContext)
 
     const [graphData, setGraphData] = useState()
     const [selectedMetric, setSelectedMetric] = useState(1)
@@ -24,27 +27,33 @@ const IssueSection = () => {
             const res = await sendRequest({
                 url: `${
                     import.meta.env.VITE_BACKEND_URL
-                }/api/issues_metric/week`,
+                }/api/issues_metric/week/${
+                    userCtx.user.position.department_id
+                }`,
             })
 
             const res2 = await sendRequest({
                 url: `${
                     import.meta.env.VITE_BACKEND_URL
-                }/api/issues_most_reported`,
+                }/api/issues_most_reported/week/${
+                    userCtx.user.position.department_id
+                }`,
             })
 
             setGraphData(res)
             setReports(res2)
         }
-        loadData()
-    }, [])
+        if (userCtx.user) loadData()
+    }, [userCtx])
 
     useEffect(() => {
         const refetchData = async () => {
             const res = await sendRequest({
                 url: `${
                     import.meta.env.VITE_BACKEND_URL
-                }/api/issues_metric/month`,
+                }/api/issues_metric/month/${
+                    userCtx.user.position.department_id
+                }`,
                 method: 'POST',
                 body: JSON.stringify({
                     month: dayjs(month).month() + 1,
@@ -55,17 +64,28 @@ const IssueSection = () => {
                 },
             })
 
+            const res2 = await sendRequest({
+                url: `${
+                    import.meta.env.VITE_BACKEND_URL
+                }/api/issues_most_reported/month/${
+                    userCtx.user.position.department_id
+                }`,
+            })
+            setReports(res2)
+
             setGraphData(res)
         }
-        if (selectedMetric === 2) refetchData()
-    }, [month])
+        if (selectedMetric === 2 && userCtx.user) refetchData()
+    }, [month, userCtx])
 
     useEffect(() => {
         const refetchData = async () => {
             const res = await sendRequest({
                 url: `${
                     import.meta.env.VITE_BACKEND_URL
-                }/api/issues_metric/year`,
+                }/api/issues_metric/year/${
+                    userCtx.user.position.department_id
+                }`,
                 method: 'POST',
                 body: JSON.stringify({
                     year: dayjs(year).year(),
@@ -75,25 +95,47 @@ const IssueSection = () => {
                 },
             })
 
+            const res2 = await sendRequest({
+                url: `${
+                    import.meta.env.VITE_BACKEND_URL
+                }/api/issues_most_reported/year/${
+                    userCtx.user.position.department_id
+                }`,
+            })
+            setReports(res2)
+
             setGraphData(res)
         }
-        if (selectedMetric === 3) refetchData()
-    }, [year])
+        if (selectedMetric === 3 && userCtx.user) refetchData()
+    }, [year, userCtx])
 
     const handleSelectMetric = async (e) => {
         if (e.target.value === 1) {
             const res = await sendRequest({
                 url: `${
                     import.meta.env.VITE_BACKEND_URL
-                }/api/issues_metric/week`,
+                }/api/issues_metric/week/${
+                    userCtx.user.position.department_id
+                }`,
             })
+
+            const res2 = await sendRequest({
+                url: `${
+                    import.meta.env.VITE_BACKEND_URL
+                }/api/issues_most_reported/week/${
+                    userCtx.user.position.department_id
+                }`,
+            })
+            setReports(res2)
 
             setGraphData(res)
         } else if (e.target.value === 2) {
             const res = await sendRequest({
                 url: `${
                     import.meta.env.VITE_BACKEND_URL
-                }/api/issues_metric/month`,
+                }/api/issues_metric/month/${
+                    userCtx.user.position.department_id
+                }`,
                 method: 'POST',
                 body: JSON.stringify({
                     month: dayjs(month).month() + 1,
@@ -104,12 +146,23 @@ const IssueSection = () => {
                 },
             })
 
+            const res2 = await sendRequest({
+                url: `${
+                    import.meta.env.VITE_BACKEND_URL
+                }/api/issues_most_reported/month/${
+                    userCtx.user.position.department_id
+                }`,
+            })
+            setReports(res2)
+
             setGraphData(res)
         } else if (e.target.value === 3) {
             const res = await sendRequest({
                 url: `${
                     import.meta.env.VITE_BACKEND_URL
-                }/api/issues_metric/year`,
+                }/api/issues_metric/year/${
+                    userCtx.user.position.department_id
+                }`,
                 method: 'POST',
                 body: JSON.stringify({
                     year: dayjs(month).year(),
@@ -118,6 +171,15 @@ const IssueSection = () => {
                     'Content-Type': 'application/json',
                 },
             })
+
+            const res2 = await sendRequest({
+                url: `${
+                    import.meta.env.VITE_BACKEND_URL
+                }/api/issues_most_reported/year/${
+                    userCtx.user.position.department_id
+                }`,
+            })
+            setReports(res2)
 
             setGraphData(res)
         }
@@ -142,9 +204,9 @@ const IssueSection = () => {
                     // label="Filter"
                     placeholder="Select filter"
                     items={[
-                        { id: 1, name: 'Weekly' },
-                        { id: 2, name: 'Monthly' },
-                        { id: 3, name: 'Yearly' },
+                        { id: 1, name: 'This Week' },
+                        { id: 2, name: 'Month' },
+                        { id: 3, name: 'Year' },
                     ]}
                     value={selectedMetric}
                     selected={selectedMetric}
