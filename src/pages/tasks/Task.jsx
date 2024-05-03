@@ -118,9 +118,10 @@ const Task = () => {
                                                     ? '#C0362D'
                                                     : task.priority === 2
                                                     ? '#EAAA08'
-                                                    : task.priority === 3 ||
-                                                      task.priority === 4
+                                                    : task.priority === 3
                                                     ? '#2DC044'
+                                                    : task.priority === 4
+                                                    ? '#2d9bc0'
                                                     : '#000',
                                         }}
                                     >
