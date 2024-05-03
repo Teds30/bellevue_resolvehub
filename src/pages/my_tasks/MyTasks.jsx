@@ -333,10 +333,11 @@ const MyTasks = () => {
                                                                                   2
                                                                                 ? '#EAAA08'
                                                                                 : task.priority ===
-                                                                                      3 ||
-                                                                                  task.priority ===
-                                                                                      4
+                                                                                  3
                                                                                 ? '#2DC044'
+                                                                                : task.priority ===
+                                                                                  4
+                                                                                ? '#2d9bc0'
                                                                                 : '#000',
                                                                     }}
                                                                 >
