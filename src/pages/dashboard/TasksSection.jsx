@@ -198,7 +198,7 @@ const TasksSection = () => {
                                 {
                                     value: metrics && metrics.ongoing,
                                     label: 'On-Going',
-                                    color: '#62CE94',
+                                    color: '#2d9bc0',
                                 },
                                 {
                                     value: metrics && metrics.pending,
