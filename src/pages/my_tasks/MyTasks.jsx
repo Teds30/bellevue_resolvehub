@@ -19,6 +19,7 @@ import userPermission from '../../hooks/userPermission'
 
 import { IconMapPin } from '@tabler/icons-react'
 import dayjs from 'dayjs'
+import PriorityTask from './PriorityTask'
 const MyTasks = () => {
     const [active, setActive] = useState(0)
     const [tasks, setTasks] = useState([])
@@ -256,330 +257,35 @@ const MyTasks = () => {
                                         )}
                                     </>
                                 ) : (
-                                    tasks?.map((task, index) => {
-                                        return (
-                                            <Link
-                                                className={'card-link'}
-                                                key={index}
-                                                to={`/tasks/${task.id}`}
-                                            >
-                                                <div
-                                                    className={
-                                                        styles['task_card']
-                                                    }
-                                                >
-                                                    <div
-                                                        className={
-                                                            styles['col1']
-                                                        }
-                                                    >
-                                                        <Box
-                                                            sx={{
-                                                                display: 'flex',
-                                                                alignItems:
-                                                                    'center',
-                                                                // padding: '2px 8px',
-                                                                // border: '1px solid #1ca457',
-                                                                borderRadius:
-                                                                    '12px',
-                                                                width: 'fit-content',
-                                                                gap: '4px',
-                                                            }}
-                                                        >
-                                                            <div
-                                                                className={
-                                                                    styles[
-                                                                        'room_chip'
-                                                                    ]
-                                                                }
-                                                            >
-                                                                <Box
-                                                                    sx={{
-                                                                        display:
-                                                                            'flex',
-                                                                        alignItems:
-                                                                            'center',
-                                                                        gap: '4px',
-                                                                    }}
-                                                                >
-                                                                    <Box
-                                                                        sx={{
-                                                                            display:
-                                                                                'flex',
-                                                                            alignItems:
-                                                                                'center',
-                                                                        }}
-                                                                    >
-                                                                        <IconMapPin
-                                                                            size={
-                                                                                12
-                                                                            }
-                                                                        />
-                                                                    </Box>{' '}
-                                                                    {task.room}
-                                                                </Box>
-                                                                <span
-                                                                    className={
-                                                                        styles[
-                                                                            'priority-chip'
-                                                                        ]
-                                                                    }
-                                                                    style={{
-                                                                        backgroundColor:
-                                                                            task.priority ===
-                                                                            1
-                                                                                ? '#C0362D'
-                                                                                : task.priority ===
-                                                                                  2
-                                                                                ? '#EAAA08'
-                                                                                : task.priority ===
-                                                                                  3
-                                                                                ? '#2DC044'
-                                                                                : task.priority ===
-                                                                                  4
-                                                                                ? '#2d9bc0'
-                                                                                : '#000',
-                                                                    }}
-                                                                >
-                                                                    {task.priority ===
-                                                                    1
-                                                                        ? 'HIGH'
-                                                                        : task.priority ===
-                                                                          2
-                                                                        ? 'MEDIUM'
-                                                                        : task.priority ===
-                                                                          3
-                                                                        ? 'NORMAL'
-                                                                        : task.priority ===
-                                                                          4
-                                                                        ? 'LOW'
-                                                                        : ''}
-                                                                </span>
-                                                            </div>
-                                                            {/* {task.status === 1 && (
-                                            <Box
-                                                sx={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    // padding: '2px 8px',
-                                                    // border: '1px solid #1ca457',
-                                                    borderRadius: '12px',
-                                                    width: 'fit-content',
-                                                    gap: '4px',
-                                                }}
-                                            >
-                                                <span
-                                                    className={styles['blob']}
-                                                ></span>
-                                                <p
-                                                    style={{
-                                                        fontSize: '10px',
-                                                        letterSpacing: '1px',
-                                                        color: '#1ca457',
-                                                        fontWeight: 700,
-                                                    }}
-                                                >@
-                                                    ACTIVE
-                                                </p>
-                                            </Box>
-                                        )} */}
-                                                        </Box>
-
-                                                        <h4>{task.issue}</h4>
-                                                        {active === 0 && (
-                                                            <>
-                                                                <p
-                                                                    style={{
-                                                                        fontSize:
-                                                                            '12px',
-                                                                        color: 'var(--fc-body)',
-                                                                    }}
-                                                                >
-                                                                    by{' '}
-                                                                    <strong>{`${task.requestor.first_name} ${task.requestor.last_name}`}</strong>
-                                                                </p>
-                                                                <p
-                                                                    style={{
-                                                                        fontSize:
-                                                                            '12px',
-                                                                        color: 'var(--fc-body)',
-                                                                    }}
-                                                                >
-                                                                    {' '}
-                                                                    <Moment
-                                                                        fromNow
-                                                                    >
-                                                                        {
-                                                                            task.created_at
-                                                                        }
-                                                                    </Moment>
-                                                                </p>
-                                                            </>
-                                                        )}
-
-                                                        {
-                                                            //TODO: PERMISSION: change to dynamic
-                                                            active === 1 &&
-                                                                task.assignee_id &&
-                                                                userCtx.user
-                                                                    .position_id ===
-                                                                    3 && (
-                                                                    <p
-                                                                        style={{
-                                                                            fontSize:
-                                                                                '12px',
-                                                                            color: 'var(--fc-body)',
-                                                                        }}
-                                                                    >
-                                                                        Assignee:{' '}
-                                                                        <strong>{`${task.assignee.first_name} ${task.assignee.last_name}`}</strong>
-                                                                    </p>
-                                                                )
-                                                        }
-                                                        {active === 1 &&
-                                                            task.assignee_id &&
-                                                            task.assignee_id !==
-                                                                userCtx.user
-                                                                    .id && (
-                                                                <p
-                                                                    style={{
-                                                                        fontSize:
-                                                                            '12px',
-                                                                        color: 'var(--fc-body)',
-                                                                    }}
-                                                                >
-                                                                    assigned to{' '}
-                                                                    <strong>{`${task.assignee.first_name} ${task.assignee.last_name}`}</strong>
-                                                                </p>
-                                                            )}
-                                                        {active === 1 && (
-                                                            <p
-                                                                style={{
-                                                                    fontSize:
-                                                                        '12px',
-                                                                    color: 'var(--fc-body)',
-                                                                }}
-                                                            >
-                                                                {dayjs().isAfter(
-                                                                    dayjs(
-                                                                        task.schedule
-                                                                    )
-                                                                ) ? (
-                                                                    'OVERDUE'
-                                                                ) : (
-                                                                    <span>
-                                                                        {' '}
-                                                                        Accomplish
-                                                                        before:{' '}
-                                                                        <Moment
-                                                                            format="h:mma"
-                                                                            style={{
-                                                                                color: 'var(--accent)',
-                                                                                fontWeight: 600,
-                                                                            }}
-                                                                        >
-                                                                            {
-                                                                                task.schedule
-                                                                            }
-                                                                        </Moment>
-                                                                    </span>
-                                                                )}
-                                                            </p>
-                                                        )}
-                                                        {
-                                                            //TODO: PERMISSION: change to dynamic
-                                                            active === 2 &&
-                                                                task.assignee_id &&
-                                                                userCtx.user
-                                                                    .position_id ===
-                                                                    3 && (
-                                                                    <>
-                                                                        <p
-                                                                            style={{
-                                                                                fontSize:
-                                                                                    '12px',
-                                                                                color: 'var(--fc-body)',
-                                                                            }}
-                                                                        >
-                                                                            Assignee:{' '}
-                                                                            {
-                                                                                task
-                                                                                    .assignee
-                                                                                    .first_name
-                                                                            }{' '}
-                                                                            {
-                                                                                task
-                                                                                    .assignee
-                                                                                    .last_name
-                                                                            }
-                                                                        </p>
-                                                                    </>
-                                                                )
-                                                        }
-
-                                                        {active === 2 && (
-                                                            <p
-                                                                style={{
-                                                                    fontSize:
-                                                                        '12px',
-                                                                    color: 'var(--fc-body)',
-                                                                }}
-                                                            >
-                                                                Accomplish
-                                                                before:{' '}
-                                                                <Moment format="MMM D [at] h:mma">
-                                                                    {
-                                                                        task.schedule
-                                                                    }
-                                                                </Moment>
-                                                            </p>
-                                                        )}
-                                                        {active === 3 && (
-                                                            <p
-                                                                style={{
-                                                                    fontSize:
-                                                                        '12px',
-                                                                    color: 'var(--fc-body)',
-                                                                }}
-                                                            >
-                                                                Accomplished on:{' '}
-                                                                <Moment format="MMM D [at] h:mma">
-                                                                    {
-                                                                        task.updated_at
-                                                                    }
-                                                                </Moment>
-                                                            </p>
-                                                        )}
-                                                        {active === 4 && (
-                                                            <p
-                                                                style={{
-                                                                    fontSize:
-                                                                        '12px',
-                                                                    color: 'var(--accent-danger)',
-                                                                }}
-                                                            >
-                                                                Cancelled on:{' '}
-                                                                <Moment format="MMM D [at] h:mma">
-                                                                    {
-                                                                        task.updated_at
-                                                                    }
-                                                                </Moment>
-                                                            </p>
-                                                        )}
-                                                    </div>
-                                                    <div
-                                                        className={
-                                                            styles['col2']
-                                                        }
-                                                    >
-                                                        <IconButton aria-label="delete">
-                                                            <IconChevronRight />
-                                                        </IconButton>
-                                                    </div>
-                                                </div>
-                                            </Link>
-                                        )
-                                    })
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: '32px',
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <PriorityTask
+                                            active={active}
+                                            items={tasks}
+                                            priority="high"
+                                        />
+                                        <PriorityTask
+                                            active={active}
+                                            items={tasks}
+                                            priority="medium"
+                                        />
+                                        <PriorityTask
+                                            active={active}
+                                            items={tasks}
+                                            priority="normal"
+                                        />
+                                        <PriorityTask
+                                            active={active}
+                                            items={tasks}
+                                            priority="low"
+                                        />
+                                    </Box>
                                 )}
                             </div>
                         </>
