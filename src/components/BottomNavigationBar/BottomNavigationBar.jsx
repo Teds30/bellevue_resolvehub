@@ -129,19 +129,21 @@ const BottomNavigationBar = (props) => {
                     ),
                 },
             ])
-            setNavItems((prev) => [
-                ...prev,
-                {
-                    index: 5,
-                    name: 'Reports',
-                    url: '/reports',
-                    icon: (
-                        <IconFolderOpen
-                        // onClick={() => userCtx.onLogout()}
-                        />
-                    ),
-                },
-            ])
+            if (userCtx.hasPermission('501')) {
+                setNavItems((prev) => [
+                    ...prev,
+                    {
+                        index: 5,
+                        name: 'Reports',
+                        url: '/reports',
+                        icon: (
+                            <IconFolderOpen
+                            // onClick={() => userCtx.onLogout()}
+                            />
+                        ),
+                    },
+                ])
+            }
         }
 
         if (userCtx.user) insertNav()
