@@ -85,6 +85,8 @@ const ProjectPendingSwipe = (props) => {
                             currentValue={startDate}
                             handleSetValue={setStartDate}
                             defaultValue={null}
+                            maxDate={deadlineDate && deadlineDate}
+                            minDate={dayjs()}
                         />
                         <TimeSelector
                             currentValue={startTime}
@@ -112,6 +114,7 @@ const ProjectPendingSwipe = (props) => {
                         <DateSelector
                             currentValue={deadlineDate}
                             handleSetValue={setDeadlineDate}
+                            minDate={startDate}
                             defaultValue={null}
                         />
                         <TimeSelector
