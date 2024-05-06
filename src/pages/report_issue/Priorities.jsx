@@ -13,7 +13,7 @@ import styles from './Priorities.module.css'
 const priorities = [
     { id: 4, prio_label: 1, label: 'LOW', color: '#2d9bc0' },
     { id: 3, prio_label: 2, label: 'NORMAL', color: '#2DC071' },
-    { id: 2, prio_label: 3, label: 'NEDIUM', color: '#BDC02D' },
+    { id: 2, prio_label: 3, label: 'MEDIUM', color: '#BDC02D' },
     { id: 1, prio_label: 4, label: 'HIGH', color: '#C0362D' },
 ]
 
