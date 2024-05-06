@@ -277,6 +277,60 @@ const ProjectsTable = () => {
                         align: 'center',
                     },
                     {
+                        field: 'schedule',
+                        hideable: false,
+                        disableColumnMenu: true,
+                        headerName: 'Start Date',
+                        renderCell: (par) => {
+                            return (
+                                <Box>
+                                    <p>
+                                        {dayjs(par.row.schedule).format(
+                                            'MMMM DD, YYYY'
+                                        )}
+                                    </p>
+                                    <p className="smaller-text">
+                                        {dayjs(par.row.schedule).format(
+                                            'hh:mm A'
+                                        )}
+                                    </p>
+                                </Box>
+                            )
+                        },
+                        flex: 1,
+                        cellClassName: styles['row_cells'],
+                        headerClassName: styles['row_header'],
+                        headerAlign: 'center',
+                        align: 'center',
+                    },
+                    {
+                        field: 'deadline',
+                        hideable: false,
+                        disableColumnMenu: true,
+                        headerName: 'End Date',
+                        renderCell: (par) => {
+                            return (
+                                <Box>
+                                    <p>
+                                        {dayjs(par.row.deadline).format(
+                                            'MMMM DD, YYYY'
+                                        )}
+                                    </p>
+                                    <p className="smaller-text">
+                                        {dayjs(par.row.deadline).format(
+                                            'hh:mm A'
+                                        )}
+                                    </p>
+                                </Box>
+                            )
+                        },
+                        flex: 1,
+                        cellClassName: styles['row_cells'],
+                        headerClassName: styles['row_header'],
+                        headerAlign: 'center',
+                        align: 'center',
+                    },
+                    {
                         field: 'status',
                         hideable: false,
                         disableColumnMenu: true,
