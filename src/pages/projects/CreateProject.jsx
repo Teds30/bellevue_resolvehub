@@ -85,6 +85,11 @@ const CreateProject = () => {
 
     const [selectedDepartment, setSelectedDepartment] = useState()
 
+    useEffect(() => {
+        if (userCtx.user)
+            setSelectedDepartment(userCtx.user.position.department_id)
+    }, [userCtx])
+
     const handleSelectDepartment = (e) => {
         setSelectedDepartment(e.target.value)
     }
@@ -251,7 +256,7 @@ const CreateProject = () => {
                 }
                 error
             />
-            <Dropdown
+            {/* <Dropdown
                 leadingIcon={<IconBuilding size={20} color="var(--fc-body)" />}
                 label="Lead Department"
                 placeholder="Select department"
@@ -259,7 +264,7 @@ const CreateProject = () => {
                 value={selectedDepartment}
                 selected={selectedDepartment}
                 handleSelect={handleSelectDepartment}
-            />
+            /> */}
 
             <DropdownSearch
                 label={`Personnel In-Charge`}
@@ -322,6 +327,7 @@ const CreateProject = () => {
                     <DateSelector
                         currentValue={deadlineDate}
                         handleSetValue={setDeadlineDate}
+                        minDate={startDate}
                         defaultValue={null}
                     />
                     <TimeSelector
