@@ -24,6 +24,8 @@ const DateSelector = (props) => {
         defaultValue = dayjs(),
         label,
         views,
+        minDate,
+        maxDate,
     } = props
 
     const [value, setValue] = React.useState(currentValue)
@@ -44,6 +46,8 @@ const DateSelector = (props) => {
                     setValue(newValue)
                     handleSetValue(newValue)
                 }}
+                minDate={minDate}
+                maxDate={maxDate}
                 views={views && views}
                 label={label ?? 'Select date'}
                 sx={{
