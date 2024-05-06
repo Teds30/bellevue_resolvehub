@@ -191,7 +191,7 @@ const ProjectsSection = () => {
                         {
                             data: [
                                 {
-                                    value: metrics && metrics.unassigned,
+                                    value: metrics && metrics.request,
                                     label: 'Request',
                                     color: '#FD4D8F',
                                 },
