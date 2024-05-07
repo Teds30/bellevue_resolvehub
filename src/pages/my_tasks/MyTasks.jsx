@@ -22,6 +22,8 @@ import dayjs from 'dayjs'
 import PriorityTask from './PriorityTask'
 import RaisedIssues from './RaisedIssues'
 import DateFilter from './DateFilter'
+import DoneTask from './DoneTask'
+import CancelledTask from './CancelledTask'
 const MyTasks = () => {
     const [active, setActive] = useState(0)
     const [tasks, setTasks] = useState([])
@@ -98,8 +100,8 @@ const MyTasks = () => {
                 if (active === 0) _tasks = await loadDepartmentAssigned()
                 if (active === 1) _tasks = await loadDepartmentOnGoing()
                 if (active === 2) _tasks = await loadDepartmentPending()
-                if (active === 3) _tasks = await loadDepartmentDone(params)
-                if (active === 4) _tasks = await loadDepartmentCancelled(params)
+                // if (active === 3) _tasks = await loadDepartmentDone(params)
+                // if (active === 4) _tasks = await loadDepartmentCancelled(params)
 
                 setTasks(_tasks)
 
@@ -108,8 +110,8 @@ const MyTasks = () => {
             if (active === 0) await loadAssigned()
             else if (active === 1) await loadOnGoing()
             else if (active === 2) await loadPending()
-            else if (active === 3) await loadDone(params)
-            else if (active === 4) await loadCancelled(params)
+            // else if (active === 3) await loadDone(params)
+            // else if (active === 4) await loadCancelled(params)
         }
 
         if (userCtx.user) loadData()
@@ -261,7 +263,7 @@ const MyTasks = () => {
                                 <h3 style={{ textAlign: 'center' }}>Today</h3>
                             )} */}
 
-                            {active !== 5 && (
+                            {active !== 5 && active !== 3 && active !== 4 && (
                                 <div className={styles['tasks_container']}>
                                     {isLoading || deptLoading ? (
                                         skeletons
@@ -331,6 +333,8 @@ const MyTasks = () => {
                                     )}
                                 </div>
                             )}
+                            {active === 3 && <DoneTask params={params} />}
+                            {active === 4 && <CancelledTask params={params} />}
                             {active === 5 && <RaisedIssues params={params} />}
                         </>
                     )}
