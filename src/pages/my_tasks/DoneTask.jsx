@@ -22,11 +22,24 @@ const DoneTask = (props) => {
     useEffect(() => {
         const loadData = async () => {
             setTasks()
-            const res = await sendRequest({
-                url: `${import.meta.env.VITE_BACKEND_URL}/api/user_done_tasks/${
-                    userCtx.user.id
-                }${params}`,
-            })
+
+            let res
+
+            if (userCtx.hasPermission('101')) {
+                res = await sendRequest({
+                    url: `${
+                        import.meta.env.VITE_BACKEND_URL
+                    }/api/department_done_tasks/${
+                        userCtx.user.position.department_id
+                    }${params}`,
+                })
+            } else {
+                res = await sendRequest({
+                    url: `${
+                        import.meta.env.VITE_BACKEND_URL
+                    }/api/user_done_tasks/${userCtx.user.id}${params}`,
+                })
+            }
 
             const { data } = res
 
@@ -189,7 +202,22 @@ const DoneTask = (props) => {
 
                                                     <h4>{task.issue}</h4>
 
-                                                    <>
+                                                    <Box>
+                                                        {task.assignee_id &&
+                                                            task.assignee_id !==
+                                                                userCtx.user
+                                                                    .id && (
+                                                                <p
+                                                                    style={{
+                                                                        fontSize:
+                                                                            '12px',
+                                                                        color: 'var(--fc-body)',
+                                                                    }}
+                                                                >
+                                                                    Assigned to{' '}
+                                                                    <strong>{`${task.assignee.first_name} ${task.assignee.last_name}`}</strong>
+                                                                </p>
+                                                            )}
                                                         <p
                                                             style={{
                                                                 fontSize:
@@ -204,7 +232,7 @@ const DoneTask = (props) => {
                                                                 }
                                                             </Moment>
                                                         </p>
-                                                    </>
+                                                    </Box>
                                                 </div>
                                                 <div className={styles['col2']}>
                                                     <IconButton aria-label="delete">
