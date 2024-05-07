@@ -83,7 +83,7 @@ const DateFilter = (props) => {
         <div>
             <FilterButton onClick={handleClick}>
                 <span>
-                    Date Created{filterLabel && `:`}
+                    Date{filterLabel && `:`}
                     <span style={{ color: 'var(--accent)', marginLeft: '4px' }}>
                         {filterLabel && ` ${filterLabel}`}
                     </span>
