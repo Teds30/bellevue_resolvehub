@@ -20,10 +20,13 @@ import userPermission from '../../hooks/userPermission'
 import { IconMapPin } from '@tabler/icons-react'
 import dayjs from 'dayjs'
 import PriorityTask from './PriorityTask'
+import RaisedIssues from './RaisedIssues'
+import DateFilter from './DateFilter'
 const MyTasks = () => {
     const [active, setActive] = useState(0)
     const [tasks, setTasks] = useState([])
     const { sendRequest, isLoading } = useHttp()
+    const [params, setParams] = useState('?filter_by=daily')
     const userCtx = useContext(AuthContext)
     const navigate = useNavigate()
 
@@ -72,13 +75,7 @@ const MyTasks = () => {
         const res = await sendRequest({
             url: `${import.meta.env.VITE_BACKEND_URL}/api/user_done_tasks/${
                 userCtx.user.id
-            }`,
-            method: 'POST',
-            body: JSON.stringify({ today: true }),
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${userCtx.token}`,
-            },
+            }${params}`,
         })
         setTasks(res.data)
     }
@@ -87,13 +84,7 @@ const MyTasks = () => {
         const res = await sendRequest({
             url: `${
                 import.meta.env.VITE_BACKEND_URL
-            }/api/user_cancelled_tasks/${userCtx.user.id}`,
-            method: 'POST',
-            body: JSON.stringify({ today: true }),
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${userCtx.token}`,
-            },
+            }/api/user_cancelled_tasks/${userCtx.user.id}${params}`,
         })
         setTasks(res.data)
     }
@@ -107,8 +98,8 @@ const MyTasks = () => {
                 if (active === 0) _tasks = await loadDepartmentAssigned()
                 if (active === 1) _tasks = await loadDepartmentOnGoing()
                 if (active === 2) _tasks = await loadDepartmentPending()
-                if (active === 3) _tasks = await loadDepartmentDone()
-                if (active === 4) _tasks = await loadDepartmentCancelled()
+                if (active === 3) _tasks = await loadDepartmentDone(params)
+                if (active === 4) _tasks = await loadDepartmentCancelled(params)
 
                 setTasks(_tasks)
 
@@ -117,12 +108,12 @@ const MyTasks = () => {
             if (active === 0) await loadAssigned()
             else if (active === 1) await loadOnGoing()
             else if (active === 2) await loadPending()
-            else if (active === 3) await loadDone()
-            else if (active === 4) await loadCancelled()
+            else if (active === 3) await loadDone(params)
+            else if (active === 4) await loadCancelled(params)
         }
 
         if (userCtx.user) loadData()
-    }, [userCtx, active])
+    }, [userCtx, active, params])
 
     let skeletons = []
 
@@ -142,6 +133,35 @@ const MyTasks = () => {
                 </Stack>
             </div>
         )
+    }
+
+    const handleAppliedFilter = async (data) => {
+        // queryClient.invalidateQueries({ queryKey: ['rows'] })
+
+        let fetchParams = ''
+        if (data) {
+            if (data.selectedFilter == 1) {
+                fetchParams = `?filter_by=daily`
+            } else if (data.selectedFilter == 2) {
+                fetchParams = `?filter_by=weekly`
+            } else if (data.selectedFilter == 3) {
+                fetchParams = `?filter_by=month&month=${dayjs(
+                    data.month
+                ).format('MMMM')}&year=${dayjs(data.month).format('YYYY')}`
+            } else if (data.selectedFilter == 4) {
+                fetchParams = `?filter_by=year&year=${dayjs(data.year).format(
+                    'YYYY'
+                )}`
+            } else if (data.selectedFilter == 5) {
+                // console.log(dayjs(data.custom).format('YYYY-MM-DD'))
+                fetchParams = `?filter_by=custom&custom=${dayjs(
+                    data.custom
+                ).format('YYYY-MM-DD')}`
+            }
+        }
+
+        console.log(fetchParams)
+        setParams(fetchParams)
     }
 
     return (
@@ -214,83 +234,108 @@ const MyTasks = () => {
                                 >
                                     Cancelled
                                 </div>
+                                <div className={styles['divider']}></div>
+                                <div
+                                    className={`${styles['nav_btn_raised']} ${
+                                        active === 5 && styles['nav_btn_active']
+                                    }`}
+                                    onClick={() => {
+                                        handleActive(5)
+                                    }}
+                                >
+                                    Forwarded Issues
+                                </div>
                             </div>
 
-                            {(active === 3 || active === 4) && (
-                                <h3 style={{ textAlign: 'center' }}>Today</h3>
+                            {(active === 3 || active === 4 || active === 5) && (
+                                <div className={styles['date_container']}>
+                                    <p className="title">Filter:</p>
+                                    <DateFilter
+                                        handleAppliedFilter={
+                                            handleAppliedFilter
+                                        }
+                                    />
+                                </div>
                             )}
+                            {/* {(active === 3 || active === 4) && (
+                                <h3 style={{ textAlign: 'center' }}>Today</h3>
+                            )} */}
 
-                            <div className={styles['tasks_container']}>
-                                {isLoading || deptLoading ? (
-                                    skeletons
-                                ) : !tasks ? (
-                                    <>
-                                        {active === 0 && (
-                                            <p>
-                                                There are currently no assigned
-                                                tasks.
-                                            </p>
-                                        )}
-                                        {active === 1 && (
-                                            <p>
-                                                There are currently no on-going
-                                                tasks.
-                                            </p>
-                                        )}
-                                        {active === 2 && (
-                                            <p>
-                                                There are currently no pending
-                                                tasks.
-                                            </p>
-                                        )}
-                                        {active === 3 && (
-                                            <p>
-                                                There are currently no
-                                                accomplished tasks today.
-                                            </p>
-                                        )}
-                                        {active === 4 && (
-                                            <p>
-                                                There are currently no cancelled
-                                                tasks today.
-                                            </p>
-                                        )}
-                                    </>
-                                ) : (
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            gap: '32px',
-                                            width: '100%',
-                                        }}
-                                    >
-                                        <PriorityTask
-                                            active={active}
-                                            items={tasks}
-                                            priority="high"
-                                        />
-                                        <PriorityTask
-                                            active={active}
-                                            items={tasks}
-                                            priority="medium"
-                                        />
-                                        <PriorityTask
-                                            active={active}
-                                            items={tasks}
-                                            priority="normal"
-                                        />
-                                        <PriorityTask
-                                            active={active}
-                                            items={tasks}
-                                            priority="low"
-                                        />
-                                    </Box>
-                                )}
-                            </div>
+                            {active !== 5 && (
+                                <div className={styles['tasks_container']}>
+                                    {isLoading || deptLoading ? (
+                                        skeletons
+                                    ) : !tasks ? (
+                                        <>
+                                            {active === 0 && (
+                                                <p>
+                                                    There are currently no
+                                                    assigned tasks.
+                                                </p>
+                                            )}
+                                            {active === 1 && (
+                                                <p>
+                                                    There are currently no
+                                                    on-going tasks.
+                                                </p>
+                                            )}
+                                            {active === 2 && (
+                                                <p>
+                                                    There are currently no
+                                                    pending tasks.
+                                                </p>
+                                            )}
+                                            {active === 3 && (
+                                                <p>
+                                                    There are currently no
+                                                    accomplished tasks.
+                                                </p>
+                                            )}
+                                            {active === 4 && (
+                                                <p>
+                                                    There are currently no
+                                                    cancelled tasks.
+                                                </p>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                gap: '32px',
+                                                width: '100%',
+                                            }}
+                                        >
+                                            <PriorityTask
+                                                active={active}
+                                                items={tasks}
+                                                priority="high"
+                                            />
+                                            <PriorityTask
+                                                active={active}
+                                                items={tasks}
+                                                priority="medium"
+                                            />
+                                            <PriorityTask
+                                                active={active}
+                                                items={tasks}
+                                                priority="normal"
+                                            />
+                                            <PriorityTask
+                                                active={active}
+                                                items={tasks}
+                                                priority="low"
+                                            />
+                                        </Box>
+                                    )}
+                                </div>
+                            )}
+                            {active === 5 && <RaisedIssues params={params} />}
                         </>
                     )}
             </div>
+
             {userCtx.user && userCtx.hasPermission('108') && (
                 <Fab
                     variant={'extended'}
