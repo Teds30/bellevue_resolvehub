@@ -45,7 +45,6 @@ const RaisedIssues = (props) => {
                 }
             }
 
-            // console.log(formattedData)
             setTasks(formattedData)
         }
 
@@ -201,6 +200,22 @@ const RaisedIssues = (props) => {
                                                                     task.created_at
                                                                 }
                                                             </Moment>
+                                                        </p>
+                                                        <p
+                                                            style={{
+                                                                fontSize:
+                                                                    '12px',
+                                                                color: 'var(--fc-body)',
+                                                            }}
+                                                        >
+                                                            forwarded to{' '}
+                                                            <strong>
+                                                                {
+                                                                    task
+                                                                        .department
+                                                                        .name
+                                                                }
+                                                            </strong>
                                                         </p>
                                                     </>
                                                 </div>
