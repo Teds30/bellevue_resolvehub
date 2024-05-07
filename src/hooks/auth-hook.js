@@ -31,12 +31,12 @@ const useAuth = () => {
         setUser(null)
         localStorage.removeItem('userData')
 
-        //TODO uncomment
-        const t = await messaging.getToken()
-        if (t) {
-            deleteToken(t)
-        }
-
+        Notification.requestPermission().then(async () => {
+            const t = await messaging.getToken()
+            if (t) {
+                deleteToken(t)
+            }
+        })
         navigate('/login')
     }
 
