@@ -23,166 +23,155 @@ const IssueSection = () => {
     const [month, setMonth] = useState(dayjs)
 
     useEffect(() => {
-        const loadData = async () => {
-            const res = await sendRequest({
-                url: `${
-                    import.meta.env.VITE_BACKEND_URL
-                }/api/issues_metric/week/${
-                    userCtx.user.position.department_id
-                }`,
-            })
+        const refreshData = async () => {
+            if (selectedMetric === 1) {
+                const res = await sendRequest({
+                    url: `${
+                        import.meta.env.VITE_BACKEND_URL
+                    }/api/issues_metric/week/${userCtx.department.id}`,
+                })
 
-            const res2 = await sendRequest({
-                url: `${
-                    import.meta.env.VITE_BACKEND_URL
-                }/api/issues_most_reported/week/${
-                    userCtx.user.position.department_id
-                }`,
-            })
+                const res2 = await sendRequest({
+                    url: `${
+                        import.meta.env.VITE_BACKEND_URL
+                    }/api/issues_most_reported/week/${userCtx.department.id}`,
+                })
+                setReports(res2)
 
-            setGraphData(res)
-            setReports(res2)
+                setGraphData(res)
+            } else if (selectedMetric === 2) {
+                const res = await sendRequest({
+                    url: `${
+                        import.meta.env.VITE_BACKEND_URL
+                    }/api/issues_metric/month/${userCtx.department.id}`,
+                    method: 'POST',
+                    body: JSON.stringify({
+                        month: dayjs(month).month() + 1,
+                        year: dayjs(month).year(),
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+
+                const res2 = await sendRequest({
+                    url: `${
+                        import.meta.env.VITE_BACKEND_URL
+                    }/api/issues_most_reported/month/${userCtx.department.id}`,
+                    method: 'POST',
+                    body: JSON.stringify({
+                        year: dayjs(year).year(),
+                        month: dayjs(month).month(),
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                setReports(res2)
+
+                setGraphData(res)
+            } else if (selectedMetric === 3) {
+                const res = await sendRequest({
+                    url: `${
+                        import.meta.env.VITE_BACKEND_URL
+                    }/api/issues_metric/year/${userCtx.department.id}`,
+                    method: 'POST',
+                    body: JSON.stringify({
+                        year: dayjs(year).year(),
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+
+                const res2 = await sendRequest({
+                    url: `${
+                        import.meta.env.VITE_BACKEND_URL
+                    }/api/issues_most_reported/year/${userCtx.department.id}`,
+                    method: 'POST',
+                    body: JSON.stringify({
+                        year: dayjs(year).year(),
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                setReports(res2)
+
+                setGraphData(res)
+            }
         }
-        if (userCtx.user) loadData()
-    }, [userCtx])
 
-    useEffect(() => {
-        const refetchData = async () => {
-            const res = await sendRequest({
-                url: `${
-                    import.meta.env.VITE_BACKEND_URL
-                }/api/issues_metric/month/${
-                    userCtx.user.position.department_id
-                }`,
-                method: 'POST',
-                body: JSON.stringify({
-                    month: dayjs(month).month() + 1,
-                    year: dayjs(month).year(),
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
+        if (userCtx.user && selectedMetric) refreshData()
+    }, [userCtx, selectedMetric, month, year])
 
-            const res2 = await sendRequest({
-                url: `${
-                    import.meta.env.VITE_BACKEND_URL
-                }/api/issues_most_reported/month/${
-                    userCtx.user.position.department_id
-                }`,
-            })
-            setReports(res2)
+    // useEffect(() => {
+    //     const refetchData = async () => {
+    //         console.log('month')
 
-            setGraphData(res)
-        }
-        if (selectedMetric === 2 && userCtx.user) refetchData()
-    }, [month, userCtx])
+    //         const res = await sendRequest({
+    //             url: `${
+    //                 import.meta.env.VITE_BACKEND_URL
+    //             }/api/issues_metric/month/${
+    //                 userCtx.user.position.department_id
+    //             }`,
+    //             method: 'POST',
+    //             body: JSON.stringify({
+    //                 month: dayjs(month).month() + 1,
+    //                 year: dayjs(month).year(),
+    //             }),
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //         })
 
-    useEffect(() => {
-        const refetchData = async () => {
-            const res = await sendRequest({
-                url: `${
-                    import.meta.env.VITE_BACKEND_URL
-                }/api/issues_metric/year/${
-                    userCtx.user.position.department_id
-                }`,
-                method: 'POST',
-                body: JSON.stringify({
-                    year: dayjs(year).year(),
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
+    //         const res2 = await sendRequest({
+    //             url: `${
+    //                 import.meta.env.VITE_BACKEND_URL
+    //             }/api/issues_most_reported/month/${
+    //                 userCtx.user.position.department_id
+    //             }`,
+    //         })
+    //         setReports(res2)
 
-            const res2 = await sendRequest({
-                url: `${
-                    import.meta.env.VITE_BACKEND_URL
-                }/api/issues_most_reported/year/${
-                    userCtx.user.position.department_id
-                }`,
-            })
-            setReports(res2)
+    //         setGraphData(res)
+    //     }
+    //     if (selectedMetric === 2 && userCtx.user) refetchData()
+    // }, [month, userCtx])
 
-            setGraphData(res)
-        }
-        if (selectedMetric === 3 && userCtx.user) refetchData()
-    }, [year, userCtx])
+    // useEffect(() => {
+    //     const refetchData = async () => {
+    //         console.log('year')
+    //         const res = await sendRequest({
+    //             url: `${
+    //                 import.meta.env.VITE_BACKEND_URL
+    //             }/api/issues_metric/year/${
+    //                 userCtx.user.position.department_id
+    //             }`,
+    //             method: 'POST',
+    //             body: JSON.stringify({
+    //                 year: dayjs(year).year(),
+    //             }),
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //         })
+
+    //         const res2 = await sendRequest({
+    //             url: `${
+    //                 import.meta.env.VITE_BACKEND_URL
+    //             }/api/issues_most_reported/year/${
+    //                 userCtx.user.position.department_id
+    //             }`,
+    //         })
+    //         setReports(res2)
+
+    //         setGraphData(res)
+    //     }
+    //     if (selectedMetric === 3 && userCtx.user) refetchData()
+    // }, [year, userCtx])
 
     const handleSelectMetric = async (e) => {
-        if (e.target.value === 1) {
-            const res = await sendRequest({
-                url: `${
-                    import.meta.env.VITE_BACKEND_URL
-                }/api/issues_metric/week/${
-                    userCtx.user.position.department_id
-                }`,
-            })
-
-            const res2 = await sendRequest({
-                url: `${
-                    import.meta.env.VITE_BACKEND_URL
-                }/api/issues_most_reported/week/${
-                    userCtx.user.position.department_id
-                }`,
-            })
-            setReports(res2)
-
-            setGraphData(res)
-        } else if (e.target.value === 2) {
-            const res = await sendRequest({
-                url: `${
-                    import.meta.env.VITE_BACKEND_URL
-                }/api/issues_metric/month/${
-                    userCtx.user.position.department_id
-                }`,
-                method: 'POST',
-                body: JSON.stringify({
-                    month: dayjs(month).month() + 1,
-                    year: dayjs(month).year(),
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-
-            const res2 = await sendRequest({
-                url: `${
-                    import.meta.env.VITE_BACKEND_URL
-                }/api/issues_most_reported/month/${
-                    userCtx.user.position.department_id
-                }`,
-            })
-            setReports(res2)
-
-            setGraphData(res)
-        } else if (e.target.value === 3) {
-            const res = await sendRequest({
-                url: `${
-                    import.meta.env.VITE_BACKEND_URL
-                }/api/issues_metric/year/${
-                    userCtx.user.position.department_id
-                }`,
-                method: 'POST',
-                body: JSON.stringify({
-                    year: dayjs(month).year(),
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-
-            const res2 = await sendRequest({
-                url: `${
-                    import.meta.env.VITE_BACKEND_URL
-                }/api/issues_most_reported/year/${
-                    userCtx.user.position.department_id
-                }`,
-            })
-            setReports(res2)
-
-            setGraphData(res)
-        }
         setSelectedMetric(e.target.value)
     }
 

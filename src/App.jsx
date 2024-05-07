@@ -25,6 +25,7 @@ import Logout from './pages/auth/Logout'
 import SplashScreen from './pages/spashscreen/SplashScreen'
 import SplashScreenStatic from './pages/spashscreen/SplashScreenStatic'
 import ProjectsSection from './pages/dashboard/ProjectsSection'
+import TopEmployees from './pages/dashboard/TopEmployees'
 // import EditProject from './pages/projects/EditProject'
 
 const MyTasks = lazy(() => import('./pages/my_tasks/MyTasks'))
@@ -46,6 +47,8 @@ const App = () => {
         isLoggedIn,
         hasPermission,
         fetchUserData,
+        department,
+        selectDepartment,
     } = useAuth()
     let routes
 
@@ -91,6 +94,10 @@ const App = () => {
                     <Route path="" element={<IssueSection />}></Route>
                     <Route path="tasks" element={<TasksSection />}></Route>
                     <Route
+                        path="top_performing"
+                        element={<TopEmployees />}
+                    ></Route>
+                    <Route
                         path="projects"
                         element={<ProjectsSection />}
                     ></Route>
@@ -108,12 +115,14 @@ const App = () => {
             <AuthContext.Provider
                 value={{
                     user: user,
+                    department: department,
                     token: token,
                     isLoggedIn: isLoggedIn,
                     onLogout: logoutHandler,
                     onLogin: loginHandler,
                     hasPermission: hasPermission,
                     fetchUserData: fetchUserData,
+                    selectDepartment: selectDepartment,
                 }}
             >
                 {routes}

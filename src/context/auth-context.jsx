@@ -3,6 +3,7 @@ import useAuth from '../hooks/auth-hook'
 
 const AuthContext = React.createContext({
     user: {},
+    department: {},
     token: '',
     isLoggedIn: false,
     onLogout: () => {},
@@ -19,6 +20,8 @@ export const AuthContextProvider = (props) => {
         isLoggedIn,
         hasPermission,
         fetchUserData,
+        department,
+        selectDepartment,
     } = useAuth()
 
     return (
@@ -31,6 +34,8 @@ export const AuthContextProvider = (props) => {
                 onLogin: loginHandler,
                 hasPermission: hasPermission,
                 fetchUserData: fetchUserData,
+                department: department,
+                selectDepartment: selectDepartment,
             }}
         >
             {props.children}

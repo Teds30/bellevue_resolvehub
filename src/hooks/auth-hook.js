@@ -21,6 +21,7 @@ const useAuth = () => {
     const { sendRequest, isLoading } = useHttp()
 
     const [user, setUser] = useState()
+    const [department, setDepartment] = useState()
     const [token, setToken] = useState('')
     const [isLoggedIn, setIsLoggedIn] = useState('initial')
     const navigate = useNavigate()
@@ -29,6 +30,7 @@ const useAuth = () => {
         setIsLoggedIn(false)
         setToken(null)
         setUser(null)
+        setDepartment(null)
         localStorage.removeItem('userData')
 
         Notification.requestPermission().then(async () => {
@@ -38,6 +40,15 @@ const useAuth = () => {
             }
         })
         navigate('/login')
+    }
+
+    const selectDepartment = async (id) => {
+        const res = await sendRequest({
+            url: `${import.meta.env.VITE_BACKEND_URL}/api/departments/${id}`,
+        })
+        console.log(res.data)
+
+        setDepartment(res.data)
     }
 
     const hasPermission = useCallback(
@@ -72,7 +83,7 @@ const useAuth = () => {
 
     const fetchUserData = useCallback(async (storedData) => {
         try {
-            console.log('tioke: ', storedData.token)
+            // console.log('tioke: ', storedData.token)
             const response = await fetch(
                 `${import.meta.env.VITE_BACKEND_URL}/api/user_data`,
                 {
@@ -92,6 +103,7 @@ const useAuth = () => {
 
             if (data) {
                 setUser(data)
+                setDepartment(data.position.department)
                 setToken(storedData.token)
                 setIsLoggedIn(true)
 
@@ -124,6 +136,7 @@ const useAuth = () => {
             if (!response.ok) {
                 localStorage.removeItem('userData')
                 setUser(null)
+                setDepartment(null)
                 setIsLoggedIn(false)
                 navigate('/login')
             }
@@ -198,11 +211,13 @@ const useAuth = () => {
         isLoading,
         accountRegistration,
         user,
+        department,
         token,
         loginHandler,
         logoutHandler,
         isLoggedIn,
         hasPermission,
+        selectDepartment,
         fetchUserData,
     }
 }

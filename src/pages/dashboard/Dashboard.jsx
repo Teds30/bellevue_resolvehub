@@ -6,12 +6,22 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import AuthContext from '../../context/auth-context'
 import useHttp from '../../hooks/http-hook'
 import { Skeleton } from '@mui/material'
+import Dropdown from '../../components/Dropdown/Dropdown'
+import { IconBuilding } from '@tabler/icons-react'
 
 const Dashboard = () => {
     const [active, setActive] = useState(0)
-    const [department, setDepartment] = useState()
+    // const [department, setDepartment] = useState()
 
     const { sendRequest } = useHttp()
+    const [departments, setDepartments] = useState()
+    const [selectedDepartment, setSelectedDepartment] = useState()
+
+    const handleSelectDepartment = (e) => {
+        setSelectedDepartment(e.target.value)
+
+        userCtx.selectDepartment(e.target.value)
+    }
 
     const navigate = useNavigate()
     const userCtx = useContext(AuthContext)
@@ -22,11 +32,26 @@ const Dashboard = () => {
 
     useEffect(() => {
         const loadData = async () => {
-            setDepartment(userCtx.user.position.department.name)
+            const res = await sendRequest({
+                url: `${import.meta.env.VITE_BACKEND_URL}/api/departments`,
+            })
+
+            setDepartments(
+                res.data?.sort((a, b) => a.name.localeCompare(b.name))
+            )
+            setSelectedDepartment(userCtx.department.id)
         }
 
-        if (userCtx.user) loadData()
+        if (userCtx && userCtx.user && userCtx.hasPermission('403')) loadData()
     }, [userCtx])
+
+    // useEffect(() => {
+    //     const loadData = async () => {
+    //         setDepartment(userCtx.user.position.department)
+    //     }
+
+    //     if (userCtx.user) loadData()
+    // }, [userCtx])
 
     return (
         <>
@@ -34,11 +59,33 @@ const Dashboard = () => {
                 <h2>Performances</h2>
                 <div className={styles['title-content']}>
                     <p className="pre-title">DEPARTMENT</p>
-                    <h4>
-                        {department ?? (
-                            <Skeleton variant="text" width={100} height={24} />
-                        )}
-                    </h4>
+                    {userCtx && userCtx.hasPermission('403') ? (
+                        <Dropdown
+                            leadingIcon={
+                                <IconBuilding
+                                    size={20}
+                                    color="var(--fc-body)"
+                                />
+                            }
+                            placeholder="Select department"
+                            items={departments}
+                            value={selectedDepartment}
+                            selected={selectedDepartment}
+                            handleSelect={handleSelectDepartment}
+                        />
+                    ) : (
+                        <h4>
+                            {userCtx && userCtx.department ? (
+                                userCtx.department.name
+                            ) : (
+                                <Skeleton
+                                    variant="text"
+                                    width={100}
+                                    height={24}
+                                />
+                            )}
+                        </h4>
+                    )}
                 </div>
                 <div className={styles['nav_container']}>
                     <div
@@ -73,6 +120,17 @@ const Dashboard = () => {
                         }}
                     >
                         Projects
+                    </div>
+                    <div
+                        className={`${styles['nav_btn']} ${
+                            active === 3 && styles['nav_btn_active']
+                        }`}
+                        onClick={() => {
+                            navigate('top_performing')
+                            handleActive(3)
+                        }}
+                    >
+                        Top Performing
                     </div>
                     {/* <div
                         className={`${styles['nav_btn']} ${
