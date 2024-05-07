@@ -261,7 +261,9 @@ const Task = () => {
                         {task &&
                             userCtx.user &&
                             hasPermission('104') &&
-                            !task.completed_marker_id && (
+                            !task.completed_marker_id &&
+                            userCtx.user.position.department_id ===
+                                task.department_id && (
                                 <div className={styles['row2']}>
                                     <TaskAssignor
                                         task={task}
