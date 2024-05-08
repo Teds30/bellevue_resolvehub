@@ -102,11 +102,16 @@ const MyProjects = () => {
                                         onClick={() => loadProjects()}
                                     />
                                 )}
-                            <Tab
-                                label="My Projects"
-                                value={1}
-                                onClick={() => loadAssignedProjects()}
-                            />
+                            {userCtx.user &&
+                                (userCtx.hasPermission('203') ||
+                                    userCtx.hasPermission('204')) && (
+                                    <Tab
+                                        label="My Projects"
+                                        value={1}
+                                        onClick={() => loadAssignedProjects()}
+                                    />
+                                )}
+
                             <Tab
                                 label="Assigned To"
                                 value={2}

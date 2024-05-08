@@ -61,6 +61,23 @@ const ReportsTable = () => {
     })
     const [filterModel, setFilterModel] = React.useState({ items: [] })
     const [sortModel, setSortModel] = React.useState([])
+    const [options, setOptions] = useState([
+        {
+            id: 1,
+            name: 'Issue',
+            field_name: 'issue',
+        },
+        {
+            id: 2,
+            name: 'Area',
+            field_name: 'room',
+        },
+        {
+            id: 3,
+            name: 'Assignee',
+            field_name: 'assignee',
+        },
+    ])
 
     const apiRef = useRef()
 
@@ -68,6 +85,33 @@ const ReportsTable = () => {
         searchField: '',
         search: '',
     })
+
+    useEffect(() => {
+        if (userCtx.hasPermission('302')) {
+            setOptions([
+                {
+                    id: 1,
+                    name: 'Issue',
+                    field_name: 'issue',
+                },
+                {
+                    id: 2,
+                    name: 'Area',
+                    field_name: 'room',
+                },
+                {
+                    id: 3,
+                    name: 'Assignee',
+                    field_name: 'assignee',
+                },
+                {
+                    id: 4,
+                    name: 'Department',
+                    field_name: 'department',
+                },
+            ])
+        }
+    }, [userCtx])
 
     const loadTasks = async (params) => {
         const page = paginationModel.page
@@ -93,6 +137,7 @@ const ReportsTable = () => {
                 method: 'POST',
                 body: JSON.stringify({
                     department_id: userCtx.user.position.department_id,
+                    can_see_all: userCtx.hasPermission('302'),
                 }),
                 headers: {
                     'Content-Type': 'application/json',
@@ -249,18 +294,7 @@ const ReportsTable = () => {
                 }}
             >
                 <TableSearch
-                    options={[
-                        {
-                            id: 1,
-                            name: 'Issue',
-                            field_name: 'issue',
-                        },
-                        {
-                            id: 2,
-                            name: 'Area',
-                            field_name: 'room',
-                        },
-                    ]}
+                    options={options}
                     handleSubmitSearch={handleSubmitSearch}
                     setSearchParams={setSearchParams}
                 />

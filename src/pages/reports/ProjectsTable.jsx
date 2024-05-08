@@ -198,6 +198,16 @@ const ProjectsTable = () => {
                             name: 'Location',
                             field_name: 'location',
                         },
+                        // {
+                        //     id: 3,
+                        //     name: 'Department',
+                        //     field_name: 'location',
+                        // },
+                        // {
+                        //     id: 4,
+                        //     name: 'Assignee',
+                        //     field_name: 'location',
+                        // },
                     ]}
                     handleSubmitSearch={handleSubmitSearch}
                     setSearchParams={setSearchParams}
