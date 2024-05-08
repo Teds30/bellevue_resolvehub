@@ -24,7 +24,7 @@ const TopEmployees = () => {
     }, [userCtx])
 
     return (
-        <div>
+        <Box sx={{ paddingInline: '12px' }}>
             <h3>Top Performing</h3>
             {topEmployees &&
                 topEmployees?.map((emp, index) => {
@@ -34,7 +34,7 @@ const TopEmployees = () => {
                             sx={{
                                 borderBottom: '1px solid var(--border-color)',
                                 display: 'flex',
-                                padding: '12px',
+                                padding: '12px 0',
                             }}
                         >
                             <Box sx={{ flex: 1 }}>
@@ -49,7 +49,7 @@ const TopEmployees = () => {
                         </Box>
                     )
                 })}
-        </div>
+        </Box>
     )
 }
 
