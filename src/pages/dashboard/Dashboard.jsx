@@ -36,9 +36,12 @@ const Dashboard = () => {
                 url: `${import.meta.env.VITE_BACKEND_URL}/api/departments`,
             })
 
-            setDepartments(
-                res.data?.sort((a, b) => a.name.localeCompare(b.name))
-            )
+            let depts = [
+                ...res.data?.sort((a, b) => a.name.localeCompare(b.name)),
+            ]
+
+            depts.unshift({ id: 10000, name: 'All Departments' })
+            setDepartments(depts)
             setSelectedDepartment(userCtx.department.id)
         }
 

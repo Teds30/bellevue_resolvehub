@@ -11,6 +11,7 @@ import { IconBuilding } from '@tabler/icons-react'
 import dayjs from 'dayjs'
 import { Box } from '@mui/material'
 import DateSelector from '../../components/DateSelector/DateSelector'
+import DepartmentContributions from './DepartmentContributions'
 
 const TasksSection = () => {
     const pieParams = { height: 230, margin: { right: 5 } }
@@ -20,29 +21,50 @@ const TasksSection = () => {
     const [year, setYear] = useState(dayjs)
     const [month, setMonth] = useState(dayjs)
 
+    const [contributions, setContributions] = useState()
+
     const { sendRequest } = useHttp()
     const userCtx = useContext(AuthContext)
 
     useEffect(() => {
         const refreshData = async () => {
             if (selectedMetric === 1) {
-                const res2 = await sendRequest({
+                const res = await sendRequest({
                     url: `${
                         import.meta.env.VITE_BACKEND_URL
                     }/api/tasks_metric/${userCtx.department.id}/daily`,
                     method: 'POST',
                 })
-                setMetrics(res2)
+                setMetrics(res)
+                if (userCtx.department.id === 10000) {
+                    const res2 = await sendRequest({
+                        url: `${
+                            import.meta.env.VITE_BACKEND_URL
+                        }/api/tasks_metric_distribution/daily`,
+                        method: 'POST',
+                    })
+                    setContributions(res2)
+                }
             } else if (selectedMetric === 2) {
-                const res2 = await sendRequest({
+                const res = await sendRequest({
                     url: `${
                         import.meta.env.VITE_BACKEND_URL
                     }/api/tasks_metric/${userCtx.department.id}/weekly`,
                     method: 'POST',
                 })
-                setMetrics(res2)
+                setMetrics(res)
+
+                if (userCtx.department.id === 10000) {
+                    const res2 = await sendRequest({
+                        url: `${
+                            import.meta.env.VITE_BACKEND_URL
+                        }/api/tasks_metric_distribution/weekly`,
+                        method: 'POST',
+                    })
+                    setContributions(res2)
+                }
             } else if (selectedMetric === 3) {
-                const res2 = await sendRequest({
+                const res = await sendRequest({
                     url: `${
                         import.meta.env.VITE_BACKEND_URL
                     }/api/tasks_metric/${userCtx.department.id}/monthly`,
@@ -55,9 +77,26 @@ const TasksSection = () => {
                         'Content-Type': 'application/json',
                     },
                 })
-                setMetrics(res2)
+                setMetrics(res)
+
+                if (userCtx.department.id === 10000) {
+                    const res2 = await sendRequest({
+                        url: `${
+                            import.meta.env.VITE_BACKEND_URL
+                        }/api/tasks_metric_distribution/monthly`,
+                        method: 'POST',
+                        body: JSON.stringify({
+                            year: dayjs(year).year(),
+                            month: dayjs(month).month(),
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    setContributions(res2)
+                }
             } else if (selectedMetric === 4) {
-                const res2 = await sendRequest({
+                const res = await sendRequest({
                     url: `${
                         import.meta.env.VITE_BACKEND_URL
                     }/api/tasks_metric/${userCtx.department.id}/yearly`,
@@ -69,7 +108,23 @@ const TasksSection = () => {
                         'Content-Type': 'application/json',
                     },
                 })
-                setMetrics(res2)
+                setMetrics(res)
+
+                if (userCtx.department.id === 10000) {
+                    const res2 = await sendRequest({
+                        url: `${
+                            import.meta.env.VITE_BACKEND_URL
+                        }/api/tasks_metric_distribution/yearly`,
+                        method: 'POST',
+                        body: JSON.stringify({
+                            year: dayjs(year).year(),
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    setContributions(res2)
+                }
             }
         }
 
@@ -257,6 +312,10 @@ const TasksSection = () => {
                     </div>
                 </Link>
             </div>
+
+            {userCtx.department && userCtx.department.id === 10000 && (
+                <DepartmentContributions contributions={contributions} />
+            )}
         </div>
     )
 }

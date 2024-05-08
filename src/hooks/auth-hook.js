@@ -43,12 +43,18 @@ const useAuth = () => {
     }
 
     const selectDepartment = async (id) => {
-        const res = await sendRequest({
-            url: `${import.meta.env.VITE_BACKEND_URL}/api/departments/${id}`,
-        })
-        console.log(res.data)
+        if (id !== 10000) {
+            const res = await sendRequest({
+                url: `${
+                    import.meta.env.VITE_BACKEND_URL
+                }/api/departments/${id}`,
+            })
 
-        setDepartment(res.data)
+            setDepartment(res.data)
+            return
+        }
+
+        setDepartment({ id: 10000, name: 'All Departments' })
     }
 
     const hasPermission = useCallback(
