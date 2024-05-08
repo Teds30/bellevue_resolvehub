@@ -279,7 +279,7 @@ const PriorityTask = (props) => {
                                                     </p>
                                                 )
                                         }
-                                        {active === 1 &&
+                                        {(active === 1 || active === 2) &&
                                             task.assignee_id &&
                                             task.assignee_id !==
                                                 userCtx.user.id && (
@@ -321,33 +321,28 @@ const PriorityTask = (props) => {
                                                 )}
                                             </p>
                                         )}
-                                        {
-                                            //TODO: PERMISSION: change to dynamic
-                                            active === 2 &&
-                                                task.assignee_id &&
-                                                userCtx.user.position_id ===
-                                                    3 && (
-                                                    <>
-                                                        <p
-                                                            style={{
-                                                                fontSize:
-                                                                    '12px',
-                                                                color: 'var(--fc-body)',
-                                                            }}
-                                                        >
-                                                            Assignee:{' '}
-                                                            {
-                                                                task.assignee
-                                                                    .first_name
-                                                            }{' '}
-                                                            {
-                                                                task.assignee
-                                                                    .last_name
-                                                            }
-                                                        </p>
-                                                    </>
-                                                )
-                                        }
+                                        {active === 2 &&
+                                            task.assignee_id &&
+                                            userCtx.user.position_id === 3 && (
+                                                <>
+                                                    <p
+                                                        style={{
+                                                            fontSize: '12px',
+                                                            color: 'var(--fc-body)',
+                                                        }}
+                                                    >
+                                                        Assignee:{' '}
+                                                        {
+                                                            task.assignee
+                                                                .first_name
+                                                        }{' '}
+                                                        {
+                                                            task.assignee
+                                                                .last_name
+                                                        }
+                                                    </p>
+                                                </>
+                                            )}
 
                                         {active === 2 && (
                                             <p
