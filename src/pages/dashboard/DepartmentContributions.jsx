@@ -102,7 +102,7 @@ const DepartmentContributions = (props) => {
                                         <div
                                             className={`${styles['color']} ${styles['cancelled']}`}
                                         >
-                                            Title
+                                            Cancelled
                                         </div>
                                         <div className={styles['line']}></div>
                                         <p className="title">
