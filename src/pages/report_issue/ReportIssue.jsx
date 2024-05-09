@@ -53,7 +53,9 @@ const ReportIssue = () => {
             })
 
             const res2 = await sendRequest({
-                url: `${import.meta.env.VITE_BACKEND_URL}/api/issues`,
+                url: `${
+                    import.meta.env.VITE_BACKEND_URL
+                }/api/issues_recommendation`,
             })
 
             let filtered
@@ -212,7 +214,7 @@ const ReportIssue = () => {
                     <IconMessageReport size={20} color="var(--fc-body)" />
                 }
                 value={selectedIssue}
-                placeholder={issues ? 'Enter issue' : 'Loading'}
+                placeholder={issues ? 'Enter issue' : ''}
                 onValueChange={setSelectedIssue}
                 onInputChange={setInputValue}
                 inputValue={inputValue}
