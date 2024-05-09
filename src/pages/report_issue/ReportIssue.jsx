@@ -59,7 +59,11 @@ const ReportIssue = () => {
             let filtered
             filtered = res.data?.sort((a, b) => a.name.localeCompare(b.name))
             filtered = filtered.filter(
-                (item) => item.id === 2 || item.id === 3 || item.id === 31
+                (item) =>
+                    item.id === 2 ||
+                    item.id === 3 ||
+                    item.id === 31 ||
+                    item.id === 30
             )
 
             setDepartments(filtered)
