@@ -8,6 +8,7 @@ import {
     ListItemAvatar,
     ListItemText,
     TextField,
+    createFilterOptions,
 } from '@mui/material'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { styled } from '@mui/material/styles'
@@ -25,6 +26,10 @@ const StyledTextField = styled(TextField)({
             boxShadow: `rgba(var(--accent-rgb), 0.12) 0 0 0 .2em`,
         },
     },
+})
+const OPTIONS_LIMIT = 10
+const filterOptions = createFilterOptions({
+    limit: OPTIONS_LIMIT,
 })
 
 const DropdownSearch = ({
@@ -78,6 +83,7 @@ const DropdownSearch = ({
                     disabled={disabled}
                     defaultValue={defaultValue}
                     value={value}
+                    filterOptions={filterOptions}
                     getOptionLabel={(option) => {
                         return option.name || option
                     }}
