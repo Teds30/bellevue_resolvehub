@@ -72,24 +72,6 @@ const MyTasks = () => {
         })
         setTasks(res.data)
     }
-    const loadDone = async () => {
-        setTasks(null)
-        const res = await sendRequest({
-            url: `${import.meta.env.VITE_BACKEND_URL}/api/user_done_tasks/${
-                userCtx.user.id
-            }${params}`,
-        })
-        setTasks(res.data)
-    }
-    const loadCancelled = async () => {
-        setTasks(null)
-        const res = await sendRequest({
-            url: `${
-                import.meta.env.VITE_BACKEND_URL
-            }/api/user_cancelled_tasks/${userCtx.user.id}${params}`,
-        })
-        setTasks(res.data)
-    }
 
     useEffect(() => {
         const loadData = async () => {
