@@ -25,108 +25,59 @@ const ProjectsSection = () => {
 
     useEffect(() => {
         const loadData = async () => {
-            const res = await sendRequest({
-                url: `${import.meta.env.VITE_BACKEND_URL}/api/projects_metric/${
-                    userCtx.user.position.department_id
-                }/daily`,
-                method: 'POST',
-            })
-
-            setMetrics(res)
+            if (selectedMetric === 1) {
+                const res = await sendRequest({
+                    url: `${
+                        import.meta.env.VITE_BACKEND_URL
+                    }/api/projects_metric/${userCtx.department.id}/daily`,
+                    method: 'POST',
+                })
+                setMetrics(res)
+            } else if (selectedMetric === 2) {
+                const res = await sendRequest({
+                    url: `${
+                        import.meta.env.VITE_BACKEND_URL
+                    }/api/projects_metric/${userCtx.department.id}/weekly`,
+                    method: 'POST',
+                })
+                setMetrics(res)
+            } else if (selectedMetric === 3) {
+                const res = await sendRequest({
+                    url: `${
+                        import.meta.env.VITE_BACKEND_URL
+                    }/api/projects_metric/${userCtx.department.id}/monthly`,
+                    method: 'POST',
+                    body: JSON.stringify({
+                        month: dayjs(month).month() + 1,
+                        year: dayjs(month).year(),
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                setMetrics(res)
+            } else if (selectedMetric === 4) {
+                const res = await sendRequest({
+                    url: `${
+                        import.meta.env.VITE_BACKEND_URL
+                    }/api/projects_metric/${userCtx.department.id}/yearly`,
+                    method: 'POST',
+                    body: JSON.stringify({
+                        year: dayjs(year).year(),
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                setMetrics(res)
+            }
         }
         if (userCtx.user) loadData()
-    }, [userCtx])
+    }, [userCtx, selectedMetric, month, year])
 
     const handleSelectMetric = async (e) => {
-        if (e.target.value === 1) {
-            const res = await sendRequest({
-                url: `${import.meta.env.VITE_BACKEND_URL}/api/projects_metric/${
-                    userCtx.user.position.department_id
-                }/daily`,
-                method: 'POST',
-            })
-            setMetrics(res)
-        } else if (e.target.value === 2) {
-            const res = await sendRequest({
-                url: `${import.meta.env.VITE_BACKEND_URL}/api/projects_metric/${
-                    userCtx.user.position.department_id
-                }/weekly`,
-                method: 'POST',
-            })
-            setMetrics(res)
-        } else if (e.target.value === 3) {
-            const res = await sendRequest({
-                url: `${import.meta.env.VITE_BACKEND_URL}/api/projects_metric/${
-                    userCtx.user.position.department_id
-                }/monthly`,
-                method: 'POST',
-                body: JSON.stringify({
-                    month: dayjs(month).month() + 1,
-                    year: dayjs(month).year(),
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-            setMetrics(res)
-        } else if (e.target.value === 4) {
-            const res = await sendRequest({
-                url: `${import.meta.env.VITE_BACKEND_URL}/api/projects_metric/${
-                    userCtx.user.position.department_id
-                }/yearly`,
-                method: 'POST',
-                body: JSON.stringify({
-                    year: dayjs(year).year(),
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-            setMetrics(res)
-        }
         setSelectedMetric(e.target.value)
     }
-
-    useEffect(() => {
-        const refetchData = async () => {
-            const res = await sendRequest({
-                url: `${import.meta.env.VITE_BACKEND_URL}/api/projects_metric/${
-                    userCtx.user.position.department_id
-                }/monthly`,
-                method: 'POST',
-                body: JSON.stringify({
-                    month: dayjs(month).month() + 1,
-                    year: dayjs(month).year(),
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-
-            setMetrics(res)
-        }
-        if (selectedMetric === 3) refetchData()
-    }, [month])
-
-    useEffect(() => {
-        const refetchData = async () => {
-            const res = await sendRequest({
-                url: `${import.meta.env.VITE_BACKEND_URL}/api/projects_metric/${
-                    userCtx.user.position.department_id
-                }/yearly`,
-                method: 'POST',
-                body: JSON.stringify({
-                    year: dayjs(year).year(),
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-
-            setMetrics(res)
-        }
-        if (selectedMetric === 4) refetchData()
-    }, [year])
 
     return (
         <div className={styles['container']}>
