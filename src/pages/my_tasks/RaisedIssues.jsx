@@ -51,6 +51,7 @@ const RaisedIssues = (props) => {
 
         if (userCtx.user) loadData()
     }, [userCtx, params])
+
     return (
         <div>
             {tasks && tasks.length > 0 && !isLoading ? (
@@ -92,6 +93,27 @@ const RaisedIssues = (props) => {
                                 }}
                             >
                                 {date.tasks?.map((task, index) => {
+                                    let ongoing =
+                                        dayjs(task.schedule).isBefore(
+                                            dayjs(),
+                                            'day'
+                                        ) ||
+                                        dayjs(task.schedule).isSame(
+                                            dayjs(),
+                                            'day'
+                                        )
+                                    let pending =
+                                        dayjs(task.schedule).isAfter(
+                                            dayjs(),
+                                            'day'
+                                        ) ||
+                                        dayjs(task.schedule).isSame(
+                                            dayjs(),
+                                            'day'
+                                        )
+                                    let isOngoing = task.status !== 0 && ongoing
+
+                                    let isPending = task.status !== 0 && pending
                                     return (
                                         <Link
                                             className={'card-link'}
@@ -233,30 +255,27 @@ const RaisedIssues = (props) => {
                                                             >
                                                                 Status:{' '}
                                                                 <span>
-                                                                    {dayjs(
-                                                                        task.schedule
-                                                                    ).isBefore(
-                                                                        dayjs(),
-                                                                        'day'
-                                                                    ) ||
-                                                                    (dayjs(
-                                                                        task.schedule
-                                                                    ).isSame(
-                                                                        dayjs(),
-                                                                        'day'
-                                                                    ) &&
-                                                                        task.completed_marker_id ===
-                                                                            null)
+                                                                    {(isOngoing &&
+                                                                        task.completed_marker_id) ===
+                                                                    null
                                                                         ? 'On-Going'
+                                                                        : isPending &&
+                                                                          task.completed_marker_id ===
+                                                                              null
+                                                                        ? 'Pending'
                                                                         : task.status ===
-                                                                          0
+                                                                              0 &&
+                                                                          task.assignee_id ===
+                                                                              null
                                                                         ? 'Open Task'
+                                                                        : task.status ===
+                                                                              0 &&
+                                                                          task.assignee_id !==
+                                                                              null
+                                                                        ? 'Assigned'
                                                                         : task.status ===
                                                                           1
                                                                         ? 'Accepted'
-                                                                        : task.status ===
-                                                                          2
-                                                                        ? 'Pending'
                                                                         : task.status ===
                                                                           3
                                                                         ? 'Cancelled'
