@@ -224,7 +224,7 @@ const Notifications = () => {
                                 justifyContent: 'center',
                             }}
                         >
-                            <h5>You have notifications</h5>
+                            <h5>You have no notifications</h5>
                         </Box>
                     )}
                     {isLoading && (
