@@ -83,7 +83,7 @@ const DropdownSearch = ({
                     disabled={disabled}
                     defaultValue={defaultValue}
                     value={value}
-                    filterOptions={filterOptions}
+                    // filterOptions={filterOptions}
                     getOptionLabel={(option) => {
                         return option.name || option
                     }}

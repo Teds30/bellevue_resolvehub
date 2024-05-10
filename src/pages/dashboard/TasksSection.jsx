@@ -132,7 +132,6 @@ const TasksSection = () => {
     }, [userCtx, selectedMetric, month, year])
 
     const handleSelectMetric = async (e) => {
-        console.log(e.target.value)
         setSelectedMetric(e.target.value)
     }
 
