@@ -176,26 +176,40 @@ const TaskAssignee = (props) => {
         <section>
             {task && (
                 <div className={styles['history-container']}>
-                    {
+                    {task.assignee_id === null &&
+                        task.requestor_id === userCtx.user.id && (
+                            <Box>
+                                <p style={{ marginBottom: '8px' }}>
+                                    No one was assigned to this task yet.
+                                </p>
+                                {task.completed_marker_id === null && (
+                                    <OutlinedButton
+                                        btnType="danger"
+                                        onClick={toggleCancelDrawer}
+                                        width="100%"
+                                        // isLoading={isLoading}
+                                        loadingText="Cancelling"
+                                    >
+                                        Cancel
+                                    </OutlinedButton>
+                                )}
+                            </Box>
+                        )}
+                    {task.assignee && (
                         <>
-                            <p className="title">
-                                You are assigned by{'  '}
-                                <span
-                                    style={{
-                                        marginLeft: '4px',
-                                        fontWeight: '400',
-                                        fontSize: '12px',
-                                        color: 'var(--fc-body-light',
-                                    }}
-                                >
-                                    • {'  '}{' '}
-                                    {task.assigned_timestamp && (
-                                        <Moment fromNow>
-                                            {task.assigned_timestamp}
-                                        </Moment>
-                                    )}
-                                </span>
-                            </p>
+                            {task.assignee_id === userCtx.user.id ? (
+                                <p>
+                                    <strong>You </strong> were assigned by
+                                </p>
+                            ) : (
+                                <p>
+                                    <strong>
+                                        {`${task.assignee.first_name} ${task.assignee.last_name}`}{' '}
+                                    </strong>{' '}
+                                    was assigned by
+                                </p>
+                            )}
+
                             <div className={styles['person-container']}>
                                 <div className={styles['avatar']}>
                                     <img src="" alt="" />
@@ -209,16 +223,31 @@ const TaskAssignee = (props) => {
                                     </p>
                                 </div>
                             </div>
-                        </>
-                    }
 
-                    {task.status === 0 ? (
+                            <p
+                                style={{
+                                    fontWeight: '400',
+                                    fontSize: '12px',
+                                    color: 'var(--fc-body-light',
+                                }}
+                            >
+                                {task.assigned_timestamp && (
+                                    <Moment fromNow>
+                                        {task.assigned_timestamp}
+                                    </Moment>
+                                )}
+                            </p>
+                        </>
+                    )}
+
+                    {task.assignee_id === userCtx.user.id &&
+                    task.status === 0 ? (
                         <div className={styles['actions_container']}>
                             {hasPermission('107') && (
                                 <OutlinedButton
                                     btnType="danger"
                                     onClick={toggleCancelDrawer}
-                                    isLoading={isLoading}
+                                    // isLoading={isLoading}
                                     loadingText="Cancelling"
                                 >
                                     Cancel
@@ -263,7 +292,7 @@ const TaskAssignee = (props) => {
                                         btnType="danger"
                                         width="100%"
                                         onClick={toggleCancelDrawer}
-                                        isLoading={isLoading}
+                                        // isLoading={isLoading}
                                         loadingText="Cancelling"
                                     >
                                         Cancel
@@ -274,7 +303,7 @@ const TaskAssignee = (props) => {
                                         width="100%"
                                         onClick={togglePendingDrawer}
                                         isLoading={isLoading}
-                                        loadingText="Pending"
+                                        // loadingText="Pending"
                                     >
                                         Pending
                                     </OutlinedButton>

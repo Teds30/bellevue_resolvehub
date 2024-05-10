@@ -276,7 +276,7 @@ const Task = () => {
                     <div className={styles['row2']}>
                         {task &&
                             userCtx.user &&
-                            task.assignee_id === userCtx.user.id && (
+                            (task.assignee_id === userCtx.user.id || task.requestor_id === userCtx.user.id) && (
                                 <TaskAssignee
                                     onRefreshData={loadData}
                                     task={task}
