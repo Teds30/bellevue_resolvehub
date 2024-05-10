@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 import { IconMapPin } from '@tabler/icons-react'
 import { IconChevronRight } from '@tabler/icons-react'
 import Moment from 'react-moment'
+import dayjs from 'dayjs'
 
 const RaisedIssues = (props) => {
     const { params } = props
@@ -217,6 +218,65 @@ const RaisedIssues = (props) => {
                                                                 }
                                                             </strong>
                                                         </p>
+                                                        <Box
+                                                            sx={{
+                                                                display: 'flex',
+                                                                gap: '4px',
+                                                            }}
+                                                        >
+                                                            <p
+                                                                style={{
+                                                                    fontSize:
+                                                                        '12px',
+                                                                    color: 'var(--fc-body)',
+                                                                }}
+                                                            >
+                                                                Status:{' '}
+                                                                <span>
+                                                                    {dayjs(
+                                                                        task.schedule
+                                                                    ).isBefore(
+                                                                        dayjs(),
+                                                                        'day'
+                                                                    ) ||
+                                                                    (dayjs(
+                                                                        task.schedule
+                                                                    ).isSame(
+                                                                        dayjs(),
+                                                                        'day'
+                                                                    ) &&
+                                                                        task.completed_marker_id ===
+                                                                            null)
+                                                                        ? 'On-Going'
+                                                                        : task.status ===
+                                                                          0
+                                                                        ? 'Open Task'
+                                                                        : task.status ===
+                                                                          1
+                                                                        ? 'Accepted'
+                                                                        : task.status ===
+                                                                          2
+                                                                        ? 'Pending'
+                                                                        : task.status ===
+                                                                          3
+                                                                        ? 'Cancelled'
+                                                                        : task.status ===
+                                                                          4
+                                                                        ? 'Done'
+                                                                        : ''}
+                                                                </span>
+                                                            </p>
+                                                            <p
+                                                                style={{
+                                                                    fontSize:
+                                                                        '12px',
+                                                                    color: 'var(--fc-body)',
+                                                                }}
+                                                            >
+                                                                {task.assignee &&
+                                                                    `| ${task.assignee.first_name} ${task.assignee.last_name}`}
+                                                            </p>
+                                                        </Box>
                                                     </>
                                                 </div>
                                                 <div className={styles['col2']}>
