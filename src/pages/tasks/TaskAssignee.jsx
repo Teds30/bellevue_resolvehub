@@ -199,13 +199,14 @@ const TaskAssignee = (props) => {
                         <>
                             {task.assignee_id === userCtx.user.id ? (
                                 <p>
-                                    <strong>You </strong> were assigned by
+                                    <span className="title">You </span> were
+                                    assigned by
                                 </p>
                             ) : (
                                 <p>
-                                    <strong>
+                                    <span className="title">
                                         {`${task.assignee.first_name} ${task.assignee.last_name}`}{' '}
-                                    </strong>{' '}
+                                    </span>{' '}
                                     was assigned by
                                 </p>
                             )}

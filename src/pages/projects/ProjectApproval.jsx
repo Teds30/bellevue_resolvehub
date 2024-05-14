@@ -223,6 +223,11 @@ const ProjectApproval = (props) => {
                             <Moment format="MMMM DD, YYYY">
                                 {project.updated_at}
                             </Moment>
+                        </strong>{' '}
+                        by{' '}
+                        <strong>
+                            {project.completed_marker.first_name}{' '}
+                            {project.completed_marker.last_name}.
                         </strong>
                     </p>
                 </div>

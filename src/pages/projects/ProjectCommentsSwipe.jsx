@@ -56,6 +56,10 @@ const ProjectCommentsSwipe = (props) => {
         }
     }
 
+    let sortedComments =
+        comments &&
+        comments.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+
     return (
         <SwipeableCard
             open={isOpen}
@@ -63,37 +67,39 @@ const ProjectCommentsSwipe = (props) => {
             closeDrawer={handleCloseDrawer}
             title="Comments"
             action={
-                <Box
-                    sx={{
-                        display: 'flex',
-                        gap: '12px',
-                        padding: '12px',
-                        backgroundColor: '#fff',
-                        borderTop: '1px solid var(--border-color)',
-                    }}
-                >
-                    <TextField
-                        label=""
-                        placeholder="Add a comment"
-                        fillWidth={true}
-                        value={comment}
-                        onChange={commentChangeHandler}
-                        onBlur={commentBlurHandler}
-                        error
-                    />
-                    <IconButton
-                        onClick={handleSubmit}
-                        disabled={!commentIsValid}
+                project?.completed_marker_id === null && (
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            gap: '12px',
+                            padding: '12px',
+                            backgroundColor: '#fff',
+                            borderTop: '1px solid var(--border-color)',
+                        }}
                     >
-                        <IconSend2
-                            color={
-                                commentIsValid
-                                    ? 'var(--accent)'
-                                    : 'var(--fc-body-lighter)'
-                            }
+                        <TextField
+                            label=""
+                            placeholder="Add a comment"
+                            fillWidth={true}
+                            value={comment}
+                            onChange={commentChangeHandler}
+                            onBlur={commentBlurHandler}
+                            error
                         />
-                    </IconButton>
-                </Box>
+                        <IconButton
+                            onClick={handleSubmit}
+                            disabled={!commentIsValid}
+                        >
+                            <IconSend2
+                                color={
+                                    commentIsValid
+                                        ? 'var(--accent)'
+                                        : 'var(--fc-body-lighter)'
+                                }
+                            />
+                        </IconButton>
+                    </Box>
+                )
             }
         >
             <Box
@@ -112,7 +118,7 @@ const ProjectCommentsSwipe = (props) => {
                     }}
                 >
                     {comments.length > 0
-                        ? comments.map((comment, index) => (
+                        ? sortedComments.map((comment, index) => (
                               <Box
                                   key={index}
                                   sx={{

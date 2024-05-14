@@ -48,11 +48,11 @@ const MyProjects = () => {
             }`,
         })
 
-        const newData = res.data.filter(
-            (d) => d.requestor_id !== userCtx.user.id
-        )
+        // const newData = res.data.filter(
+        //     (d) => d.requestor_id !== userCtx.user.id
+        // )
 
-        setProjects(newData)
+        setProjects(res.data)
     }
     const loadUserProjects = async () => {
         const res = await sendRequest({
