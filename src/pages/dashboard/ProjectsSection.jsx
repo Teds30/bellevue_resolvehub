@@ -11,11 +11,14 @@ import { IconBuilding } from '@tabler/icons-react'
 import dayjs from 'dayjs'
 import { Box } from '@mui/material'
 import DateSelector from '../../components/DateSelector/DateSelector'
+import DepartmentProjectsContributions from './DepartmentProjectsContributions'
 
 const ProjectsSection = () => {
     const pieParams = { height: 230, margin: { right: 5 } }
 
     const [metrics, setMetrics] = useState()
+    const [contributions, setContributions] = useState()
+
     const [selectedMetric, setSelectedMetric] = useState(1)
     const [year, setYear] = useState(dayjs)
     const [month, setMonth] = useState(dayjs)
@@ -33,6 +36,16 @@ const ProjectsSection = () => {
                     method: 'POST',
                 })
                 setMetrics(res)
+
+                if (userCtx.department.id === 10000) {
+                    const res2 = await sendRequest({
+                        url: `${
+                            import.meta.env.VITE_BACKEND_URL
+                        }/api/projects_metric_distribution/daily`,
+                        method: 'POST',
+                    })
+                    setContributions(res2)
+                }
             } else if (selectedMetric === 2) {
                 const res = await sendRequest({
                     url: `${
@@ -41,6 +54,16 @@ const ProjectsSection = () => {
                     method: 'POST',
                 })
                 setMetrics(res)
+
+                if (userCtx.department.id === 10000) {
+                    const res2 = await sendRequest({
+                        url: `${
+                            import.meta.env.VITE_BACKEND_URL
+                        }/api/projects_metric_distribution/weekly`,
+                        method: 'POST',
+                    })
+                    setContributions(res2)
+                }
             } else if (selectedMetric === 3) {
                 const res = await sendRequest({
                     url: `${
@@ -56,6 +79,24 @@ const ProjectsSection = () => {
                     },
                 })
                 setMetrics(res)
+
+                if (userCtx.department.id === 10000) {
+                    const res2 = await sendRequest({
+                        url: `${
+                            import.meta.env.VITE_BACKEND_URL
+                        }/api/projects_metric_distribution/monthly`,
+                        method: 'POST',
+
+                        body: JSON.stringify({
+                            month: dayjs(month).month() + 1,
+                            year: dayjs(month).year(),
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    setContributions(res2)
+                }
             } else if (selectedMetric === 4) {
                 const res = await sendRequest({
                     url: `${
@@ -70,6 +111,23 @@ const ProjectsSection = () => {
                     },
                 })
                 setMetrics(res)
+
+                if (userCtx.department.id === 10000) {
+                    const res2 = await sendRequest({
+                        url: `${
+                            import.meta.env.VITE_BACKEND_URL
+                        }/api/projects_metric_distribution/yearly`,
+                        method: 'POST',
+
+                        body: JSON.stringify({
+                            year: dayjs(month).year(),
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    setContributions(res2)
+                }
             }
         }
         if (userCtx.user) loadData()
@@ -142,7 +200,7 @@ const ProjectsSection = () => {
                         {
                             data: [
                                 {
-                                    value: metrics && metrics.request,
+                                    value: metrics && metrics.requested,
                                     label: 'Request',
                                     color: '#FD4D8F',
                                 },
@@ -206,7 +264,7 @@ const ProjectsSection = () => {
                             <p className="title">Request</p>
                         </div>
                         <div className={styles['col2']}>
-                            {metrics ? metrics.request : '--'}
+                            {metrics ? metrics.requested : '--'}
                         </div>
                     </div>
                     <div className={styles['legend']}>
@@ -271,6 +329,12 @@ const ProjectsSection = () => {
                     </div>
                 </Link>
             </div>
+
+            {userCtx.department && userCtx.department.id === 10000 && (
+                <DepartmentProjectsContributions
+                    contributions={contributions}
+                />
+            )}
         </div>
     )
 }
