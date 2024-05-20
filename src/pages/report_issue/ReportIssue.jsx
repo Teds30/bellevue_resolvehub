@@ -66,7 +66,10 @@ const ReportIssue = () => {
                     item.id === 3 ||
                     item.id === 31 ||
                     item.id === 30 ||
-                    item.id === 1
+                    item.id === 1 ||
+                    item.id === 33 ||
+                    item.id === 20 ||
+                    item.id === 34
             )
 
             setDepartments(filtered)
