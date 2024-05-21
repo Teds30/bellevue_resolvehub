@@ -80,7 +80,7 @@ const ProfileDetails = () => {
                             onChange={firstnameChangeHandler}
                             onBlur={firstnameBlurHandler}
                             helperText={firstnameHasError && 'Invalid input.'}
-                            disabled={!isEditing}
+                            disabled
                             error
                         />
                         <TextField
@@ -90,7 +90,7 @@ const ProfileDetails = () => {
                             onChange={lastnameChangeHandler}
                             onBlur={lastnameBlurHandler}
                             helperText={lastnameHasError && 'Invalid input.'}
-                            disabled={!isEditing}
+                            disabled
                             error
                         />
                         <TextField

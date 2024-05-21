@@ -365,6 +365,7 @@ const TaskAssignee = (props) => {
                             <DateSelector
                                 currentValue={date}
                                 handleSetValue={setDate}
+                                minDate={dayjs()}
                             />
                             <TimeSelector
                                 currentValue={time}
