@@ -16,7 +16,7 @@ import BellevueLoading from '../../components/LoadingSpinner/BellevueLoading'
 import TableFilter from './TableFilter'
 import dayjs from 'dayjs'
 import { useNavigate } from 'react-router-dom'
-import { IconExternalLink } from '@tabler/icons-react'
+import { IconDownload, IconExternalLink } from '@tabler/icons-react'
 import AuthContext from '../../context/auth-context'
 import TableFilterMain from './TableFilterStatus'
 
@@ -32,7 +32,8 @@ import TableSearch from './TableSearch'
 function CustomToolbar() {
     return (
         <GridToolbarContainer>
-            <GridToolbarExport />
+            {/* <GridToolbarExport /> */}
+            {/* <Box>hs</Box> */}
         </GridToolbarContainer>
     )
 }
@@ -153,6 +154,43 @@ const ReportsTable = () => {
                 page: page,
                 pageSize: pageSize,
             },
+        }
+    }
+
+    const handleExport = async () => {
+        let _searchParams = ''
+        if (searchParams && searchParams.searchField && searchParams.search) {
+            _searchParams = `&searchField=${searchParams.searchField}&search=${searchParams.search}`
+        }
+
+        const res = await fetch(
+            `${
+                import.meta.env.VITE_BACKEND_URL
+            }/api/tasks_export?${params}${statusParams}${_searchParams}`,
+            {
+                method: 'POST',
+                body: JSON.stringify({
+                    department_id: userCtx.user.position.department_id,
+                    can_see_all: userCtx.hasPermission('302'),
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        )
+
+        if (res.ok) {
+            const blob = await res.blob()
+            const url = window.URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = 'tasks.csv'
+            document.body.appendChild(a) // Append to the DOM for Firefox support
+            a.click()
+            a.remove() // Remove the element after clicking
+            window.URL.revokeObjectURL(url)
+        } else {
+            console.error('Failed to download tasks')
         }
     }
 
@@ -436,13 +474,15 @@ const ReportsTable = () => {
                     },
 
                     {
-                        field: 'completion_date',
+                        field: 'updated_at',
                         hidden: true,
                         hideable: false,
                         disableColumnMenu: true,
                         headerName: 'Completion Date',
                         valueGetter: (value) => {
-                            return value
+                            return value !== null
+                                ? dayjs(value).format('MMMM DD, YYYY hh:mm A')
+                                : null
                         },
                         renderCell: (par) => {
                             let out = par.row.completed_marker_id ? (
@@ -565,6 +605,33 @@ const ReportsTable = () => {
                 //     setFilterModel(newFilterModel)
                 // }}
             />
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    padding: '12px 16px',
+                    border: '1px solid var(--border-color)',
+                }}
+            >
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        color: 'var(--accent)',
+                        gap: '4px',
+                        fontWeight: 500,
+                        padding: '12px 16px',
+                        border: '1px solid var(--border-color)',
+                        width: 'fit-content',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                    }}
+                    onClick={handleExport}
+                >
+                    <IconDownload size={16} /> Export Data
+                </Box>
+            </Box>
         </div>
     )
 }
