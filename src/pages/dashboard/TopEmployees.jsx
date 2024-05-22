@@ -4,19 +4,23 @@ import useHttp from '../../hooks/http-hook'
 import AuthContext from '../../context/auth-context'
 import { Box } from '@mui/system'
 import Dropdown from '../../components/Dropdown/Dropdown'
-import { IconBuilding, IconChevronRight } from '@tabler/icons-react'
+import { IconBuilding, IconChevronRight, IconFilter } from '@tabler/icons-react'
 import DateSelector from '../../components/DateSelector/DateSelector'
 import dayjs from 'dayjs'
+import { IconButton } from '@mui/material'
+import { IconUsersGroup } from '@tabler/icons-react'
 
 const TopEmployees = () => {
     const userCtx = useContext(AuthContext)
     const [topEmployees, setTopEmployees] = useState()
+    const [topDepartments, setTopDepartments] = useState()
 
     const [selectedMetric, setSelectedMetric] = useState(1)
     const [year, setYear] = useState(dayjs)
     const [month, setMonth] = useState(dayjs)
 
     const { sendRequest } = useHttp()
+    const [selected, setSelected] = useState(0)
 
     useEffect(() => {
         const loadData = async () => {
@@ -27,6 +31,14 @@ const TopEmployees = () => {
             })
 
             setTopEmployees(res)
+
+            const res2 = await sendRequest({
+                url: `${import.meta.env.VITE_BACKEND_URL}/api/top_departments/${
+                    userCtx.department.id
+                }?filter_by=daily`,
+            })
+
+            setTopDepartments(res2)
         }
 
         if (userCtx.department) loadData()
@@ -43,9 +55,12 @@ const TopEmployees = () => {
                     }?filter_by=daily`,
                 })
                 setTopEmployees(res)
-                if (userCtx.department.id === 10000) {
-                    // management
-                }
+                const res2 = await sendRequest({
+                    url: `${
+                        import.meta.env.VITE_BACKEND_URL
+                    }/api/top_departments?filter_by=daily`,
+                })
+                setTopDepartments(res2)
             } else if (selectedMetric === 2) {
                 const res = await sendRequest({
                     url: `${
@@ -55,10 +70,12 @@ const TopEmployees = () => {
                     }?filter_by=weekly`,
                 })
                 setTopEmployees(res)
-
-                if (userCtx.department.id === 10000) {
-                    //
-                }
+                const res2 = await sendRequest({
+                    url: `${
+                        import.meta.env.VITE_BACKEND_URL
+                    }/api/top_departments?filter_by=weekly`,
+                })
+                setTopDepartments(res2)
             } else if (selectedMetric === 3) {
                 const res = await sendRequest({
                     url: `${
@@ -70,10 +87,14 @@ const TopEmployees = () => {
                     ).month()}&year=${dayjs(year).year()}`,
                 })
                 setTopEmployees(res)
-
-                if (userCtx.department.id === 10000) {
-                    //
-                }
+                const res2 = await sendRequest({
+                    url: `${
+                        import.meta.env.VITE_BACKEND_URL
+                    }/api/top_departments?filter_by=month&month=${dayjs(
+                        month
+                    ).month()}&year=${dayjs(year).year()}`,
+                })
+                setTopDepartments(res2)
             } else if (selectedMetric === 4) {
                 const res = await sendRequest({
                     url: `${
@@ -84,9 +105,15 @@ const TopEmployees = () => {
                 })
                 setTopEmployees(res)
 
-                if (userCtx.department.id === 10000) {
-                    //
-                }
+                const res2 = await sendRequest({
+                    url: `${
+                        import.meta.env.VITE_BACKEND_URL
+                    }/api/top_departments?filter_by=year&year=${dayjs(
+                        year
+                    ).year()}`,
+                })
+
+                setTopDepartments(res2)
             }
         }
 
@@ -101,7 +128,55 @@ const TopEmployees = () => {
 
     return (
         <Box sx={{ paddingInline: '12px' }}>
-            <h3>Top Performing</h3>
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                }}
+            >
+                <h3>Top Performing</h3>
+                <span>•</span>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                    }}
+                >
+                    <IconButton
+                        onClick={() => setSelected(0)}
+                        sx={
+                            selected === 0 && {
+                                backgroundColor: 'var(--accent)',
+                                color: '#fff',
+                                borderRadius: '8px',
+                                '&:hover': {
+                                    backgroundColor: 'var(--accent-dark)',
+                                },
+                            }
+                        }
+                    >
+                        <IconUsersGroup size={20} />
+                    </IconButton>
+                    <IconButton
+                        onClick={() => setSelected(1)}
+                        sx={
+                            selected === 1 && {
+                                backgroundColor: 'var(--accent)',
+                                color: '#fff',
+                                borderRadius: '8px',
+                                '&:hover': {
+                                    backgroundColor: 'var(--accent-dark)',
+                                },
+                            }
+                        }
+                    >
+                        <IconBuilding size={20} />
+                    </IconButton>
+                </Box>
+            </Box>
+
             <Box
                 sx={{
                     marginTop: '16px',
@@ -113,7 +188,7 @@ const TopEmployees = () => {
             >
                 <Dropdown
                     leadingIcon={
-                        <IconBuilding size={20} color="var(--fc-body)" />
+                        <IconFilter size={20} color="var(--fc-body)" />
                     }
                     // label="Filter"
                     placeholder="Select filter"
@@ -155,18 +230,33 @@ const TopEmployees = () => {
                     />
                 ) : null}
             </Box>
-            {topEmployees &&
+            {selected === 0 &&
+                topEmployees &&
                 topEmployees?.map((emp, index) => {
                     return (
                         <Box
                             key={index}
                             sx={{
                                 borderBottom: '1px solid var(--border-color)',
-                                display: 'flex',
                                 padding: '12px 0',
+                                display: 'flex',
+                                alignItems: 'center',
                             }}
                         >
-                            <Box sx={{ flex: 1 }}>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    marginRight: '8px',
+                                }}
+                            >
+                                <p className="title">{index + 1}.</p>
+                            </Box>
+                            <Box
+                                sx={{
+                                    flex: 1,
+                                }}
+                            >
                                 <p>
                                     {emp.assignee.first_name}{' '}
                                     {emp.assignee.last_name}
@@ -174,6 +264,42 @@ const TopEmployees = () => {
                             </Box>
                             <Box>
                                 <p className="title">{emp.completed_tasks}</p>
+                            </Box>
+                        </Box>
+                    )
+                })}
+
+            {selected === 1 &&
+                topDepartments &&
+                topDepartments?.map((dep, index) => {
+                    return (
+                        <Box
+                            key={index}
+                            sx={{
+                                borderBottom: '1px solid var(--border-color)',
+                                padding: '12px 0',
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    marginRight: '8px',
+                                }}
+                            >
+                                <p className="title">{index + 1}.</p>
+                            </Box>
+                            <Box
+                                sx={{
+                                    flex: 1,
+                                }}
+                            >
+                                <p>{dep.department.name} </p>
+                            </Box>
+                            <Box>
+                                <p className="title">{dep.completed_tasks}</p>
                             </Box>
                         </Box>
                     )
