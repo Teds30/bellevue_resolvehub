@@ -42,7 +42,7 @@ const Dashboard = () => {
 
             depts.unshift({ id: 10000, name: 'All Departments' })
             setDepartments(depts)
-            setSelectedDepartment(userCtx.department.id)
+            setSelectedDepartment(10000)
         }
 
         if (userCtx && userCtx.user && userCtx.hasPermission('403')) loadData()
@@ -135,16 +135,6 @@ const Dashboard = () => {
                     >
                         Top Performing
                     </div>
-                    {/* <div
-                        className={`${styles['nav_btn']} ${
-                            active === 2 && styles['nav_btn_active']
-                        }`}
-                        onClick={() => {
-                            handleActive(2)
-                        }}
-                    >
-                        Department
-                    </div> */}
                 </div>
                 <Outlet />
             </div>
