@@ -82,7 +82,6 @@ const useAuth = () => {
             //         token: token,
             //     })
             // )
-            console.log('has: ', hasPermission('401'))
 
             if (hasPermission('401')) {
                 navigate('/dashboard', { state: { isFresh: fresh } })
