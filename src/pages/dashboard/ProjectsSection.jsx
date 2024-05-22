@@ -12,6 +12,7 @@ import dayjs from 'dayjs'
 import { Box } from '@mui/material'
 import DateSelector from '../../components/DateSelector/DateSelector'
 import DepartmentProjectsContributions from './DepartmentProjectsContributions'
+import { IconFilter } from '@tabler/icons-react'
 
 const ProjectsSection = () => {
     const pieParams = { height: 230, margin: { right: 5 } }
@@ -150,7 +151,7 @@ const ProjectsSection = () => {
             >
                 <Dropdown
                     leadingIcon={
-                        <IconBuilding size={20} color="var(--fc-body)" />
+                        <IconFilter size={20} color="var(--fc-body)" />
                     }
                     // label="Filter"
                     placeholder="Select filter"

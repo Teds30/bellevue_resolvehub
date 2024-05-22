@@ -10,6 +10,7 @@ import DateSelector from '../../components/DateSelector/DateSelector'
 import dayjs from 'dayjs'
 import { IconChevronRight } from '@tabler/icons-react'
 import AuthContext from '../../context/auth-context'
+import { IconFilter } from '@tabler/icons-react'
 
 const IssueSection = () => {
     const { sendRequest } = useHttp()
@@ -188,7 +189,7 @@ const IssueSection = () => {
             >
                 <Dropdown
                     leadingIcon={
-                        <IconBuilding size={20} color="var(--fc-body)" />
+                        <IconFilter size={20} color="var(--fc-body)" />
                     }
                     // label="Filter"
                     placeholder="Select filter"

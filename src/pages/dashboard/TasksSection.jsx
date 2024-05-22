@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { PieChart } from '@mui/x-charts/PieChart'
 
 import styles from './TasksSection.module.css'
-import { IconChevronRight } from '@tabler/icons-react'
+import { IconChevronRight, IconFilter } from '@tabler/icons-react'
 import useHttp from '../../hooks/http-hook'
 import AuthContext from '../../context/auth-context'
 import { Link } from 'react-router-dom'
@@ -148,7 +148,7 @@ const TasksSection = () => {
             >
                 <Dropdown
                     leadingIcon={
-                        <IconBuilding size={20} color="var(--fc-body)" />
+                        <IconFilter size={20} color="var(--fc-body)" />
                     }
                     // label="Filter"
                     placeholder="Select filter"
