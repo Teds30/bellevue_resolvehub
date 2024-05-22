@@ -276,7 +276,8 @@ const Task = () => {
                     <div className={styles['row2']}>
                         {task &&
                             userCtx.user &&
-                            (task.assignee_id === userCtx.user.id || task.requestor_id === userCtx.user.id) && (
+                            (task.assignee_id === userCtx.user.id ||
+                                task.requestor_id === userCtx.user.id) && (
                                 <TaskAssignee
                                     onRefreshData={loadData}
                                     task={task}
@@ -355,6 +356,22 @@ const Task = () => {
                                         <p>{task.remarks}</p>
                                     </div>
                                 </div>
+
+                                <section>
+                                    <p className="title">Proof</p>
+                                    <div className={styles['images-container']}>
+                                        {task.task_accomplish_images?.map(
+                                            (img, index) => {
+                                                return (
+                                                    <TaskImage
+                                                        key={index}
+                                                        img_url={img.url}
+                                                    />
+                                                )
+                                            }
+                                        )}
+                                    </div>
+                                </section>
                             </div>
                         ) : task.status === 3 ? (
                             <div className={styles['marked-done-container']}>

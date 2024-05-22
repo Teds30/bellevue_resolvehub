@@ -25,6 +25,7 @@ import dayjs from 'dayjs'
 import AuthContext from '../../context/auth-context'
 import { IconSquareRoundedCheckFilled } from '@tabler/icons-react'
 import userPermission from '../../hooks/userPermission'
+import UploadedImages from '../report_issue/UploadedImages'
 
 const TaskAssignee = (props) => {
     const { task, onRefreshData } = props
@@ -66,6 +67,8 @@ const TaskAssignee = (props) => {
     const userCtx = useContext(AuthContext)
 
     const { hasPermission } = userPermission()
+
+    const [uploadedImages, setUploadedImages] = useState([])
 
     const [openPending, setOpenPending] = useState()
     const [openCancel, setOpenCancel] = useState()
@@ -118,8 +121,51 @@ const TaskAssignee = (props) => {
             }),
         })
 
+        uploadImages(task.id)
+
         onRefreshData()
         handleCloseSubmitDrawer()
+    }
+
+    const handleFileUpload = async (image, task_id, i) => {
+        const formData = new FormData()
+
+        formData.append('image', image)
+        formData.append('name', `task${task_id}_${i}`)
+        formData.append('task_id', task_id)
+
+        try {
+            const res = await fetch(
+                `${
+                    import.meta.env.VITE_BACKEND_URL
+                }/api/task_accomplish_images`,
+                {
+                    method: 'POST',
+                    body: formData,
+                }
+            )
+
+            const data = await res.json()
+            return data
+        } catch (err) {}
+    }
+
+    const uploadImages = async (task_id) => {
+        try {
+            // Use Promise.all to wait for all uploads to complete
+            const uploadPromises = uploadedImages.map(async (img, index) => {
+                return await handleFileUpload(img, task_id, index)
+            })
+
+            const results = await Promise.all(uploadPromises)
+
+            // Process results if needed
+            console.log('Upload results:', results)
+
+            // Continue with the rest of your code here...
+        } catch (error) {
+            console.error('Error uploading images:', error)
+        }
     }
 
     const handlePending = async () => {
@@ -471,6 +517,10 @@ const TaskAssignee = (props) => {
                         onBlur={remarksBlurHandler}
                         helperText={remarksHasError && 'Enter the remarks.'}
                         error
+                    />
+                    <UploadedImages
+                        uploadedImages={uploadedImages}
+                        setUploadedImages={setUploadedImages}
                     />
 
                     <PrimaryButton
