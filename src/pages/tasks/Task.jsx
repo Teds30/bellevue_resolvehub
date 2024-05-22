@@ -190,8 +190,13 @@ const Task = () => {
                         </section>
                         {task && (
                             <>
-                                <p className="title">
-                                    Requestor{'  '}
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <p className="title">Requestor {'  '}</p>
                                     <span
                                         style={{
                                             marginLeft: '4px',
@@ -200,12 +205,12 @@ const Task = () => {
                                             color: 'var(--fc-body-light)',
                                         }}
                                     >
-                                        • {'  '}{' '}
+                                        ·{'  '}{' '}
                                         <Moment fromNow>
                                             {task.created_at}
                                         </Moment>
                                     </span>
-                                </p>
+                                </Box>
                                 <div className={styles['requestor_container']}>
                                     <div className={styles['person-container']}>
                                         <div className={styles['avatar']}>
