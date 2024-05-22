@@ -207,7 +207,7 @@ const Project = () => {
                                                 }}
                                             >
                                                 <h3>
-                                                    <Moment format="MMMM D">
+                                                    <Moment format="MMMM D, Y">
                                                         {project.schedule}
                                                     </Moment>
                                                 </h3>
@@ -257,7 +257,7 @@ const Project = () => {
                                                 }}
                                             >
                                                 <h3>
-                                                    <Moment format="MMMM D">
+                                                    <Moment format="MMMM D, Y">
                                                         {project.deadline}
                                                     </Moment>
                                                 </h3>
