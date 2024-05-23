@@ -58,7 +58,6 @@ const DoneTask = (props) => {
                 }
             }
 
-            console.log(formattedData)
             setTasks(formattedData)
         }
 

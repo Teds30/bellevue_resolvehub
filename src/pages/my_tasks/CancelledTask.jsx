@@ -58,7 +58,6 @@ const CancelledTask = (props) => {
                 }
             }
 
-            console.log(formattedData)
             setTasks(formattedData)
         }
 

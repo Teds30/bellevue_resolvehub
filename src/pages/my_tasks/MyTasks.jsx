@@ -144,7 +144,6 @@ const MyTasks = () => {
             }
         }
 
-        console.log(fetchParams)
         setParams(fetchParams)
     }
 
