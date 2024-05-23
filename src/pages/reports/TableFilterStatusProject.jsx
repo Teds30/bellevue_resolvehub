@@ -20,7 +20,7 @@ const StatusCircle = (props) => {
     )
 }
 
-const TableFilterStatus = (props) => {
+const TableFilterStatusProject = (props) => {
     const { handleAppliedFilter } = props
     const [anchorEl, setAnchorEl] = React.useState(null)
     const [selectedFilter, setSelectedFilter] = useState(1)
@@ -47,16 +47,16 @@ const TableFilterStatus = (props) => {
                 handleAppliedFilter('')
                 break
             case 2:
-                setFilterLabel('Open Task')
-                handleAppliedFilter('opentask')
-                break
-            case 3:
-                setFilterLabel('On-Going')
-                handleAppliedFilter('ongoing')
+                setFilterLabel('Request')
+                handleAppliedFilter('request')
                 break
             case 4:
                 setFilterLabel('Pending')
                 handleAppliedFilter('pending')
+                break
+            case 3:
+                setFilterLabel('On-Going')
+                handleAppliedFilter('ongoing')
                 break
             case 5:
                 setFilterLabel('Cancelled')
@@ -65,6 +65,10 @@ const TableFilterStatus = (props) => {
             case 6:
                 setFilterLabel('Accomplished')
                 handleAppliedFilter('accomplished')
+                break
+            case 7:
+                setFilterLabel('Rejected')
+                handleAppliedFilter('rejected')
                 break
         }
         handleClose()
@@ -113,18 +117,18 @@ const TableFilterStatus = (props) => {
                                 },
                                 {
                                     id: 2,
-                                    name: 'Open Task',
+                                    name: 'Request',
                                     adornment: <StatusCircle color="#ccc" />,
-                                },
-                                {
-                                    id: 3,
-                                    name: 'On-Going',
-                                    adornment: <StatusCircle color="#0c8a60" />,
                                 },
                                 {
                                     id: 4,
                                     name: 'Pending',
                                     adornment: <StatusCircle color="#555ccc" />,
+                                },
+                                {
+                                    id: 3,
+                                    name: 'On-Going',
+                                    adornment: <StatusCircle color="#0c8a60" />,
                                 },
                                 {
                                     id: 5,
@@ -135,6 +139,11 @@ const TableFilterStatus = (props) => {
                                     id: 6,
                                     name: 'Accomplished',
                                     adornment: <StatusCircle color="#03c988" />,
+                                },
+                                {
+                                    id: 7,
+                                    name: 'Rejected',
+                                    adornment: <StatusCircle color="#555" />,
                                 },
                             ]}
                             value={selectedStatus}
@@ -157,4 +166,4 @@ const TableFilterStatus = (props) => {
     )
 }
 
-export default TableFilterStatus
+export default TableFilterStatusProject

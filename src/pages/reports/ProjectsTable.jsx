@@ -27,6 +27,8 @@ import { IconSend } from '@tabler/icons-react'
 import { IconHourglassHigh } from '@tabler/icons-react'
 import AuthContext from '../../context/auth-context'
 import TableSearch from './TableSearch'
+import TableFilterStatus from './TableFilterStatus'
+import TableFilterStatusProject from './TableFilterStatusProject'
 
 function CustomToolbar() {
     return (
@@ -39,7 +41,7 @@ function CustomToolbar() {
 const ProjectsTable = () => {
     const { sendRequest } = useHttp()
     const queryClient = useQueryClient()
-    const [params, setParams] = useState('')
+    const [params, setParams] = useState('&filter_by=daily')
     const navigate = useNavigate()
 
     const userCtx = useContext(AuthContext)
@@ -50,6 +52,7 @@ const ProjectsTable = () => {
     })
     const [filterModel, setFilterModel] = React.useState({ items: [] })
     const [sortModel, setSortModel] = React.useState([])
+    const [statusParams, setStatusParams] = useState('')
 
     const [searchParams, setSearchParams] = useState({
         searchField: '',
@@ -75,11 +78,12 @@ const ProjectsTable = () => {
         const res = await fetch(
             `${
                 import.meta.env.VITE_BACKEND_URL
-            }/api/projects_page?page_size=${pageSize}&page=${_page}${params}${_searchParams}`,
+            }/api/projects_page?page_size=${pageSize}&page=${_page}${params}${statusParams}${_searchParams}`,
             {
                 method: 'POST',
                 body: JSON.stringify({
                     department_id: userCtx.user.position.department_id,
+                    can_see_all: userCtx.hasPermission('302'),
                 }),
                 headers: {
                     'Content-Type': 'application/json',
@@ -104,7 +108,7 @@ const ProjectsTable = () => {
         let fetchParams = ''
         if (data) {
             if (data.selectedFilter == 1) {
-                fetchParams = `&filter_by=today`
+                fetchParams = `&filter_by=daily`
             } else if (data.selectedFilter == 2) {
                 fetchParams = `&filter_by=this_week`
             } else if (data.selectedFilter == 3) {
@@ -115,10 +119,24 @@ const ProjectsTable = () => {
                 fetchParams = `&filter_by=year&year=${dayjs(data.year).format(
                     'YYYY'
                 )}`
+            } else if (data.selectedFilter == 5) {
+                console.log(dayjs(data.custom).format('YYYY-MM-DD'))
+                fetchParams = `&filter_by=custom&custom=${dayjs(
+                    data.custom
+                ).format('YYYY-MM-DD')}`
             }
         }
 
         setParams(fetchParams)
+    }
+
+    const handleFilterStatus = async (data) => {
+        if (data) {
+            let fetchParams = `&status=${data}`
+            setStatusParams(fetchParams)
+        } else {
+            setStatusParams('')
+        }
     }
 
     const {
@@ -134,6 +152,7 @@ const ProjectsTable = () => {
                 page: paginationModel.page,
                 pageSize: paginationModel.pageSize,
                 params: params,
+                statusParams: statusParams,
                 searchParams: searchParams,
             },
         ],
@@ -218,11 +237,14 @@ const ProjectsTable = () => {
                     padding: '12px',
                     border: '1px solid var(--border-color)',
                     borderBottom: '0',
-                    // borderTopLeftRadius: '8px',
-                    // borderTopRightRadius: '8px',
+                    display: 'flex',
+                    gap: '12px',
                 }}
             >
                 <TableFilter handleAppliedFilter={handleAppliedFilter} />
+                <TableFilterStatusProject
+                    handleAppliedFilter={handleFilterStatus}
+                />
             </Box>
             <DataGrid
                 sx={{ width: '100%' }}
@@ -279,6 +301,20 @@ const ProjectsTable = () => {
                                 : value == 0
                                 ? 'Minor'
                                 : ''
+                        },
+                        flex: 1,
+                        cellClassName: styles['row_cells'],
+                        headerClassName: styles['row_header'],
+                        headerAlign: 'center',
+                        align: 'center',
+                    },
+                    {
+                        field: 'department',
+                        hideable: false,
+                        disableColumnMenu: true,
+                        headerName: 'Type',
+                        valueGetter: (value) => {
+                            return value.name
                         },
                         flex: 1,
                         cellClassName: styles['row_cells'],

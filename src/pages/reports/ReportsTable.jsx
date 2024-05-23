@@ -341,8 +341,6 @@ const ReportsTable = () => {
                 sx={{
                     padding: '12px',
                     border: '1px solid var(--border-color)',
-                    // borderTopLeftRadius: '8px',
-                    // borderTopRightRadius: '8px',
                     borderBottom: '0',
                     display: 'flex',
                     gap: '12px',
