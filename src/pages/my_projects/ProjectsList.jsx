@@ -6,6 +6,7 @@ import useHttp from '../../hooks/http-hook'
 import Moment from 'react-moment'
 import {
     IconChevronRight,
+    IconChevronsDown,
     IconCircleCheck,
     IconCircleX,
     IconFilter,
@@ -28,6 +29,7 @@ import Dropdown from '../../components/Dropdown/Dropdown'
 import dayjs from 'dayjs'
 import DateFilter from '../my_tasks/DateFilter'
 import AuthContext from '../../context/auth-context'
+import { IconChevronDown } from '@tabler/icons-react'
 
 const ProjectsList = (props) => {
     const { type } = props
@@ -69,7 +71,6 @@ const ProjectsList = (props) => {
     }
 
     const loadDepartmentProjects = async (active) => {
-        console.log('sd', active)
         if (active === 0) {
             setRequested()
         } else if (active === 1) {
@@ -113,23 +114,19 @@ const ProjectsList = (props) => {
         if (res) {
             if (active === 0) {
                 setRequested(res.data)
-                setfilteredProjects(res.data)
             } else if (active === 1) {
                 setPending(res.data)
-                setfilteredProjects(res.data)
             } else if (active === 2) {
                 setOngoing(res.data)
-                setfilteredProjects(res.data)
             } else if (active === 3) {
                 setCancelled(res.data)
-                setfilteredProjects(res.data)
             } else if (active === 4) {
                 setDone(res.data)
-                setfilteredProjects(res.data)
             } else if (active === 5) {
                 setRejected(res.data)
-                setfilteredProjects(res.data)
             }
+
+            setfilteredProjects(res.data)
         }
     }
 
@@ -220,24 +217,49 @@ const ProjectsList = (props) => {
 
         const origUrl = new URL(next_page_url)
         const proxied = origUrl.pathname + origUrl.search
-        const res = await sendRequest({
-            url: `${proxied}&${queryString}&status=${active}`,
-        })
+        const res_query = await fetch(
+            `${proxied}&${queryString}&status=${active}`
+        )
 
-        let _oldproj = [...requested.data, ...res.data.data]
-        let _new = res.data
-        _new.data = _oldproj
+        const res = await res_query.json()
 
-        if (active === 0) {
-            setRequested(_new)
-        } else if (active === 1) {
-            setPending(_new)
-        } else if (active === 2) {
-            setOngoing(_new)
-        } else if (active === 3) {
-            setCancelled(_new)
-        } else if (active === 4) {
-            setDone(_new)
+        if (res) {
+            let _oldproj
+            let _new
+
+            if (active === 0) {
+                _oldproj = [...requested.data, ...res.data.data]
+                _new = res.data
+                _new.data = _oldproj
+                setRequested(_new)
+            } else if (active === 1) {
+                _oldproj = [...pending.data, ...res.data.data]
+                _new = res.data
+                _new.data = _oldproj
+                setPending(_new)
+            } else if (active === 2) {
+                _oldproj = [...ongoing.data, ...res.data.data]
+                _new = res.data
+                _new.data = _oldproj
+                setOngoing(_new)
+            } else if (active === 3) {
+                _oldproj = [...cancelled.data, ...res.data.data]
+                _new = res.data
+                _new.data = _oldproj
+                setCancelled(_new)
+            } else if (active === 4) {
+                _oldproj = [...done.data, ...res.data.data]
+                _new = res.data
+                _new.data = _oldproj
+                setDone(_new)
+            } else if (active === 5) {
+                _oldproj = [...rejected.data, ...res.data.data]
+                _new = res.data
+                _new.data = _oldproj
+                setRejected(_new)
+            }
+
+            setfilteredProjects(_new)
         }
     }
 
@@ -323,133 +345,159 @@ const ProjectsList = (props) => {
                         </div>
                     </div>
 
-                    <Box>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '24px',
+                        }}
+                    >
                         <div className={styles['date_container']}>
                             {/* <p className="title">Filter:</p> */}
                             <DateFilter
                                 handleAppliedFilter={handleAppliedFilter}
                             />
                         </div>
-                        {filteredProjects?.data?.map((project, index) => {
-                            return (
-                                <div
-                                    key={index}
-                                    className={styles['project']}
-                                    onClick={() => {
-                                        navigate(`/projects/${project.id}`)
-                                    }}
-                                >
-                                    <div className={styles['col1']}>
-                                        <div className={styles['date']}>
-                                            <h3>
-                                                <Moment format="DD">
-                                                    {project.schedule}
-                                                </Moment>
-                                            </h3>
-                                            <p>
-                                                <Moment format="MMM">
-                                                    {project.schedule}
-                                                </Moment>
-                                            </p>
-                                        </div>
-                                        <div className={styles['details']}>
-                                            <div
-                                                className={
-                                                    styles['chip-container']
-                                                }
-                                            >
-                                                <div className={styles['chip']}>
-                                                    {project.type == 0
-                                                        ? 'MINOR'
-                                                        : 'MAJOR'}
-                                                </div>
-                                                <div
-                                                    className={styles['status']}
-                                                >
-                                                    <span
-                                                        style={{
-                                                            display: 'flex',
-                                                            alignItems:
-                                                                'center',
-                                                            justifyContent:
-                                                                'center',
-                                                        }}
-                                                    >
-                                                        {project.status == 0 ? (
-                                                            <IconSend
-                                                                size={18}
-                                                            />
-                                                        ) : project.status ==
-                                                          1 ? (
-                                                            <IconHourglassHigh
-                                                                size={18}
-                                                            />
-                                                        ) : project.status ==
-                                                          2 ? (
-                                                            <IconPlayerPlay
-                                                                size={18}
-                                                                color="var(--success)"
-                                                            />
-                                                        ) : project.status ==
-                                                          3 ? (
-                                                            <IconCircleX
-                                                                size={18}
-                                                            />
-                                                        ) : project.status ==
-                                                          4 ? (
-                                                            <IconCircleCheck
-                                                                size={18}
-                                                            />
-                                                        ) : project.status ==
-                                                          5 ? (
-                                                            <IconFileDislike
-                                                                size={18}
-                                                            />
-                                                        ) : (
-                                                            ''
-                                                        )}
-                                                    </span>
-                                                    {project.status == 0
-                                                        ? 'REQUEST'
-                                                        : project.status == 1
-                                                        ? 'PENDING'
-                                                        : project.status == 2
-                                                        ? 'ON-GOING'
-                                                        : project.status == 3
-                                                        ? 'CANCELLED'
-                                                        : project.status == 4
-                                                        ? 'DONE'
-                                                        : project.status == 5
-                                                        ? 'REJECTED'
-                                                        : ''}
-                                                </div>
+                        <Box>
+                            {filteredProjects?.data?.map((project, index) => {
+                                return (
+                                    <div
+                                        key={index}
+                                        className={styles['project']}
+                                        onClick={() => {
+                                            navigate(`/projects/${project.id}`)
+                                        }}
+                                    >
+                                        <div className={styles['col1']}>
+                                            <div className={styles['date']}>
+                                                <h3>
+                                                    <Moment format="DD">
+                                                        {project.schedule}
+                                                    </Moment>
+                                                </h3>
+                                                <p>
+                                                    <Moment format="MMM">
+                                                        {project.schedule}
+                                                    </Moment>
+                                                </p>
                                             </div>
-                                            <h4>{project.title}</h4>
-                                            <p>
-                                                <span>
-                                                    <IconMapPin size={14} />
-                                                </span>{' '}
-                                                {project.location}
-                                            </p>
+                                            <div className={styles['details']}>
+                                                <div
+                                                    className={
+                                                        styles['chip-container']
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles['chip']
+                                                        }
+                                                    >
+                                                        {project.type == 0
+                                                            ? 'MINOR'
+                                                            : 'MAJOR'}
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles['status']
+                                                        }
+                                                    >
+                                                        <span
+                                                            style={{
+                                                                display: 'flex',
+                                                                alignItems:
+                                                                    'center',
+                                                                justifyContent:
+                                                                    'center',
+                                                            }}
+                                                        >
+                                                            {project.status ==
+                                                            0 ? (
+                                                                <IconSend
+                                                                    size={18}
+                                                                />
+                                                            ) : project.status ==
+                                                              1 ? (
+                                                                <IconHourglassHigh
+                                                                    size={18}
+                                                                />
+                                                            ) : project.status ==
+                                                              2 ? (
+                                                                <IconPlayerPlay
+                                                                    size={18}
+                                                                    color="var(--success)"
+                                                                />
+                                                            ) : project.status ==
+                                                              3 ? (
+                                                                <IconCircleX
+                                                                    size={18}
+                                                                />
+                                                            ) : project.status ==
+                                                              4 ? (
+                                                                <IconCircleCheck
+                                                                    size={18}
+                                                                />
+                                                            ) : project.status ==
+                                                              5 ? (
+                                                                <IconFileDislike
+                                                                    size={18}
+                                                                />
+                                                            ) : (
+                                                                ''
+                                                            )}
+                                                        </span>
+                                                        {project.status == 0
+                                                            ? 'REQUEST'
+                                                            : project.status ==
+                                                              1
+                                                            ? 'PENDING'
+                                                            : project.status ==
+                                                              2
+                                                            ? 'ON-GOING'
+                                                            : project.status ==
+                                                              3
+                                                            ? 'CANCELLED'
+                                                            : project.status ==
+                                                              4
+                                                            ? 'DONE'
+                                                            : project.status ==
+                                                              5
+                                                            ? 'REJECTED'
+                                                            : ''}
+                                                    </div>
+                                                </div>
+                                                <h4>{project.title}</h4>
+                                                <p>
+                                                    <span>
+                                                        <IconMapPin size={14} />
+                                                    </span>{' '}
+                                                    {project.location}
+                                                </p>
 
-                                            <p className="smaller-text">
-                                                created{' '}
-                                                <Moment fromNow>
-                                                    {project.created_at}
-                                                </Moment>
-                                            </p>
+                                                <p className="smaller-text">
+                                                    created{' '}
+                                                    <Moment fromNow>
+                                                        {project.created_at}
+                                                    </Moment>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className={styles['col2']}>
+                                            <IconButton>
+                                                <IconChevronRight />
+                                            </IconButton>
                                         </div>
                                     </div>
-                                    <div className={styles['col2']}>
-                                        <IconButton>
-                                            <IconChevronRight />
-                                        </IconButton>
-                                    </div>
-                                </div>
-                            )
-                        })}
+                                )
+                            })}
+                        </Box>
                         {filteredProjects?.next_page_url && (
-                            <p
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    color: 'var(--accent)',
+                                }}
                                 onClick={() =>
                                     viewMore(
                                         active,
@@ -458,7 +506,15 @@ const ProjectsList = (props) => {
                                 }
                             >
                                 View More
-                            </p>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <IconChevronDown />
+                                </Box>
+                            </Box>
                         )}
                     </Box>
                 </div>
