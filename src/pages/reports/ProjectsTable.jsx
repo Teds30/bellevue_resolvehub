@@ -229,16 +229,16 @@ const ProjectsTable = () => {
                             name: 'Location',
                             field_name: 'location',
                         },
-                        // {
-                        //     id: 3,
-                        //     name: 'Department',
-                        //     field_name: 'location',
-                        // },
-                        // {
-                        //     id: 4,
-                        //     name: 'Assignee',
-                        //     field_name: 'location',
-                        // },
+                        {
+                            id: 3,
+                            name: 'In-Charge',
+                            field_name: 'incharge',
+                        },
+                        {
+                            id: 4,
+                            name: 'Department',
+                            field_name: 'department',
+                        },
                     ]}
                     handleSubmitSearch={handleSubmitSearch}
                     setSearchParams={setSearchParams}
