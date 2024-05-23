@@ -126,6 +126,9 @@ const ProjectsList = (props) => {
             } else if (active === 4) {
                 setDone(res.data)
                 setfilteredProjects(res.data)
+            } else if (active === 5) {
+                setRejected(res.data)
+                setfilteredProjects(res.data)
             }
         }
     }
@@ -221,20 +224,20 @@ const ProjectsList = (props) => {
             url: `${proxied}&${queryString}&status=${active}`,
         })
 
-        if (active === 0) {
-            let _oldproj = [...requested.data, ...res.data.data]
-            let _new = res.data
-            _new.data = _oldproj
+        let _oldproj = [...requested.data, ...res.data.data]
+        let _new = res.data
+        _new.data = _oldproj
 
+        if (active === 0) {
             setRequested(_new)
         } else if (active === 1) {
-            setPending(res.data)
+            setPending(_new)
         } else if (active === 2) {
-            setOngoing(res.data)
+            setOngoing(_new)
         } else if (active === 3) {
-            setCancelled(res.data)
+            setCancelled(_new)
         } else if (active === 4) {
-            setDone(res.data)
+            setDone(_new)
         }
     }
 
