@@ -59,23 +59,23 @@ const ProjectApproval = (props) => {
         })
 
         onRefreshData()
-        // console.log(res)
     }
     const handleReject = async () => {}
     const handlePending = async () => {}
     const handleCancel = async () => {}
     const handleAccomplish = async () => {
-        // const res = await sendRequest({
-        //     url: `${import.meta.env.VITE_BACKEND_URL}/api/projects/${
-        //         project.id
-        //     }`,
-        //     body: JSON.stringify({
-        //         status: 4,
-        //     }),
-        //     method: 'PATCH',
-        // })
-        // onRefreshData()
+        const res = await sendRequest({
+            url: `${import.meta.env.VITE_BACKEND_URL}/api/projects/${
+                project.id
+            }`,
+            body: JSON.stringify({
+                status: 4,
+            }),
+            method: 'PATCH',
+        })
+        onRefreshData()
     }
+    console.log(project)
 
     return (
         <Box
@@ -226,8 +226,8 @@ const ProjectApproval = (props) => {
                         </strong>{' '}
                         by{' '}
                         <strong>
-                            {project.completed_marker.first_name}{' '}
-                            {project.completed_marker.last_name}.
+                            {project.completed_marker?.first_name}{' '}
+                            {project.completed_marker?.last_name}.
                         </strong>
                     </p>
                 </div>

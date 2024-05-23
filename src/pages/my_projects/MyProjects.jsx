@@ -15,6 +15,9 @@ import AuthContext from '../../context/auth-context'
 import { IconPlus } from '@tabler/icons-react'
 import { useNavigate } from 'react-router-dom'
 
+import Dropdown from '../../components/Dropdown/Dropdown'
+import { IconFilter } from '@tabler/icons-react'
+
 const MyProjects = () => {
     const [projects, setProjects] = useState([])
     const [myProjects, setMyProjects] = useState([])
@@ -34,26 +37,13 @@ const MyProjects = () => {
     useEffect(() => {
         if (userCtx.user) {
             if (userCtx.hasPermission('201') || userCtx.hasPermission('202')) {
-                loadProjects()
+                // loadProjects()
             }
             loadAssignedProjects()
             loadUserProjects()
         }
     }, [userCtx.user])
 
-    const loadProjects = async () => {
-        const res = await sendRequest({
-            url: `${import.meta.env.VITE_BACKEND_URL}/api/department_projects/${
-                userCtx.user.position.department_id
-            }`,
-        })
-
-        // const newData = res.data.filter(
-        //     (d) => d.requestor_id !== userCtx.user.id
-        // )
-
-        setProjects(res.data)
-    }
     const loadUserProjects = async () => {
         const res = await sendRequest({
             url: `${import.meta.env.VITE_BACKEND_URL}/api/user_projects/${
@@ -99,7 +89,7 @@ const MyProjects = () => {
                                     <Tab
                                         label="My Department"
                                         value={0}
-                                        onClick={() => loadProjects()}
+                                        // onClick={() => loadProjects()}
                                     />
                                 )}
                             {userCtx.user &&
@@ -124,7 +114,7 @@ const MyProjects = () => {
                         sx={{ padding: '0', width: '100%', maxWidth: '720px' }}
                     >
                         {!isLoading ? (
-                            <ProjectsList projects={projects} />
+                            <ProjectsList type="department" />
                         ) : (
                             <p>Loading...</p>
                         )}
@@ -133,13 +123,13 @@ const MyProjects = () => {
                         value={1}
                         sx={{ padding: '0', width: '100%', maxWidth: '720px' }}
                     >
-                        <ProjectsList projects={assignedProjects} />
+                        <ProjectsList type="my_projects" />
                     </TabPanel>
                     <TabPanel
                         value={2}
                         sx={{ padding: '0', width: '100%', maxWidth: '720px' }}
                     >
-                        <ProjectsList projects={myProjects} />
+                        <ProjectsList type="assigned_to" />
                     </TabPanel>
                 </TabContext>
             </div>

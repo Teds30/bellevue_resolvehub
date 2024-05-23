@@ -135,6 +135,13 @@ const Project = () => {
                                         {project.requestor.last_name}
                                     </span>
                                 </p>
+
+                                <p className="smaller-text">
+                                    created on{' '}
+                                    <Moment format="MMMM D, Y [at] h:mm A">
+                                        {project.created_at}
+                                    </Moment>
+                                </p>
                             </section>
                             <section>
                                 <div className={styles['to_department']}>
