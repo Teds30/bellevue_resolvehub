@@ -42,10 +42,10 @@ const Dashboard = () => {
 
             depts.unshift({ id: 10000, name: 'All Departments' })
             setDepartments(depts)
-            setSelectedDepartment(10000)
+            setSelectedDepartment(userCtx.department.id)
         }
 
-        if (userCtx && userCtx.user && userCtx.hasPermission('403')) loadData()
+        if ((userCtx, userCtx.user && userCtx.hasPermission('403'))) loadData()
     }, [userCtx])
 
     // useEffect(() => {
