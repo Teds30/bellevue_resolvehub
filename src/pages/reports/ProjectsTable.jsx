@@ -29,6 +29,7 @@ import AuthContext from '../../context/auth-context'
 import TableSearch from './TableSearch'
 import TableFilterStatus from './TableFilterStatus'
 import TableFilterStatusProject from './TableFilterStatusProject'
+import TableFilterTypeProject from './TableFilterTypeProject'
 
 function CustomToolbar() {
     return (
@@ -53,6 +54,7 @@ const ProjectsTable = () => {
     const [filterModel, setFilterModel] = React.useState({ items: [] })
     const [sortModel, setSortModel] = React.useState([])
     const [statusParams, setStatusParams] = useState('')
+    const [typeParams, setTypeParams] = useState('')
 
     const [searchParams, setSearchParams] = useState({
         searchField: '',
@@ -78,7 +80,7 @@ const ProjectsTable = () => {
         const res = await fetch(
             `${
                 import.meta.env.VITE_BACKEND_URL
-            }/api/projects_page?page_size=${pageSize}&page=${_page}${params}${statusParams}${_searchParams}`,
+            }/api/projects_page?page_size=${pageSize}&page=${_page}${params}${statusParams}${typeParams}${_searchParams}`,
             {
                 method: 'POST',
                 body: JSON.stringify({
@@ -139,6 +141,15 @@ const ProjectsTable = () => {
         }
     }
 
+    const handleFilterType = async (data) => {
+        if (data) {
+            let fetchParams = `&type=${data}`
+            setTypeParams(fetchParams)
+        } else {
+            setTypeParams('')
+        }
+    }
+
     const {
         data: unitData,
         isLoading,
@@ -153,6 +164,7 @@ const ProjectsTable = () => {
                 pageSize: paginationModel.pageSize,
                 params: params,
                 statusParams: statusParams,
+                typeParams: typeParams,
                 searchParams: searchParams,
             },
         ],
@@ -245,6 +257,9 @@ const ProjectsTable = () => {
                 <TableFilterStatusProject
                     handleAppliedFilter={handleFilterStatus}
                 />
+                <TableFilterTypeProject
+                    handleAppliedFilter={handleFilterType}
+                />
             </Box>
             <DataGrid
                 sx={{ width: '100%' }}
@@ -309,10 +324,24 @@ const ProjectsTable = () => {
                         align: 'center',
                     },
                     {
+                        field: 'incharge',
+                        hideable: false,
+                        disableColumnMenu: true,
+                        headerName: 'In-Charge',
+                        valueGetter: (value) => {
+                            return `${value.first_name} ${value.last_name}`
+                        },
+                        flex: 1,
+                        cellClassName: styles['row_cells'],
+                        headerClassName: styles['row_header'],
+                        headerAlign: 'center',
+                        align: 'center',
+                    },
+                    {
                         field: 'department',
                         hideable: false,
                         disableColumnMenu: true,
-                        headerName: 'Type',
+                        headerName: 'Department',
                         valueGetter: (value) => {
                             return value.name
                         },
