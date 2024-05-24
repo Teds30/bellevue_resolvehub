@@ -132,14 +132,25 @@ const ReportsTable = () => {
             }
 
             .MuiDataGrid-cell{
-                // --maxWidth: 150px !important;
+                // --maxWidth: 145px !important;
                 --flex: 1;
                 // flex: unset !important;
-                min-width: 150px !important;
-                // max-width: 150px !important;
+                min-width: 170px !important;
+                width: 170px !important;
+                max-width: 170px !important;
+                --width: 145;
+                // max-width: 170px !important;
                 // display: block;
+                padding: 12px 0;
                 white-space: normal;
                 word-wrap: break-word;
+            }
+
+            .MuiDataGrid-columnHeader {
+                min-width: 170px !important;
+                width: 170px !important;
+                max-width: 170px !important;
+                --width: 170;
             }
             .MuiDataGrid-columnHeaderTitle {
                 white-space: normal;

@@ -103,11 +103,21 @@ const ProjectsTable = () => {
                 --flex: 1;
                 // flex: unset !important;
                 min-width: 145px !important;
+                width: 145px !important;
+                max-width: 145px !important;
+                --width: 145;
                 // max-width: 145px !important;
                 // display: block;
                 padding: 12px 0;
                 white-space: normal;
                 word-wrap: break-word;
+            }
+
+            .MuiDataGrid-columnHeader {
+                min-width: 145px !important;
+                width: 145px !important;
+                max-width: 145px !important;
+                --width: 145;
             }
             .MuiDataGrid-columnHeaderTitle {
                 white-space: normal;
