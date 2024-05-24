@@ -16,7 +16,11 @@ import BellevueLoading from '../../components/LoadingSpinner/BellevueLoading'
 import TableFilter from './TableFilter'
 import dayjs from 'dayjs'
 import { useNavigate } from 'react-router-dom'
-import { IconDownload, IconExternalLink } from '@tabler/icons-react'
+import {
+    IconDownload,
+    IconExternalLink,
+    IconPrinter,
+} from '@tabler/icons-react'
 import AuthContext from '../../context/auth-context'
 import TableFilterMain from './TableFilterStatus'
 
@@ -28,13 +32,18 @@ import Dropdown from '../../components/Dropdown/Dropdown'
 import TableFilterStatus from './TableFilterStatus'
 import Moment from 'react-moment'
 import TableSearch from './TableSearch'
+import { useReactToPrint } from 'react-to-print'
+import { extractQueryParams } from './params'
 
 function CustomToolbar() {
     return (
-        <GridToolbarContainer>
-            {/* <GridToolbarExport /> */}
-            {/* <Box>hs</Box> */}
-        </GridToolbarContainer>
+        <GridToolbarExport
+            csvOptions={false}
+            printOptions={{
+                hideFooter: true,
+                hideToolbar: true,
+            }}
+        />
     )
 }
 
@@ -86,6 +95,64 @@ const ReportsTable = () => {
         searchField: '',
         search: '',
     })
+
+    const componentRef = useRef()
+
+    const handlePrint = useReactToPrint({
+        content: () => componentRef.current,
+    })
+
+    const getPageMargins = () => {
+        return `@page { margin: 32px 32px 32px 32px !important;}
+        @media print {
+            html, body{
+                width: 1000px !important;
+                // border: 1px solid blue;
+                max-width: 900px !important;
+            }
+            
+            .MuiDataGrid-root{
+                width: 1000px !important;
+            }
+            .MuiDataGrid-virtualScrollerContent {           
+                width: 1000px !important;
+                display: flex;
+            }
+            .MuiDataGrid-columnHeaders{
+                width: 1000px !important;
+            }
+            .exclude-from-print {
+              display: none;
+            }
+            .MuiDataGrid-scrollbar{
+                display: none !important;
+            }
+            .datagrid-container{
+                max-width: 900px !important;
+            }
+
+            .MuiDataGrid-cell{
+                // --maxWidth: 150px !important;
+                --flex: 1;
+                // flex: unset !important;
+                min-width: 150px !important;
+                // max-width: 150px !important;
+                // display: block;
+                white-space: normal;
+                word-wrap: break-word;
+            }
+            .MuiDataGrid-columnHeaderTitle {
+                white-space: normal;
+                line-height: normal;
+            },
+            .MuiDataGrid-columnHeader {
+                height: unset !important,
+            },
+            .MuiDataGrid-columnHeaders {
+                max-height: 168px !important,
+            },
+          }`
+    }
 
     useEffect(() => {
         if (userCtx.hasPermission('302')) {
@@ -166,7 +233,7 @@ const ReportsTable = () => {
         const res = await fetch(
             `${
                 import.meta.env.VITE_BACKEND_URL
-            }/api/tasks_export?${params}${statusParams}${_searchParams}`,
+            }/api/tasks_page?${params}${statusParams}${_searchParams}&export=true`,
             {
                 method: 'POST',
                 body: JSON.stringify({
@@ -285,6 +352,8 @@ const ReportsTable = () => {
 
     return (
         <div className={styles['table_container']}>
+            {' '}
+            <style>{getPageMargins()}</style>
             {/* <Box
                 sx={{
                     padding: '12px',
@@ -349,268 +418,326 @@ const ReportsTable = () => {
                 <TableFilter handleAppliedFilter={handleAppliedFilter} />
                 <TableFilterStatus handleAppliedFilter={handleFilterStatus} />
             </Box>
-            <DataGrid
-                sx={{ width: '100%' }}
-                columnVisibilityModel={{
-                    room: false,
+            <Box
+                ref={componentRef}
+                sx={{
+                    width: '100%',
                 }}
-                columns={[
-                    {
-                        field: 'row_data',
-                        hideable: false,
-                        disableColumnMenu: true,
-                        headerName: 'Task',
-                        valueGetter: (value) => {
-                            return value.name
-                        },
-                        flex: 1,
-                        cellClassName: styles['row_cells'],
-                        headerClassName: styles['row_header'],
-                        headerAlign: 'center',
-                        align: 'start',
+                className={'datagrid-container'}
+            >
+                <DataGrid
+                    columnVisibilityModel={{
+                        room: false,
+                    }}
+                    columns={[
+                        {
+                            field: 'row_data',
+                            hideable: false,
+                            disableColumnMenu: true,
+                            headerName: 'Task',
+                            valueGetter: (value) => {
+                                return value.name
+                            },
+                            // flex: 1,
+                            // flex: window.innerWidth > 900 && 1,
+                            minWidth: 150,
+                            width: 160,
+                            cellClassName: styles['row_cells'],
+                            headerClassName: `${styles['row_header']}`,
+                            headerAlign: 'center',
+                            align: 'start',
 
-                        renderCell: (par) => {
-                            return (
-                                <div className={styles['details']}>
-                                    <p
-                                        className={styles['task-link']}
-                                        onClick={() =>
-                                            navigate(`/tasks/${par.row.id}`)
-                                        }
-                                    >
-                                        {par.row.issue}{' '}
-                                        <span>
-                                            <IconExternalLink size={10} />
-                                        </span>
-                                    </p>
-                                    <p className="smaller-text">
-                                        {/* Created:{' '} */}
-                                        <Moment format="MMMM DD, YYYY">
-                                            {par.row.created_at}
-                                        </Moment>
-                                    </p>
-                                </div>
-                            )
-                        },
-                    },
-                    {
-                        field: 'area',
-                        hideable: true,
-                        disableColumnMenu: true,
-                        headerName: 'Area/Room ID',
-                        valueGetter: (value) => {
-                            return value
-                        },
-                        renderCell: (par) => {
-                            return (
-                                <Box>
-                                    <p>{par.row.room}</p>
-                                </Box>
-                            )
-                        },
-                        flex: 1,
-                        cellClassName: styles['row_cells'],
-                        headerClassName: styles['row_header'],
-                        headerAlign: 'center',
-                        align: 'center',
-                    },
-                    {
-                        field: 'assignee_id',
-                        hideable: false,
-                        disableColumnMenu: true,
-                        headerName: 'Assigned to',
-                        valueGetter: (value) => {
-                            return value
-                        },
-                        renderCell: (par) => {
-                            return (
-                                <Box>
-                                    <p>{par.row.department.name}</p>
-                                    <p className="smaller-text">
-                                        {par.row.assignee
-                                            ? `${par.row.assignee.first_name} ${par.row.assignee.last_name}`
-                                            : 'None'}
-                                    </p>
-                                </Box>
-                            )
-                        },
-                        flex: 1,
-                        cellClassName: styles['row_cells'],
-                        headerClassName: styles['row_header'],
-                        headerAlign: 'center',
-                        align: 'center',
-                    },
-                    {
-                        field: 'schedule',
-                        hideable: false,
-                        disableColumnMenu: true,
-                        headerName: 'Schedule',
-                        valueGetter: (value) => {
-                            return value
-                        },
-                        renderCell: (par) => {
-                            return (
-                                <Box>
-                                    <p>
-                                        {dayjs(par.row.schedule).format(
-                                            'MMMM DD, YYYY'
-                                        )}
-                                    </p>
-                                    <p className="smaller-text">
-                                        {dayjs(par.row.schedule).format(
-                                            'hh:mm A'
-                                        )}
-                                    </p>
-                                </Box>
-                            )
-                        },
-                        flex: 1,
-                        cellClassName: styles['row_cells'],
-                        headerClassName: styles['row_header'],
-                        headerAlign: 'center',
-                        align: 'center',
-                    },
-
-                    {
-                        field: 'updated_at',
-                        hidden: true,
-                        hideable: false,
-                        disableColumnMenu: true,
-                        headerName: 'Completion Date',
-                        valueGetter: (value) => {
-                            return value !== null
-                                ? dayjs(value).format('MMMM DD, YYYY hh:mm A')
-                                : null
-                        },
-                        renderCell: (par) => {
-                            let out = par.row.completed_marker_id ? (
-                                <Box>
-                                    <p>
-                                        {dayjs(par.row.updated_at).format(
-                                            'MMMM DD, YYYY'
-                                        )}
-                                    </p>
-                                    <p className="smaller-text">
-                                        {dayjs(par.row.updated_at).format(
-                                            'hh:mm A'
-                                        )}
-                                    </p>
-                                </Box>
-                            ) : (
-                                ''
-                            )
-
-                            return out
-                        },
-                        flex: 1,
-                        cellClassName: styles['row_cells'],
-                        headerClassName: styles['row_header'],
-                        headerAlign: 'center',
-                        align: 'center',
-                    },
-                    {
-                        field: 'status',
-                        hideable: false,
-                        disableColumnMenu: true,
-                        headerName: 'Status',
-                        headerAlign: 'center',
-                        align: 'center',
-                        valueFormatter: (value) => {
-                            if (value == 0) {
-                                return 'request'
-                            } else if (value == 1) {
-                                return 'active'
-                            } else if (value == 2) {
-                                return 'pending'
-                            } else if (value == 3) {
-                                return 'cancelled'
-                            } else if (value == 4) {
-                                return 'accomplished'
-                            }
-                        },
-                        renderCell: (par) => {
-                            let statusStyles
-                            let statusLabel = ''
-
-                            if (par.row.status == 0) {
-                                statusStyles = 'request'
-                                statusLabel = 'Request'
-                            } else if (par.row.status == 1) {
-                                statusStyles = 'active'
-                                statusLabel = 'Active'
-                            } else if (par.row.status == 2) {
-                                statusStyles = 'pending'
-                                statusLabel = 'Pending'
-                            } else if (par.row.status == 3) {
-                                statusStyles = 'cancelled'
-                                statusLabel = 'Cancelled'
-                            } else if (par.row.status == 4) {
-                                statusStyles = 'accomplished'
-                                statusLabel = 'Accomplished'
-                            }
-
-                            return (
-                                <div className={styles['status-container']}>
-                                    <div
-                                        className={`${
-                                            styles[`status-${statusStyles}`]
-                                        } ${styles['status-chip']}`}
-                                    >
-                                        {statusLabel}
+                            renderCell: (par) => {
+                                return (
+                                    <div className={styles['details']}>
+                                        <p
+                                            className={styles['task-link']}
+                                            onClick={() =>
+                                                navigate(`/tasks/${par.row.id}`)
+                                            }
+                                        >
+                                            {par.row.issue}{' '}
+                                            <span>
+                                                <IconExternalLink size={10} />
+                                            </span>
+                                        </p>
+                                        <p className="smaller-text">
+                                            {/* Created:{' '} */}
+                                            <Moment format="MMMM DD, YYYY">
+                                                {par.row.created_at}
+                                            </Moment>
+                                        </p>
                                     </div>
-                                </div>
-                            )
+                                )
+                            },
                         },
-                        valueGetter: (value) => {
-                            return value
+                        {
+                            field: 'area',
+                            hideable: true,
+                            disableColumnMenu: true,
+                            headerName: 'Area/Room ID',
+                            valueGetter: (value) => {
+                                return value
+                            },
+                            renderCell: (par) => {
+                                return (
+                                    <Box>
+                                        <p>{par.row.room}</p>
+                                    </Box>
+                                )
+                            },
+                            // flex: 1,
+                            // flex: window.innerWidth > 900 && 1,
+                            minWidth: 150,
+                            width: 160,
+
+                            cellClassName: styles['row_cells'],
+                            headerClassName: `${styles['row_header']}`,
+                            headerAlign: 'center',
+                            align: 'center',
                         },
-                        flex: 1,
-                        cellClassName: `${styles['row_cells']}`,
-                        headerClassName: styles['row_header'],
-                    },
-                ]}
-                getRowClassName={(params) => {
-                    return styles[`status-${params.row.status}`]
-                }}
-                // getCellClassName={(params) => {
-                //     if(params.field === 's')
-                // }}
-                ref={apiRef}
-                autosizeOnMount={true}
-                pagination
-                rows={unitData.data.data ?? []}
-                sortingMode="server"
-                filterMode="server"
-                loading={unitFetching}
-                slots={{
-                    loadingOverlay: LinearProgress,
-                    // toolbar: GridToolbar,
-                    // toolbar: CustomToolbar,
-                }}
-                isRowSelectable={false}
-                paginationMode="server"
-                rowCount={unitData.data.total ?? 0}
-                pageSize={paginationModel.pageSize}
-                paginationModel={unitData.model}
-                sortModel={sortModel}
-                onSortModelChange={(newSortModel) => setSortModel(newSortModel)}
-                onPaginationModelChange={handlePageChange}
-                pageSizeOptions={[10, 25, 50, 100]}
-                disableColumnSorting={true}
-                // filterModel={filterModel}
-                // onFilterModelChange={(newFilterModel) => {
-                //     console.log(newFilterModel)
-                //     setFilterModel(newFilterModel)
-                // }}
-            />
+                        {
+                            field: 'assignee_id',
+                            hideable: false,
+                            disableColumnMenu: true,
+                            headerName: 'Assigned to',
+                            valueGetter: (value) => {
+                                return value
+                            },
+                            renderCell: (par) => {
+                                return (
+                                    <Box>
+                                        <p>{par.row.department.name}</p>
+                                        <p className="smaller-text">
+                                            {par.row.assignee
+                                                ? `${par.row.assignee.first_name} ${par.row.assignee.last_name}`
+                                                : 'None'}
+                                        </p>
+                                    </Box>
+                                )
+                            },
+                            // flex: 1,
+                            // flex: window.innerWidth > 900 && 1,
+                            minWidth: 150,
+                            width: 160,
+
+                            cellClassName: styles['row_cells'],
+                            headerClassName: `${styles['row_header']}`,
+                            headerAlign: 'center',
+                            align: 'center',
+                        },
+                        {
+                            field: 'schedule',
+                            hideable: false,
+                            disableColumnMenu: true,
+                            headerName: 'Schedule',
+                            valueGetter: (value) => {
+                                return value !== null
+                                    ? dayjs(value).format(
+                                          'MMMM DD, YYYY hh:mm A'
+                                      )
+                                    : null
+                            },
+                            renderCell: (par) => {
+                                return par.row.schedule ? (
+                                    <Box>
+                                        <p>
+                                            {dayjs(par.row.schedule).format(
+                                                'MMMM DD, YYYY'
+                                            )}
+                                        </p>
+                                        <p className="smaller-text">
+                                            {dayjs(par.row.schedule).format(
+                                                'hh:mm A'
+                                            )}
+                                        </p>
+                                    </Box>
+                                ) : (
+                                    'N/A'
+                                )
+                            },
+                            // flex: 1,
+                            // flex: window.innerWidth > 900 && 1,
+                            minWidth: 150,
+                            width: 160,
+
+                            cellClassName: styles['row_cells'],
+                            headerClassName: `${styles['row_header']}`,
+                            headerAlign: 'center',
+                            align: 'center',
+                        },
+
+                        {
+                            field: 'updated_at',
+                            hidden: true,
+                            hideable: false,
+                            disableColumnMenu: true,
+                            headerName: 'Completion Date',
+                            valueGetter: (value) => {
+                                return value !== null
+                                    ? dayjs(value).format(
+                                          'MMMM DD, YYYY hh:mm A'
+                                      )
+                                    : null
+                            },
+                            renderCell: (par) => {
+                                let out = par.row.completed_marker_id ? (
+                                    <Box>
+                                        <p>
+                                            {dayjs(par.row.updated_at).format(
+                                                'MMMM DD, YYYY'
+                                            )}
+                                        </p>
+                                        <p className="smaller-text">
+                                            {dayjs(par.row.updated_at).format(
+                                                'hh:mm A'
+                                            )}
+                                        </p>
+                                    </Box>
+                                ) : (
+                                    'N/A'
+                                )
+
+                                return out
+                            },
+                            // flex: 1,
+                            // flex: window.innerWidth > 900 && 1,
+                            minWidth: 150,
+                            width: 160,
+
+                            cellClassName: styles['row_cells'],
+                            headerClassName: `${styles['row_header']}`,
+                            headerAlign: 'center',
+                            align: 'center',
+                        },
+                        {
+                            field: 'status',
+                            hideable: false,
+                            disableColumnMenu: true,
+                            headerName: 'Status',
+                            headerAlign: 'center',
+                            align: 'center',
+                            valueFormatter: (value) => {
+                                if (value == 0) {
+                                    return 'request'
+                                } else if (value == 1) {
+                                    return 'active'
+                                } else if (value == 2) {
+                                    return 'pending'
+                                } else if (value == 3) {
+                                    return 'cancelled'
+                                } else if (value == 4) {
+                                    return 'accomplished'
+                                }
+                            },
+                            renderCell: (par) => {
+                                let statusStyles
+                                let statusLabel = ''
+
+                                if (par.row.status == 0) {
+                                    statusStyles = 'request'
+                                    statusLabel = 'Request'
+                                } else if (par.row.status == 1) {
+                                    statusStyles = 'active'
+                                    statusLabel = 'Active'
+                                } else if (par.row.status == 2) {
+                                    statusStyles = 'pending'
+                                    statusLabel = 'Pending'
+                                } else if (par.row.status == 3) {
+                                    statusStyles = 'cancelled'
+                                    statusLabel = 'Cancelled'
+                                } else if (par.row.status == 4) {
+                                    statusStyles = 'accomplished'
+                                    statusLabel = 'Accomplished'
+                                }
+
+                                return (
+                                    <div className={styles['status-container']}>
+                                        <div
+                                            className={`${
+                                                styles[`status-${statusStyles}`]
+                                            } ${styles['status-chip']}`}
+                                        >
+                                            {statusLabel}
+                                        </div>
+                                    </div>
+                                )
+                            },
+                            valueGetter: (value) => {
+                                return value
+                            },
+                            // flex: 1,
+                            // flex: window.innerWidth > 900 && 1,
+                            minWidth: 150,
+                            width: 160,
+                            cellClassName: `${styles['row_cells']}`,
+                            headerClassName: `${styles['row_header']}`,
+                        },
+                    ]}
+                    getRowClassName={(params) => {
+                        return styles[`status-${params.row.status}`]
+                    }}
+                    // getCellClassName={(params) => {
+                    //     if(params.field === 's')
+                    // }}
+                    // ref={apiRef}
+                    autosizeOnMount={true}
+                    pagination
+                    rows={unitData.data.data ?? []}
+                    sortingMode="server"
+                    filterMode="server"
+                    loading={unitFetching}
+                    slots={{
+                        loadingOverlay: LinearProgress,
+                        // toolbar: GridToolbar,
+                    }}
+                    isRowSelectable={false}
+                    paginationMode="server"
+                    rowCount={unitData.data.total ?? 0}
+                    pageSize={paginationModel.pageSize}
+                    paginationModel={unitData.model}
+                    sortModel={sortModel}
+                    onSortModelChange={(newSortModel) =>
+                        setSortModel(newSortModel)
+                    }
+                    onPaginationModelChange={handlePageChange}
+                    pageSizeOptions={[10, 25, 50, 100]}
+                    disableColumnSorting={true}
+                    getRowHeight={() => 'auto'}
+                    // filterModel={filterModel}
+                    // onFilterModelChange={(newFilterModel) => {
+                    //     console.log(newFilterModel)
+                    //     setFilterModel(newFilterModel)
+                    // }}
+                />
+            </Box>
             <Box
                 sx={{
                     display: 'flex',
                     justifyContent: 'flex-end',
                     padding: '12px 16px',
+                    gap: '12px',
                     border: '1px solid var(--border-color)',
                 }}
             >
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        color: 'var(--accent)',
+                        gap: '4px',
+                        fontWeight: 500,
+                        padding: '12px 16px',
+                        border: '1px solid var(--border-color)',
+                        width: 'fit-content',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                    }}
+                    onClick={handlePrint}
+                >
+                    <IconPrinter size={16} /> Print
+                </Box>
                 <Box
                     sx={{
                         display: 'flex',

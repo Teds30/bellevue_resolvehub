@@ -2,12 +2,16 @@
     width: 100%;
 }
 
+.row_cells {
+    flex: 1;
+}
 .cell_column {
     font-weight: 700;
 }
 .row_header {
     background-color: #f9fafb;
     text-align: center;
+    flex: 1 !important;
     /* font-weight: 800 !important; */
 }
 
@@ -20,6 +24,7 @@
 }
 
 .status-container {
+    margin-inline: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
