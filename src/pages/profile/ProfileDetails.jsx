@@ -10,6 +10,9 @@ import { Box } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import useHttp from '../../hooks/http-hook'
 import ChangePassword from './ChangePassword'
+import { IconDownload } from '@tabler/icons-react'
+
+import UserManual from '../../assets/OMS_user_manual.pdf'
 
 const ProfileDetails = () => {
     const {
@@ -165,6 +168,46 @@ const ProfileDetails = () => {
                             </>
                         )}
                     </div>
+                    <Box
+                        sx={{
+                            borderTop: '1px solid var(--border-color)',
+                            width: '100%',
+                            padding: '12px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                color: 'var(--accent)',
+                                gap: '4px',
+                                fontWeight: 500,
+                                padding: '12px 16px',
+                                // border: '1px solid var(--border-color)',
+                                width: 'fit-content',
+                                borderRadius: '8px',
+                                cursor: 'pointer',
+                            }}
+                            // onClick={handleExport}
+                        >
+                            <a
+                                href={UserManual}
+                                download="OMS User Manual.pdf"
+                                style={{
+                                    color: 'inherit',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                }}
+                            >
+                                <IconDownload size={16} />
+                                User Manual
+                            </a>
+                        </Box>
+                    </Box>
                 </div>
             )}
             {<ChangePassword open={open} handleClose={handleClose} />}
